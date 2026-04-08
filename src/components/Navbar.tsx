@@ -29,20 +29,20 @@ export default function Navbar() {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isTransparent
           ? "bg-transparent"
-          : "bg-white shadow-sm border-b border-gray-100"
+          : "bg-white shadow-sm border-b border-stone-100"
       }`}
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center gap-2.5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-700">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1B4332]">
                 <span className="text-lg font-bold text-white">SM</span>
               </div>
               <span
                 className={`text-xl font-bold transition-colors duration-300 ${
-                  isTransparent ? "text-white drop-shadow-md" : "text-emerald-800"
+                  isTransparent ? "text-white drop-shadow-sm" : "text-[#1B4332]"
                 }`}
               >
                 Si-Manggis
@@ -58,8 +58,8 @@ export default function Navbar() {
                 href={link.href}
                 className={`text-sm font-medium transition-colors duration-300 ${
                   isTransparent
-                    ? "text-white/90 hover:text-white drop-shadow-sm"
-                    : "text-gray-600 hover:text-emerald-700"
+                    ? "text-white/85 hover:text-white"
+                    : "text-[#57534E] hover:text-[#1B4332]"
                 }`}
               >
                 {link.label}
@@ -69,8 +69,8 @@ export default function Navbar() {
               href="/masuk"
               className={`rounded-full px-5 py-2 text-sm font-semibold transition-colors duration-300 ${
                 isTransparent
-                  ? "bg-emerald-600 text-white hover:bg-emerald-700"
-                  : "bg-emerald-700 text-white hover:bg-emerald-800"
+                  ? "bg-[#EA580C] text-white hover:bg-[#C2410C]"
+                  : "bg-[#1B4332] text-white hover:bg-[#2D5016]"
               }`}
             >
               Masuk
@@ -83,7 +83,7 @@ export default function Navbar() {
               type="button"
               onClick={() => setIsOpen(!isOpen)}
               className={`p-1 transition-colors duration-300 ${
-                isTransparent ? "text-white drop-shadow-md" : "text-gray-800"
+                isTransparent ? "text-white drop-shadow-sm" : "text-[#1C1917]"
               }`}
               aria-label="Toggle menu"
             >
@@ -94,14 +94,14 @@ export default function Navbar() {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden border-t border-gray-100 bg-white pb-3">
+          <div className="md:hidden border-t border-stone-100 bg-white pb-3">
             <div className="space-y-0.5 pt-2">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="block px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg mx-1 transition-colors"
+                  className="block px-3 py-2.5 text-sm font-medium text-[#57534E] hover:text-[#1B4332] hover:bg-stone-50 rounded-lg mx-1 transition-colors"
                 >
                   {link.label}
                 </Link>
@@ -109,7 +109,7 @@ export default function Navbar() {
               <Link
                 href="/masuk"
                 onClick={() => setIsOpen(false)}
-                className="mx-1 mt-2 block rounded-full bg-emerald-700 px-4 py-2.5 text-center text-sm font-semibold text-white hover:bg-emerald-800 transition-colors"
+                className="mx-1 mt-2 block rounded-full bg-[#1B4332] px-4 py-2.5 text-center text-sm font-semibold text-white hover:bg-[#2D5016] transition-colors"
               >
                 Masuk
               </Link>

@@ -6,7 +6,7 @@ import Navbar from "@/src/components/Navbar";
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-jakarta",
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -22,7 +22,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className={`${plusJakartaSans.variable} scroll-smooth`}>
-      <body className="min-h-full flex flex-col antialiased" style={{ fontFamily: "var(--font-jakarta), sans-serif" }}>
+      <body
+        className="min-h-full flex flex-col antialiased"
+        style={{ fontFamily: "var(--font-jakarta), sans-serif" }}
+      >
         <Navbar />
         {children}
       </body>
