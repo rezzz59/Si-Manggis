@@ -8,7 +8,7 @@ const navLinks = [
   { label: "Beranda", href: "/" },
   { label: "Profil", href: "/profil" },
   { label: "Layanan", href: "/layanan" },
-  { label: "Galeri", href: "/galeri" },
+  { label: "Kabar", href: "/artikel" },
   { label: "Kontak", href: "/kontak" },
 ];
 
@@ -29,7 +29,7 @@ export default function Navbar() {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isTransparent
           ? "bg-transparent"
-          : "bg-white shadow-sm border-b border-stone-100"
+          : "bg-white shadow-sm border-b border-[#E7E5E4]"
       }`}
     >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -51,12 +51,12 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center md:gap-7">
+          <div className="hidden md:flex md:items-center md:gap-6">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium transition-colors duration-300 ${
+                className={`text-sm font-medium transition-colors duration-200 ${
                   isTransparent
                     ? "text-white/85 hover:text-white"
                     : "text-[#57534E] hover:text-[#1B4332]"
@@ -67,7 +67,7 @@ export default function Navbar() {
             ))}
             <Link
               href="/masuk"
-              className={`rounded-full px-5 py-2 text-sm font-semibold transition-colors duration-300 ${
+              className={`rounded-full px-5 py-2 text-sm font-semibold transition-colors duration-200 ${
                 isTransparent
                   ? "bg-[#EA580C] text-white hover:bg-[#C2410C]"
                   : "bg-[#1B4332] text-white hover:bg-[#2D5016]"
@@ -82,26 +82,26 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setIsOpen(!isOpen)}
-              className={`p-1 transition-colors duration-300 ${
+              className={`p-1 transition-colors duration-200 ${
                 isTransparent ? "text-white drop-shadow-sm" : "text-[#1C1917]"
               }`}
               aria-label="Toggle menu"
             >
-              {isOpen ? <X size={28} /> : <Menu size={28} />}
+              {isOpen ? <X size={26} /> : <Menu size={26} />}
             </button>
           </div>
         </div>
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden border-t border-stone-100 bg-white pb-3">
+          <div className="md:hidden border-t border-[#E7E5E4] bg-white pb-3">
             <div className="space-y-0.5 pt-2">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="block px-3 py-2.5 text-sm font-medium text-[#57534E] hover:text-[#1B4332] hover:bg-stone-50 rounded-lg mx-1 transition-colors"
+                  className="block px-3 py-2.5 text-sm font-medium text-[#57534E] hover:text-[#1B4332] hover:bg-[#F5F5F4] rounded-lg mx-1 transition-colors"
                 >
                   {link.label}
                 </Link>

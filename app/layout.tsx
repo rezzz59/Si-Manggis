@@ -12,7 +12,8 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: "Si-Manggis - Layanan Desa Digital",
-  description: "Web Layanan Desa Digital yang modern dan ramah warga",
+  description:
+    "Sistem Informasi Desa Digital Gunting Manggis. Kabar desa, layanan online, dan informasi untuk warga.",
 };
 
 export default function RootLayout({
