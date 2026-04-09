@@ -1,26 +1,116 @@
 @import "tailwindcss";
 
+/* ============================================
+   CSS VARIABLES — Indonesian Village Warm Naturalism
+   ============================================ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-forest:    #1B4332;
+  --color-moss:      #40916C;
+  --color-wood:      #92400E;
+  --color-wood-mid:  #B45309;
+  --color-sunset:    #EA580C;
+  --color-sunset-bg: #FFF7ED;
+  --color-cream:     #FEFCE8;
+  --color-cream-alt: #FFFBEB;
+  --color-stone-900: #1C1917;
+  --color-stone-600: #57534E;
+  --color-stone-400: #A8A29E;
+  --color-stone-200: #E7E5E4;
+  --color-stone-100: #F5F5F4;
+  --color-stone-50:  #FAFAF9;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ============================================
+   NOISE TEXTURE — eliminates "clean AI" look
+   ============================================ */
+.noise-texture::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 300px 300px;
+  pointer-events: none;
+  z-index: 1;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ============================================
+   PAGE LOAD — STAGGER ANIMATIONS
+   ============================================ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.stagger-1 { animation: fadeUp 0.5s ease-out 0.15s both; }
+.stagger-2 { animation: fadeUp 0.5s ease-out 0.28s both; }
+.stagger-3 { animation: fadeUp 0.5s ease-out 0.4s both; }
+.stagger-4 { animation: fadeUp 0.5s ease-out 0.55s both; }
+.stagger-5 { animation: fadeUp 0.5s ease-out 0.7s both; }
+
+/* ============================================
+   CARD REVEAL
+   ============================================ */
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reveal { opacity: 0; animation: revealUp 0.5s ease-out forwards; }
+.reveal-d1 { animation-delay: 0.1s; }
+.reveal-d2 { animation-delay: 0.2s; }
+.reveal-d3 { animation-delay: 0.3s; }
+.reveal-d4 { animation-delay: 0.4s; }
+
+/* ============================================
+   CARD HOVER
+   ============================================ */
+.hover-lift {
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(27, 67, 50, 0.1);
+}
+
+/* ============================================
+   SCROLL HINT
+   ============================================ */
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(7px); }
+}
+.scroll-hint { animation: scrollBounce 1.6s ease-in-out infinite; }
+
+/* ============================================
+   PULSE DOT
+   ============================================ */
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.4); opacity: 0.5; }
+}
+.pulse-dot { animation: pulseDot 2s ease-in-out infinite; }
+
+/* ============================================
+   SECTION ACCENT BAR — orange vertical
+   ============================================ */
+.accent-bar {
+  display: inline-block;
+  width: 4px;
+  height: 1.4em;
+  background: #EA580C;
+  border-radius: 2px;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+/* ============================================
+   SECTION ACCENT LINE — horizontal
+   ============================================ */
+.accent-line {
+  display: block;
+  height: 3px;
+  width: 2.5rem;
+  background: linear-gradient(to right, #EA580C, #B45309);
+  border-radius: 2px;
 }
