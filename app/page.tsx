@@ -99,7 +99,8 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
 
           {/* Header */}
-          <div className="flex items-end justify-between mb-10 gap-4">
+          <div className="fl
+          ex items-end justify-between mb-10 gap-4">
             <div>
               <span className="accent-line mb-3" />
               <h2 className="text-2xl sm:text-3xl font-bold text-[#1B4332]">
