@@ -39,10 +39,10 @@ export default function DaruratPage() {
                 <div className={`${item.warnaBg} px-6 py-5`}>
                   <p className={`text-xs font-bold uppercase tracking-wide ${item.warnaText} mb-1`}>
                     {item.kategori === "damkar"
-                      ? "🚒 Pemadam Kebakaran"
+                      ? "Pemadam Kebakaran"
                       : item.kategori === "ambulans"
-                      ? "🚑 Ambulans"
-                      : "🏥 Pos Kesehatan Desa"}
+                      ? "Ambulans"
+                      : "Pos Kesehatan Desa"}
                   </p>
                   <h2 className="text-lg font-bold text-stone-900 leading-snug">
                     {item.nama}
