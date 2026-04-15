@@ -1,448 +1,423 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
+  Search,
   ArrowRight,
-  Users,
   FileText,
-  Clock,
-  CheckCircle,
   MapPin,
-  Leaf,
-  TreesIcon,
-  Drumstick,
-  Home as HomeIcon,
-  FilePen,
-  UsersRound,
-  CreditCard,
+  Phone,
+  Building2,
+  Newspaper,
+  Flame,
+  Siren,
+  ShieldCheck,
+  Droplets,
+  Heart,
+  Sparkles,
+  Recycle,
   Briefcase,
-  HeartHandshake,
 } from "lucide-react";
 
-export default function Home() {
+const PROGRAM_UNGGULAN = [
+  {
+    icon: ShieldCheck,
+    label: "Kampung KB",
+    desc: "Program nasional — mewakili Kalseltel",
+    badge: "Nasional",
+    color: "bg-[#eff6ff]",
+    iconColor: "text-[#1e40af]",
+  },
+  {
+    icon: Droplets,
+    label: "RT Mandiri",
+    desc: "Budidaya ikan papuyu &amp; ternak sapi",
+    badge: null,
+    color: "bg-[#f0fdf4]",
+    iconColor: "text-[#16a34a]",
+  },
+  {
+    icon: Heart,
+    label: "Home Care Lansia",
+    desc: "Pelayanan kesehatan warga lanjut usia",
+    badge: null,
+    color: "bg-[#fff7ed]",
+    iconColor: "text-[#f97316]",
+  },
+  {
+    icon: Sparkles,
+    label: "Kelurahan Bersinar",
+    desc: "Wilayah percontohan bersih dari narkoba",
+    badge: "Percontohan",
+    color: "bg-[#eff6ff]",
+    iconColor: "text-[#1e40af]",
+  },
+  {
+    icon: Recycle,
+    label: "Bank Sampah",
+    desc: "8 unit beroperasi, kesadaran lingkungan tinggi",
+    badge: "8 Unit",
+    color: "bg-[#f0fdf4]",
+    iconColor: "text-[#16a34a]",
+  },
+  {
+    icon: Briefcase,
+    label: "Koperasi Merah Putih",
+    desc: "Program strategis nasional — Juli 2025",
+    badge: "Stranas",
+    color: "bg-[#fff7ed]",
+    iconColor: "text-[#f97316]",
+  },
+];
+
+const STATS = [
+  { value: "52", label: "RT", sub: "Pemekaran Okt 2025" },
+  { value: "2.500+", label: "Warga", sub: "Terdaftar" },
+  { value: "8", label: "Bank Sampah", sub: "Unit aktif" },
+  { value: "5", label: "Program", sub: "Inovasi Unggulan" },
+];
+
+const JENIS_SURAT = [
+  {
+    icon: FileText,
+    label: "Surat Izin Tinggal",
+    desc: "Izin domisili & tinggal sementara",
+    href: "/layanan/surat-izin-tinggal",
+    color: "bg-white/10",
+    iconColor: "text-[#93c5fd]",
+  },
+  {
+    icon: Building2,
+    label: "Surat Keterangan",
+    desc: "Domisili, pengantar, usaha",
+    href: "/layanan/surat-keterangan",
+    color: "bg-white/10",
+    iconColor: "text-[#93c5fd]",
+  },
+];
+
+export default function HomePage() {
   return (
-    <main className="flex flex-col">
+    <main className="flex flex-col min-h-full">
 
       {/* ============================================
-          HERO SECTION
+          HERO — full photo
+          Mobile: gradient top | Desktop: gradient right
          ============================================ */}
       <section className="relative min-h-screen flex items-center overflow-hidden">
-        {/* Background photo */}
+        {/* Full-bleed foto */}
         <div className="absolute inset-0">
           <Image
             src="/img/Sekilas-Tentang-Danau-Seran.jpg"
-            alt="Pemandangan Danau Seran, Desa Guntung Manggis"
+            alt="Pemandangan Kelurahan Gunting Manggis, Danau Seran"
             fill
             className="object-cover object-center"
             priority
           />
         </div>
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-[#1B4332]/65" />
-        {/* Noise */}
-        <div className="absolute inset-0 noise-texture" />
 
-        {/* Content */}
-        <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 py-24 lg:py-32 w-full">
-          <div className="max-w-2xl">
+        {/* Gradient overlay */}
+        {/* Mobile: biru dari atas; Desktop: biru dari kanan */}
+        <div className="absolute inset-0 bg-gradient-to-b lg:bg-gradient-to-r from-[#1e40af] via-[#1e40af]/70 to-transparent" />
+        <div className="absolute inset-0 noise-texture pointer-events-none" />
 
-            {/* Badge pill */}
-            <div className="stagger-1 inline-flex items-center gap-2 rounded-full bg-[#EA580C]/90 backdrop-blur-sm px-5 py-2 mb-7">
-              <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-white inline-block" />
-              <span className="text-xs font-bold text-white uppercase tracking-normal">
-                Kabar Desa Guntung Manggis
+        {/* Teks overlay */}
+        <div className="relative z-10 w-full mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-lg">
+            <div className="inline-block rounded-sm bg-white/10 border border-white/20 px-3 py-1 mb-6">
+              <span className="text-xs font-semibold text-white/80 uppercase tracking-wider">
+                Portal Resmi Pemerintah
               </span>
             </div>
 
-            {/* Headline */}
-            <h1 className="stagger-2 text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight mb-4">
-              Kabar Desa
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight tracking-tight mb-4">
+              Selamat Datang di
               <br />
-              <span className="text-[#FEFCE8]">Guntung Manggis</span>
+              <span className="text-[#93c5fd]">Kelurahan Gunting Manggis</span>
             </h1>
 
-            {/* Tagline */}
-            <p className="stagger-3 text-base sm:text-lg text-white/75 leading-relaxed mb-10 max-w-md">
-              Sistem Informasi Desa Digital Untuk Kemaslahatan Masyarakat
+            <p className="text-base text-white/65 mb-8 leading-relaxed max-w-sm">
+              Kecamatan Landasan Ulin, Kota Banjarbaru, Kalimantan Selatan.
+              Portal informasi dan layanan digital untuk warga.
             </p>
 
-            {/* CTAs */}
-            <div className="stagger-4 flex flex-wrap items-center gap-3">
-              <Link
-                href="/layanan"
-                className="inline-flex items-center gap-2 rounded-full bg-[#EA580C] px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#EA580C]/30 transition-all hover:bg-[#C2410C] hover:gap-3"
+            {/* Search bar */}
+            <div className="relative max-w-sm">
+              <div className="absolute inset-y-0 left-3.5 flex items-center pointer-events-none">
+                <Search size={16} className="text-[#64748b]" strokeWidth={2} />
+              </div>
+              <input
+                type="text"
+                placeholder="Cari layanan, dokumen, berita..."
+                className="w-full rounded-sm bg-white pl-10 pr-20 py-3 text-sm text-[#1e293b] placeholder-[#94a3b8] border border-[#cbd5e1] focus:outline-none focus:ring-2 focus:ring-[#93c5fd] focus:border-transparent transition-shadow duration-150"
+              />
+              <button
+                type="button"
+                className="absolute inset-y-1 right-1 my-0.5 px-4 rounded-sm bg-[#1e40af] text-white text-xs font-semibold hover:bg-[#1e3a8a] transition-colors duration-150 cursor-pointer"
               >
-                Layanan
-                <ArrowRight size={16} />
-              </Link>
-              <Link
-                href="/kontak"
-                className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 backdrop-blur-sm px-8 py-3.5 text-sm font-semibold text-white transition-all hover:bg-white/20"
-              >
-                Hubungi Kami
-              </Link>
+                Cari
+              </button>
             </div>
-          </div>
-        </div>
 
-        {/* Scroll hint */}
-        <div className="scroll-hint absolute bottom-8 left-1/2 -translate-x-1/2 z-10">
-          <div className="h-10 w-6 rounded-full border-2 border-white/25 flex items-start justify-center p-1.5">
-            <div className="h-1.5 w-1.5 rounded-full bg-white/40" />
+            {/* Program badges */}
+            <div className="flex flex-wrap gap-2 mt-8">
+              {["Kampung KB", "RT Mandiri", "Bank Sampah", "Koperasi Merah Putih"].map(
+                (tag) => (
+                  <span
+                    key={tag}
+                    className="text-xs font-medium text-white/70 bg-white/10 border border-white/15 px-2.5 py-1 rounded-sm"
+                  >
+                    {tag}
+                  </span>
+                )
+              )}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ============================================
-          KABAR DESA
-         ============================================ */}
-      <section className="bg-white py-16 lg:py-20">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
 
-          {/* Header */}
-          <div className="fl
-          ex items-end justify-between mb-10 gap-4">
-            <div>
-              <span className="accent-line mb-3" />
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#1B4332]">
-                Kabar Desa
+      {/* ============================================
+          SECTION 2 — FULL WHITE
+          Unit Gawat Darurat | Berita | Alur Layanan | Layanan
+         ============================================ */}
+      <section className="bg-white pt-12 pb-14">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+          {/* --- BLOK 1: UNIT GAWAT DARURAT --- */}
+          <div className="mb-12">
+            <div className="flex items-end justify-between mb-5">
+              <h2 className="text-lg font-bold text-[#1e293b] tracking-tight">
+                Unit Gawat Darurat
               </h2>
-              <p className="mt-1 text-sm text-[#57534E]">
-                Berita dan informasi terbaru dari Desa Guntung Manggis
-              </p>
-            </div>
-            <Link
-              href="/artikel"
-              className="text-sm font-semibold text-[#EA580C] hover:text-[#C2410C] transition-colors whitespace-nowrap flex items-center gap-1"
-            >
-              Lihat Semua <ArrowRight size={14} />
-            </Link>
-          </div>
-
-          {/* Article cards — asymmetric: left card larger */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-
-            {/* Article 1 — Featured (larger) */}
-            <div className="reveal reveal-d1 md:col-span-2 hover-lift group">
-              <Link href="/artikel/1" className="block">
-                <div className="relative h-52 sm:h-64 rounded-xl overflow-hidden bg-[#1B4332]/10 mb-4">
-                  <Image
-                    src="/img/Sekilas-Tentang-Danau-Seran.jpg"
-                    alt="Artikel 1"
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                  <div className="absolute bottom-3 left-4">
-                    <span className="text-xs font-semibold text-white bg-[#EA580C] px-2.5 py-1 rounded-full">
-                      08 April 2026
-                    </span>
-                  </div>
-                </div>
-                <h3 className="text-lg sm:text-xl font-bold text-[#1B4332] leading-snug mb-2 group-hover:text-[#EA580C] transition-colors">
-                  Pembangunan Jalan Desa Segera Dimulai, Warga Antusias
-                </h3>
-                <p className="text-sm text-[#57534E] leading-relaxed line-clamp-2">
-                  Pemerintah Desa Guntung Manggis segera melaksanakan pembangunan
-                  infrastruktur jalan desa yang telah dinantikan warga selama...
-                </p>
-              </Link>
-            </div>
-
-            {/* Article 2 */}
-            <div className="reveal reveal-d2 hover-lift group">
-              <Link href="/artikel/2" className="block">
-                <div className="relative h-36 rounded-xl overflow-hidden bg-[#1B4332]/10 mb-4">
-                  <Image
-                    src="/img/Sekilas-Tentang-Danau-Seran.jpg"
-                    alt="Artikel 2"
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-                <span className="text-xs font-semibold text-[#57534E]">07 April 2026</span>
-                <h3 className="text-base font-bold text-[#1B4332] leading-snug mt-1 mb-2 group-hover:text-[#EA580C] transition-colors">
-                  Pelatihan Keterampilan Perempuan untuk Ekonomi Desa
-                </h3>
-                <p className="text-xs text-[#57534E] leading-relaxed line-clamp-2">
-                  Puluhan perempuan desa mengikuti pelatihan...
-                </p>
-              </Link>
-            </div>
-
-            {/* Article 3 */}
-            <div className="reveal reveal-d3 hover-lift group">
-              <Link href="/artikel/3" className="block">
-                <div className="relative h-36 rounded-xl overflow-hidden bg-[#1B4332]/10 mb-4">
-                  <Image
-                    src="/img/Sekilas-Tentang-Danau-Seran.jpg"
-                    alt="Artikel 3"
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-                <span className="text-xs font-semibold text-[#57534E]">05 April 2026</span>
-                <h3 className="text-base font-bold text-[#1B4332] leading-snug mt-1 mb-2 group-hover:text-[#EA580C] transition-colors">
-                  Posyandu Desa Guntung Manggis Raih Predikat Teraktif
-                </h3>
-                <p className="text-xs text-[#57534E] leading-relaxed line-clamp-2">
-                  Posyandu Melati meraih penghargaan...
-                </p>
-              </Link>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================
-          STATS BAR
-         ============================================ */}
-      <section className="bg-[#1B4332] py-8">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="flex flex-row items-center divide-x divide-white/20">
-            {[
-              { icon: Users, value: "2.500+", label: "Warga Terdaftar" },
-              { icon: FileText, value: "15+", label: "Jenis Layanan" },
-              { icon: Clock, value: "< 24 Jam", label: "Rata-rata Proses" },
-              { icon: CheckCircle, value: "100%", label: "Layanan Online" },
-            ].map(({ icon: Icon, value, label }) => (
-              <div
-                key={label}
-                className="flex items-center gap-3.5 px-8 py-2 first:pl-0 last:pr-0"
+              <Link
+                href="/darurat"
+                className="text-xs font-semibold text-[#1e40af] hover:text-[#1e3a8a] transition-colors duration-150 flex items-center gap-1 cursor-pointer"
               >
-                <Icon size={20} className="text-[#EA580C] flex-shrink-0" strokeWidth={2} />
-                <div>
-                  <p className="text-2xl lg:text-3xl font-bold text-white leading-none">
-                    {value}
+                Lihat Semua <ArrowRight size={11} />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* Damkar */}
+              <a
+                href="https://maps.google.com/?q=Dinas+Pemadam+Kebakaran+Kota+Banjarbaru"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover-lift flex items-start gap-4 rounded-sm bg-[#eff6ff] border border-[#bfdbfe] px-5 py-4 cursor-pointer block"
+              >
+                <div className="flex-shrink-0 mt-0.5">
+                  <Flame size={22} className="text-[#dc2626]" strokeWidth={1.8} />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-[#1e293b] leading-tight">Damkar</p>
+                  <p className="text-xs text-[#64748b] mt-0.5 leading-snug">
+                    Dinas Pemadam Kebakaran Kota Banjarbaru
                   </p>
-                  <p className="text-xs text-white/55 mt-0.5">{label}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================
-          LAYANAN
-         ============================================ */}
-      <section className="bg-[#FEFCE8] py-16 lg:py-20">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-
-          {/* Header */}
-          <div className="flex items-end justify-between mb-10 gap-4">
-            <div>
-              <span className="accent-line mb-3" />
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#1B4332]">
-                Layanan Desa
-              </h2>
-              <p className="mt-1 text-sm text-[#57534E]">
-                Berbagai layanan pemerintahan desa yang dapat diakses online
-              </p>
-            </div>
-            <Link
-              href="/layanan"
-              className="text-sm font-semibold text-[#EA580C] hover:text-[#C2410C] transition-colors whitespace-nowrap flex items-center gap-1"
-            >
-              Lihat Semua <ArrowRight size={14} />
-            </Link>
-          </div>
-
-          {/* Service grid — 2 rows × 3 cols */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {[
-              {
-                icon: FilePen,
-                bg: "bg-[#FFF7ED]",
-                color: "text-[#EA580C]",
-                title: "Surat Keterangan",
-                desc: "Surat domisili, pengantar, keterangan usaha",
-              },
-              {
-                icon: FileText,
-                bg: "bg-[#F0FDF4]",
-                color: "text-[#40916C]",
-                title: "Surat Permohonan",
-                desc: "Pengajuan surat untuk keperluan administrasi",
-              },
-              {
-                icon: UsersRound,
-                bg: "bg-[#EFF6FF]",
-                color: "text-[#1B4332]",
-                title: "Data Penduduk",
-                desc: "Pencatatan dan pembaruan data warga",
-              },
-              {
-                icon: HomeIcon,
-                bg: "bg-[#FFF7ED]",
-                color: "text-[#92400E]",
-                title: "Izin Tempat",
-                desc: "Izin keramaian, usaha, dan kegiatan desa",
-              },
-              {
-                icon: CreditCard,
-                bg: "bg-[#F0FDF4]",
-                color: "text-[#40916C]",
-                title: "Pembayaran",
-                desc: "Pembayaran retribusi dan-iuran desa",
-              },
-              {
-                icon: HeartHandshake,
-                bg: "bg-[#EFF6FF]",
-                color: "text-[#1B4332]",
-                title: "Bantuan Sosial",
-                desc: "Pendaftaran dan informasi bantuan desa",
-              },
-            ].map(({ icon: Icon, bg, color, title, desc }) => (
-              <Link
-                key={title}
-                href="/layanan"
-                className="reveal hover-lift flex flex-col gap-3 bg-white rounded-xl p-5 border border-[#E7E5E4] hover:border-[#EA580C]/40 transition-colors group"
-              >
-                <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${bg}`}>
-                  <Icon size={20} className={color} strokeWidth={1.8} />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-[#1B4332] group-hover:text-[#EA580C] transition-colors">
-                    {title}
-                  </h3>
-                  <p className="text-xs text-[#A8A29E] mt-0.5 leading-relaxed">{desc}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================
-          WILAYAH DESA
-         ============================================ */}
-      <section className="bg-white py-16 lg:py-20">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row gap-10 lg:gap-16">
-
-            {/* Left — Deskripsi */}
-            <div className="lg:w-5/12 reveal reveal-d1">
-              <span className="accent-line mb-4" />
-              <p className="text-xs font-bold text-[#92400E] uppercase mb-2">Geografi</p>
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#1B4332] leading-tight mb-5">
-                Wilayah Desa
-              </h2>
-              <p className="text-[15px] text-[#57534E] leading-relaxed">
-                Desa Guntung Manggis terletak di Kecamatan bla,
-                <strong className="text-[#1B4332]"> </strong>, Lorem ipsum dolor, sit amet consectetur adipisicing elit. Animi quae corporis et dolore culpa repellat, laborum aliquam nam doloribus, temporibus corrupti quas, commodi eius harum repudiandae. Totam, nisi! Perferendis, nobis?
-                Incidunt ipsa provident facere eligendi, fugit tempore possimus obcaecati nostrum officiis hic cumque nemo earum asperiores explicabo illo beatae. Pariatur quas eveniet repellat fugit quaerat optio totam quia, reiciendis sit.
-                Aut atque ipsa voluptatibus sit earum cupiditate, mollitia doloribus. {" "}
-                <strong className="text-[#1B4332]">pertanian, perkebunan,
-                dan peternakan</strong> sebagai mata pencaharian utama warga.
-              </p>
-              <p className="text-[15px] text-[#57534E] leading-relaxed mt-3">
-                Dengan semangat <em>gotong royong</em>, warga terus membangun
-                desa menuju kehidupan yang lebih sejahtera melalui pemanfaatan
-                sumber daya alam dan teknologi digital.
-              </p>
-            </div>
-
-            {/* Right — Data table */}
-            <div className="lg:w-7/12 reveal reveal-d2">
-              <div className="bg-[#FEFCE8] rounded-xl overflow-hidden border border-[#E7E5E4]">
-                {/* Table header */}
-                <div className="bg-[#1B4332] px-6 py-3">
-                  <p className="text-sm font-bold text-white">Data Desa</p>
-                </div>
-                <div className="divide-y divide-[#E7E5E4]">
-                  {[
-                    { label: "Kecamatan", value: "bla" },
-                    { label: "Kabupaten", value: "Tanrat" },
-                    { label: "Provinsi", value: "Jambi" },
-                    { label: "Luas Wilayah", value: "4.250 Ha" },
-                    { label: "Jumlah Penduduk", value: "2.547 Jiwa" },
-                    { label: "Jumlah RT", value: "18 RT" },
-                    { label: "Jumlah RW", value: "6 RW" },
-                    { label: "Kode Pos", value: "36553" },
-                  ].map(({ label, value }) => (
-                    <div
-                      key={label}
-                      className="flex items-center justify-between px-5 py-3"
-                    >
-                      <span className="text-sm text-[#57534E]">{label}</span>
-                      <span className="text-sm font-semibold text-[#1B4332]">{value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================
-          POTENSI DESA
-         ============================================ */}
-      <section className="bg-[#FAFAF9] py-16 lg:py-20 border-t border-[#E7E5E4]">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-
-          {/* Header */}
-          <div className="mb-10">
-            <span className="accent-line mb-3" />
-            <p className="text-xs font-bold text-[#92400E] uppercase mb-2">Potensi</p>
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#1B4332]">
-              Potensi Desa
-            </h2>
-            <p className="mt-1 text-sm text-[#57534E] max-w-sm">
-              Sumber daya alam dan potensi yang dikembangkan warga desa
-            </p>
-          </div>
-
-          {/* 3 potential cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            {[
-              {
-                icon: Leaf,
-                title: "Pertanian",
-                desc: "Lahan pertanian padi dan palawija yang luas dengan sistem irigasi sederhana namun produktif sepanjang tahun.",
-                color: "bg-[#F0FDF4]",
-                iconColor: "text-[#40916C]",
-              },
-              {
-                icon: TreesIcon,
-                title: "Perkebunan",
-                desc: "Kawasan perkebunan karet dan kelapa sawit menjadi sumber ekonomi utama warga desa.",
-                color: "bg-[#FFF7ED]",
-                iconColor: "text-[#92400E]",
-              },
-              {
-                icon: Drumstick,
-                title: "Peternakan",
-                desc: "Budidaya ayam kampung dan kambing yang dikelola secara tradisional oleh kelompok warga.",
-                color: "bg-[#EFF6FF]",
-                iconColor: "text-[#1B4332]",
-              },
-            ].map(({ icon: Icon, title, desc, color, iconColor }, i) => (
-              <div
-                key={title}
-                className={`reveal reveal-d${i + 1} hover-lift rounded-xl overflow-hidden border border-[#E7E5E4] bg-white`}
-              >
-                {/* Image */}
-                <div className="relative h-36 sm:h-44 overflow-hidden bg-[#1B4332]/10">
-                  <Image
-                    src="/img/Sekilas-Tentang-Danau-Seran.jpg"
-                    alt={title}
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-                </div>
-                {/* Content */}
-                <div className="p-5">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${color}`}>
-                      <Icon size={18} className={iconColor} strokeWidth={1.8} />
-                    </div>
-                    <h3 className="text-base font-bold text-[#1B4332]">{title}</h3>
+                  <div className="mt-1.5 inline-flex items-center gap-1 text-[10px] font-semibold text-[#1e40af]">
+                    <MapPin size={9} strokeWidth={2} />
+                    Lihat di Google Maps
                   </div>
-                  <p className="text-sm text-[#57534E] leading-relaxed">{desc}</p>
+                </div>
+              </a>
+
+              {/* Ambulans */}
+              <a
+                href="https://maps.google.com/?q=Poskesdes+Kelurahan+Gunting+Manggis"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover-lift flex items-start gap-4 rounded-sm bg-[#eff6ff] border border-[#bfdbfe] px-5 py-4 cursor-pointer block"
+              >
+                <div className="flex-shrink-0 mt-0.5">
+                  <Siren size={22} className="text-[#16a34a]" strokeWidth={1.8} />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-[#1e293b] leading-tight">Ambulans</p>
+                  <p className="text-xs text-[#64748b] mt-0.5 leading-snug">
+                    Poskesdes Kelurahan Gunting Manggis
+                  </p>
+                  <div className="mt-1.5 inline-flex items-center gap-1 text-[10px] font-semibold text-[#1e40af]">
+                    <MapPin size={9} strokeWidth={2} />
+                    Lihat di Google Maps
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="h-px bg-[#e2e8f0] mb-12" />
+
+          {/* --- BLOK 2: BERITA TERKINI --- */}
+          <div className="mb-12">
+            <div className="flex items-end justify-between mb-5">
+              <div>
+                <span className="accent-line mb-2 block" />
+                <h2 className="text-lg font-bold text-[#1e293b] tracking-tight">
+                  Berita Terkini
+                </h2>
+              </div>
+              <Link
+                href="/artikel"
+                className="text-xs font-semibold text-[#1e40af] hover:text-[#1e3a8a] transition-colors duration-150 flex items-center gap-1 whitespace-nowrap cursor-pointer"
+              >
+                Lihat Lebih Banyak <ArrowRight size={11} />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[
+                {
+                  tanggal: "Jan 2026",
+                  judul: "Perbaikan Jembatan Guntung Manggis, Dinas PUPR Kalseltel Gerak Cepat",
+                  href: "/artikel/jembatan-gunting-manggis",
+                },
+                {
+                  tanggal: "Feb 2025",
+                  judul: "Pasar Murah Mandiri Komplek Wengga Kuda: Pengendalian Inflasi",
+                  href: "/artikel/pasar-murah-wengga-kuda",
+                },
+                {
+                  tanggal: "Okt 2025",
+                  judul: "Pemekaran 52 RT, Kelurahan Tumbuh Cepat di Landasan Ulin",
+                  href: "/artikel/pemekaran-rt-52",
+                },
+              ].map((b) => (
+                <Link
+                  key={b.href}
+                  href={b.href}
+                  className="hover-lift block bg-white rounded-sm overflow-hidden border border-[#cbd5e1] card-shadow cursor-pointer"
+                >
+                  <div className="relative h-28 overflow-hidden bg-[#e2e8f0]">
+                    <Image
+                      src="/img/Sekilas-Tentang-Danau-Seran.jpg"
+                      alt={b.judul}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
+                    <div className="absolute top-2 left-2">
+                      <span className="text-[10px] font-bold text-white bg-[#f97316] px-2 py-0.5 rounded-sm">
+                        {b.tanggal}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="p-3">
+                    <h3 className="text-xs font-bold text-[#1e293b] leading-snug line-clamp-2">
+                      {b.judul}
+                    </h3>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="h-px bg-[#e2e8f0] mb-12" />
+
+          {/* --- BLOK 3: PROGRAM UNGGULAN --- */}
+          <div className="mb-12">
+            <div className="mb-5">
+              <span className="accent-line mb-2 block" />
+              <h2 className="text-lg font-bold text-[#1e293b] tracking-tight">
+                Program Unggulan
+              </h2>
+              <p className="text-xs text-[#64748b] mt-1">
+                Inovasi dan keunggulan Kelurahan Gunting Manggis
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {PROGRAM_UNGGULAN.map((prog) => (
+                <div
+                  key={prog.label}
+                  className="hover-lift bg-white rounded-sm border border-[#cbd5e1] card-shadow p-4"
+                >
+                  <div className="flex items-start gap-3">
+                    <div
+                      className={`flex h-10 w-10 items-center justify-center rounded-sm flex-shrink-0 ${prog.color}`}
+                    >
+                      <prog.icon size={18} className={prog.iconColor} strokeWidth={1.8} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="text-sm font-bold text-[#1e293b] leading-tight">
+                          {prog.label}
+                        </p>
+                        {prog.badge && (
+                          <span className="text-[9px] font-bold text-white bg-[#1e40af] px-1.5 py-0.5 rounded-sm uppercase tracking-wide">
+                            {prog.badge}
+                          </span>
+                        )}
+                      </div>
+                      <p
+                        className="text-xs text-[#64748b] mt-0.5 leading-snug"
+                        dangerouslySetInnerHTML={{ __html: prog.desc }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="h-px bg-[#e2e8f0] mb-12" />
+
+          {/* --- BLOK 4: LAYANAN WARGA --- */}
+          <div>
+            <div className="flex items-end justify-between mb-5">
+              <h2 className="text-lg font-bold text-[#1e293b] tracking-tight">
+                Layanan Warga
+              </h2>
+              <Link
+                href="/layanan"
+                className="text-xs font-semibold text-[#1e40af] hover:text-[#1e3a8a] transition-colors duration-150 flex items-center gap-1 cursor-pointer"
+              >
+                Ajukan Sekarang <ArrowRight size={11} />
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {JENIS_SURAT.map((surat) => (
+                <Link
+                  key={surat.label}
+                  href={surat.href}
+                  className="hover-lift flex items-center gap-4 rounded-sm bg-white border border-[#cbd5e1] px-5 py-4 cursor-pointer"
+                >
+                  <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-[#eff6ff] flex-shrink-0">
+                    <surat.icon size={18} className="text-[#1e40af]" strokeWidth={1.8} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-[#1e293b] leading-tight">
+                      {surat.label}
+                    </p>
+                    <p className="text-xs text-[#64748b] mt-0.5">{surat.desc}</p>
+                  </div>
+                  <ArrowRight size={14} className="text-[#cbd5e1] ml-auto flex-shrink-0" />
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      {/* ============================================
+          STATISTIK BAR — biru gelap
+         ============================================ */}
+      <section className="bg-[#1e3a5f] py-7">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4">
+            {STATS.map((stat) => (
+              <div key={stat.label} className="flex items-center gap-3 px-6 py-2">
+                <span className="text-2xl lg:text-3xl font-bold text-white leading-none">
+                  {stat.value}
+                </span>
+                <div>
+                  <p className="text-xs font-semibold text-white/90 leading-tight">
+                    {stat.label}
+                  </p>
+                  <p className="text-[10px] text-white/40 mt-0.5">{stat.sub}</p>
                 </div>
               </div>
             ))}
@@ -450,65 +425,75 @@ export default function Home() {
         </div>
       </section>
 
+
       {/* ============================================
-          FOOTER
+          FOOTER — gelap
          ============================================ */}
-      <footer className="bg-[#1B4332] pt-12 pb-8">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <footer className="bg-[#0f172a] pt-12 pb-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
 
             {/* Brand */}
             <div className="sm:col-span-2 lg:col-span-1">
               <div className="flex items-center gap-2.5 mb-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#EA580C]">
-                  <span className="text-lg font-bold text-white">SM</span>
+                <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-[#1e40af]">
+                  <span className="text-base font-bold text-white">SM</span>
                 </div>
-                <span className="text-xl font-bold text-white">Si-Manggis</span>
+                <div>
+                  <p className="text-base font-bold text-white leading-tight">Si-Manggis</p>
+                  <p className="text-[10px] text-white/40">Portal Kelurahan Digital</p>
+                </div>
               </div>
-              <p className="text-sm text-white/55 leading-relaxed">
-                Sistem Informasi Desa Digital<br />
-                Desa Guntung Manggis
+              <p className="text-sm text-white/45 leading-relaxed">
+                Kelurahan Gunting Manggis
+                <br />
+                Kec. Landasan Ulin, Kota Banjarbaru
+                <br />
+                Kalimantan Selatan 70724
               </p>
             </div>
 
-            {/* Links */}
+            {/* Navigasi */}
             <div>
-              <p className="text-xs font-bold text-white/80 uppercase mb-3 tracking-wider">
+              <p className="text-xs font-bold text-white/70 uppercase tracking-wider mb-3">
                 Navigasi
               </p>
               <ul className="space-y-2">
-                {["Beranda", "Profil", "Layanan", "Galeri", "Kontak"].map((item) => (
-                  <li key={item}>
+                {[
+                  { label: "Beranda", href: "/" },
+                  { label: "Profil", href: "/profil" },
+                  { label: "Layanan", href: "/layanan" },
+                  { label: "Kabar", href: "/artikel" },
+                  { label: "Darurat", href: "/darurat" },
+                ].map((item) => (
+                  <li key={item.href}>
                     <Link
-                      href={`/${item.toLowerCase()}`}
-                      className="text-sm text-white/55 hover:text-white transition-colors"
+                      href={item.href}
+                      className="text-sm text-white/45 hover:text-white transition-colors duration-150"
                     >
-                      {item}
+                      {item.label}
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Layanan */}
+            {/* Program */}
             <div>
-              <p className="text-xs font-bold text-white/80 uppercase mb-3 tracking-wider">
-                Layanan
+              <p className="text-xs font-bold text-white/70 uppercase tracking-wider mb-3">
+                Program Unggulan
               </p>
               <ul className="space-y-2">
                 {[
-                  "Surat Keterangan",
-                  "Data Penduduk",
-                  "Izin Tempat",
-                  "Bantuan Sosial",
+                  "Kampung KB (Nasional)",
+                  "RT Mandiri",
+                  "Home Care Lansia",
+                  "Kelurahan Bersinar",
+                  "Bank Sampah (8 Unit)",
+                  "Koperasi Merah Putih",
                 ].map((item) => (
-                  <li key={item}>
-                    <Link
-                      href="/layanan"
-                      className="text-sm text-white/55 hover:text-white transition-colors"
-                    >
-                      {item}
-                    </Link>
+                  <li key={item} className="text-sm text-white/45">
+                    {item}
                   </li>
                 ))}
               </ul>
@@ -516,31 +501,37 @@ export default function Home() {
 
             {/* Kontak */}
             <div>
-              <p className="text-xs font-bold text-white/80 uppercase mb-3 tracking-wider">
+              <p className="text-xs font-bold text-white/70 uppercase tracking-wider mb-3">
                 Kontak
               </p>
-              <ul className="space-y-2 text-sm text-white/55">
-                <li>Kec. Landasan Ulin</li>
-                <li>Kab. blablabla</li>
-                <li>Prov. Kalimantan Selatan</li>
-                <li className="pt-1">desaguntungmanggis@mail.com</li>
+              <ul className="space-y-2.5">
+                {[
+                  { icon: MapPin, text: "Kode Wilayah 63.72.02.1005" },
+                  { icon: Building2, text: "Kelurahan Gunting Manggis" },
+                  { icon: Phone, text: "Hubungi via Portal Darurat" },
+                  { icon: Newspaper, text: "Kode Pos: 70724" },
+                ].map(({ icon: Icon, text }) => (
+                  <li key={text} className="flex items-start gap-2 text-sm text-white/45">
+                    <Icon size={14} className="flex-shrink-0 mt-0.5" strokeWidth={1.8} />
+                    {text}
+                  </li>
+                ))}
               </ul>
             </div>
-
           </div>
 
           {/* Bottom bar */}
-          <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p className="text-xs text-white/40">
-              © 2026 Pemerintah Desa Guntung Manggis
-            </p>
+          <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2">
             <p className="text-xs text-white/30">
+              &copy; 2026 Pemerintah Kelurahan Gunting Manggis
+            </p>
+            <p className="text-xs text-white/20">
               Dibuat dengan semangat gotong royong
             </p>
           </div>
         </div>
       </footer>
-                
+
     </main>
   );
 }

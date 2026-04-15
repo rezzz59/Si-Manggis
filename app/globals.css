@@ -1,33 +1,73 @@
 @import "tailwindcss";
 
 /* ============================================
-   CSS VARIABLES — Indonesian Village Warm Naturalism
+   CSS VARIABLES — Duo Blue-White Design System
    ============================================ */
 :root {
-  --color-forest:    #1B4332;
-  --color-moss:      #40916C;
-  --color-wood:      #92400E;
-  --color-wood-mid:  #B45309;
-  --color-sunset:    #EA580C;
-  --color-sunset-bg: #FFF7ED;
-  --color-cream:     #FEFCE8;
-  --color-cream-alt: #FFFBEB;
-  --color-stone-900: #1C1917;
-  --color-stone-600: #57534E;
-  --color-stone-400: #A8A29E;
-  --color-stone-200: #E7E5E4;
-  --color-stone-100: #F5F5F4;
-  --color-stone-50:  #FAFAF9;
+  --color-blue-primary:  #1e40af;
+  --color-blue-dark:     #1e3a5f;
+  --color-blue-light:    #eff6ff;
+  --color-orange-cta:     #f97316;
+  --color-green-accent:  #16a34a;
+  --color-red-accent:    #dc2626;
+  --color-cream:         #fefce8;
+  --color-stone-900:     #1e293b;
+  --color-stone-600:     #64748b;
+  --color-stone-400:     #94a3b8;
+  --color-stone-300:     #cbd5e1;
+  --color-stone-100:     #f1f5f9;
+  --color-white:         #ffffff;
 }
 
 /* ============================================
-   NOISE TEXTURE — eliminates "clean AI" look
+   HARD SHADOW — human-made, no blur
+   ============================================ */
+.card-shadow {
+  box-shadow: 2px 3px 0 var(--color-stone-300);
+}
+.card-shadow:hover {
+  box-shadow: 2px 3px 0 var(--color-blue-primary);
+}
+
+.card-shadow-dark {
+  box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.18);
+}
+
+/* ============================================
+   CARD HOVER — subtle lift, 150ms
+   ============================================ */
+.hover-lift {
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   HERO PHOTO FRAME — thick border, hard shadow
+   ============================================ */
+.photo-frame {
+  box-shadow: 6px 7px 0 rgba(255, 255, 255, 0.15);
+  border: 3px solid rgba(255, 255, 255, 0.25);
+}
+
+/* ============================================
+   BLUE GLASS CARD (transparansi, left column)
+   ============================================ */
+.blue-glass {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ============================================
+   NOISE TEXTURE — eliminates clean-AI look
+   (kept for hero overlay, still useful)
    ============================================ */
 .noise-texture::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 300px 300px;
   pointer-events: none;
@@ -35,82 +75,12 @@
 }
 
 /* ============================================
-   PAGE LOAD — STAGGER ANIMATIONS
-   ============================================ */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.stagger-1 { animation: fadeUp 0.5s ease-out 0.15s both; }
-.stagger-2 { animation: fadeUp 0.5s ease-out 0.28s both; }
-.stagger-3 { animation: fadeUp 0.5s ease-out 0.4s both; }
-.stagger-4 { animation: fadeUp 0.5s ease-out 0.55s both; }
-.stagger-5 { animation: fadeUp 0.5s ease-out 0.7s both; }
-
-/* ============================================
-   CARD REVEAL
-   ============================================ */
-@keyframes revealUp {
-  from { opacity: 0; transform: translateY(22px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.reveal { opacity: 0; animation: revealUp 0.5s ease-out forwards; }
-.reveal-d1 { animation-delay: 0.1s; }
-.reveal-d2 { animation-delay: 0.2s; }
-.reveal-d3 { animation-delay: 0.3s; }
-.reveal-d4 { animation-delay: 0.4s; }
-
-/* ============================================
-   CARD HOVER
-   ============================================ */
-.hover-lift {
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
-}
-.hover-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(27, 67, 50, 0.1);
-}
-
-/* ============================================
-   SCROLL HINT
-   ============================================ */
-@keyframes scrollBounce {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(7px); }
-}
-.scroll-hint { animation: scrollBounce 1.6s ease-in-out infinite; }
-
-/* ============================================
-   PULSE DOT
-   ============================================ */
-@keyframes pulseDot {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50%       { transform: scale(1.4); opacity: 0.5; }
-}
-.pulse-dot { animation: pulseDot 2s ease-in-out infinite; }
-
-/* ============================================
-   SECTION ACCENT BAR — orange vertical
-   ============================================ */
-.accent-bar {
-  display: inline-block;
-  width: 4px;
-  height: 1.4em;
-  background: #EA580C;
-  border-radius: 2px;
-  vertical-align: middle;
-  margin-right: 8px;
-}
-
-/* ============================================
-   SECTION ACCENT LINE — horizontal
+   SECTION ACCENT LINE — horizontal, bottom-left
    ============================================ */
 .accent-line {
   display: block;
   height: 3px;
   width: 2.5rem;
-  background: linear-gradient(to right, #EA580C, #B45309);
+  background: var(--color-orange-cta);
   border-radius: 2px;
 }
