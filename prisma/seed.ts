@@ -10,13 +10,13 @@ async function main() {
     where: { email: "admin@desaguntingmanggis.id" },
     update: {},
     create: {
-      email: "admin@desaguntingmanggis.id",
+      email: "admin@desaguntungmanggis.id",
       nama: "Administrator",
       password: hashedPassword,
     },
   });
 
-  console.log("Seed done: admin@desaguntingmanggis.id / staff2026");
+  console.log("Seed done: admin@desaguntungmanggis.id / staff2026");
 }
 
 main()

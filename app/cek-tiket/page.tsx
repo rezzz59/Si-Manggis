@@ -79,7 +79,6 @@ function ProgressTracker({ status }: { status: string }) {
 
 function PermohonanResult({ data }: { data: Record<string, unknown> }) {
   const cfg = statusConfig[data.status as string] ?? statusConfig.MENUNGGU;
-  const Icon = cfg.icon;
 
   return (
     <div className="space-y-4">

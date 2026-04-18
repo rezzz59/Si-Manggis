@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Save, CheckCircle } from "lucide-react";
+import { ArrowLeft, CheckCircle } from "lucide-react";
 
 export default function PengaduanDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -68,7 +68,7 @@ export default function PengaduanDetailPage() {
         <p className="text-xs text-stone-400 font-semibold uppercase tracking-wide mb-1">Nomor Tiket</p>
         <p className="text-2xl font-mono font-bold text-[#1e40af]">{data.tiket}</p>
         <p className="text-xs text-stone-400 mt-1">
-          Diajukan: {new Date(data.createdAt ?? Date.now()).toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+          Diajukan: {new Date(data.createdAt as string).toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}
         </p>
       </div>
 
