@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Staff {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  nama      String
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Permohonan {
+  id        String   @id @default(cuid())
+  tiket     String   @unique
+  nama      String
+  nik       String?
+  alamat    String
+  layanan   String
+  keperluan String
+  telepon   String
+  status    String   @default("MENUNGGU")
+  catatan   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Pengaduan {
+  id        String   @id @default(cuid())
+  tiket     String   @unique
+  nama      String
+  telepon   String?
+  email     String?
+  topik     String
+  pesan     String
+  status    String   @default("MENUNGGU")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
