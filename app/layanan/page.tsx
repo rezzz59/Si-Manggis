@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   FileText,
   IdCard,
@@ -33,10 +34,30 @@ export default function LayananPage() {
     telepon: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [tiket, setTiket] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    try {
+      const res = await fetch("/api/permohonan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || "Gagal mengirim permohonan");
+        return;
+      }
+      setTiket(data.tiket);
+      setSubmitted(true);
+    } catch {
+      alert("Terjadi kesalahan. Silakan coba lagi.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const toggle = (id: string) => setOpenId(openId === id ? null : id);
@@ -155,13 +176,27 @@ export default function LayananPage() {
               <h3 className="text-lg font-bold text-emerald-700 mb-2">
                 Permohonan Terkirim
               </h3>
-              <p className="text-sm text-emerald-600 max-w-sm mx-auto">
-                Terima kasih. Staff desa akan menghubungi Anda dalam 1–2 hari kerja untuk konfirmasi lebih lanjut.
+              <p className="text-sm text-emerald-600 max-w-sm mx-auto mb-4">
+                Terima kasih. Staff desa akan menghubungi Anda dalam 1–2 hari kerja.
               </p>
+              {tiket && (
+                <div className="inline-block bg-white border border-emerald-300 rounded-xl px-6 py-4">
+                  <p className="text-xs text-emerald-500 font-semibold uppercase tracking-wide mb-1">
+                    Nomor Tiket Anda
+                  </p>
+                  <p className="text-2xl font-bold font-mono text-emerald-700">
+                    {tiket}
+                  </p>
+                  <p className="text-xs text-stone-400 mt-1">
+                    Simpan nomor ini untuk mengecek status
+                  </p>
+                </div>
+              )}
               <button
                 type="button"
                 onClick={() => {
                   setSubmitted(false);
+                  setTiket("");
                   setForm({
                     nama: "",
                     nik: "",
@@ -175,6 +210,12 @@ export default function LayananPage() {
               >
                 Ajukan permohonan lain
               </button>
+              <Link
+                href="/cek-tiket"
+                className="mt-3 block text-sm font-semibold text-[#1e40af] hover:underline cursor-pointer"
+              >
+                Cek Status Tiket
+              </Link>
             </div>
           ) : (
             <form
@@ -293,10 +334,11 @@ export default function LayananPage() {
 
               <button
                 type="submit"
-                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#1e40af] text-white font-semibold text-sm px-8 py-3 rounded-lg hover:bg-[#1e3a8a] transition-colors cursor-pointer"
+                disabled={loading}
+                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#1e40af] text-white font-semibold text-sm px-8 py-3 rounded-lg hover:bg-[#1e3a8a] transition-colors cursor-pointer disabled:opacity-60"
               >
                 <Send size={16} />
-                Kirim Permohonan
+                {loading ? "Mengirim..." : "Kirim Permohonan"}
               </button>
             </form>
           )}

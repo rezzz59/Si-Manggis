@@ -11,6 +11,7 @@ const navLinks = [
   { label: "Darurat", href: "/darurat" },
   { label: "Kabar", href: "/artikel" },
   { label: "Kontak", href: "/kontak" },
+  { label: "Cek Tiket", href: "/cek-tiket" },
 ];
 
 export default function Navbar() {

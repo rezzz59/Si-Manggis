@@ -3,6 +3,7 @@ import { auth } from "@/src/lib/auth";
 import { prisma } from "@/src/lib/prisma";
 import { generateTiket } from "@/src/lib/tiket";
 
+// GET: staff only — list pengaduan
 export async function GET(req: NextRequest) {
   const session = await auth();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -28,10 +29,8 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ data, total, page, limit });
 }
 
+// POST: publik — warga bisa ajukan pengaduan tanpa login
 export async function POST(req: NextRequest) {
-  const session = await auth();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
   const body = await req.json();
   const { nama, telepon, email, topik, pesan } = body;
 
