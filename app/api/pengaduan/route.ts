@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/src/lib/auth";
-import { prisma } from "@/src/lib/prisma";
+import { supabase } from "@/src/lib/supabase";
 import { generateTiket } from "@/src/lib/tiket";
 
-// GET: staff only — list pengaduan
 export async function GET(req: NextRequest) {
   const session = await auth();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -12,24 +11,26 @@ export async function GET(req: NextRequest) {
   const status = searchParams.get("status");
   const page = parseInt(searchParams.get("page") ?? "1");
   const limit = 20;
-  const skip = (page - 1) * limit;
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
 
-  const where = status ? { status } : {};
+  let query = supabase
+    .from("pengaduan")
+    .select("*", { count: "exact" })
+    .order("createdAt", { ascending: false })
+    .range(from, to);
 
-  const [data, total] = await Promise.all([
-    prisma.pengaduan.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      skip,
-      take: limit,
-    }),
-    prisma.pengaduan.count({ where }),
-  ]);
+  if (status) {
+    query = query.eq("status", status);
+  }
 
-  return NextResponse.json({ data, total, page, limit });
+  const { data, count, error } = await query;
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  return NextResponse.json({ data: data ?? [], total: count ?? 0, page, limit });
 }
 
-// POST: publik — warga bisa ajukan pengaduan tanpa login
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const { nama, telepon, email, topik, pesan } = body;
@@ -41,11 +42,21 @@ export async function POST(req: NextRequest) {
   let tiket: string;
   do {
     tiket = generateTiket();
-  } while (await prisma.pengaduan.findUnique({ where: { tiket } }));
+    const { data: existing } = await supabase
+      .from("pengaduan")
+      .select("tiket")
+      .eq("tiket", tiket)
+      .single();
+    if (!existing) break;
+  } while (true);
 
-  const data = await prisma.pengaduan.create({
-    data: { tiket, nama, telepon: telepon || null, email: email || null, topik, pesan },
-  });
+  const { data, error } = await supabase
+    .from("pengaduan")
+    .insert({ tiket, nama, telepon: telepon || null, email: email || null, topik, pesan })
+    .select()
+    .single();
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   return NextResponse.json(data, { status: 201 });
 }

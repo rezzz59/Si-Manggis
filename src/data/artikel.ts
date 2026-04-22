@@ -32,7 +32,7 @@ export const dataArtikel: EntriArtikel[] = [
     penulis: "Admin Kelurahan",
   },
   {
-    slug: "perbaikan-jembatan-gunting-manggis",
+    slug: "perbaikan-jembatan-guntung-manggis",
     judul: "Perbaikan Jembatan Guntung Manggis, Dinas PUPR Kalseltel Gerak Cepat",
     tanggal: "12 Januari 2026",
     kategori: "Pembangunan",

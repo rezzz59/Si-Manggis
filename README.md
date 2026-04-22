@@ -64,7 +64,7 @@ Buka [http://localhost:3000](http://localhost:3000) di browser.
 
 | Field | Value |
 |-------|-------|
-| Email | `admin@desaguntingmanggis.id` |
+| Email | `admin@desaguntungmanggis.id` |
 | Password | `staff2026` |
 
 Akses dashboard di [http://localhost:3000/login](http://localhost:3000/login)

@@ -1,4 +1,4 @@
-import { prisma } from "@/src/lib/prisma";
+import { supabase } from "@/src/lib/supabase";
 import Link from "next/link";
 import { FileText } from "lucide-react";
 
@@ -11,20 +11,22 @@ export default async function PermohonanPage({
   const status = statusRaw ?? "";
   const page = parseInt(pageRaw ?? "1");
   const limit = 20;
-  const skip = (page - 1) * limit;
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
 
-  const where = status ? { status } : {};
+  let query = supabase
+    .from("permohonan")
+    .select("*", { count: "exact" })
+    .order("createdAt", { ascending: false })
+    .range(from, to);
 
-  const [data, total] = await Promise.all([
-    prisma.permohonan.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      skip,
-      take: limit,
-    }),
-    prisma.permohonan.count({ where }),
-  ]);
+  if (status) {
+    query = query.eq("status", status);
+  }
 
+  const { data, count, error } = await query;
+
+  const total = count ?? 0;
   const totalPages = Math.ceil(total / limit);
 
   const statusColors: Record<string, string> = {
@@ -80,7 +82,7 @@ export default async function PermohonanPage({
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100">
-              {data.length === 0 ? (
+              {error || !data?.length ? (
                 <tr>
                   <td colSpan={7} className="text-center py-12 text-stone-400">
                     <FileText size={32} className="mx-auto mb-2 opacity-40" />

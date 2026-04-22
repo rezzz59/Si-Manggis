@@ -1,53 +1,61 @@
-import { prisma } from "@/src/lib/prisma";
+import { supabase } from "@/src/lib/supabase";
 import Link from "next/link";
 import { FileText, MessageSquare, Clock, CheckCircle } from "lucide-react";
 
 export default async function DashboardPage() {
-  const [totalPermohonan, totalPengaduan, menungguPermohonan, menungguPengaduan, selesaiPermohonan, selesaiPengaduan] =
-    await Promise.all([
-      prisma.permohonan.count(),
-      prisma.pengaduan.count(),
-      prisma.permohonan.count({ where: { status: "MENUNGGU" } }),
-      prisma.pengaduan.count({ where: { status: "MENUNGGU" } }),
-      prisma.permohonan.count({ where: { status: "SELESAI" } }),
-      prisma.pengaduan.count({ where: { status: "SELESAI" } }),
-    ]);
+  const [
+    { count: totalPermohonan },
+    { count: totalPengaduan },
+    { count: menungguPermohonan },
+    { count: menungguPengaduan },
+    { count: selesaiPermohonan },
+    { count: selesaiPengaduan },
+  ] = await Promise.all([
+    supabase.from("permohonan").select("*", { count: "exact", head: true }),
+    supabase.from("pengaduan").select("*", { count: "exact", head: true }),
+    supabase.from("permohonan").select("*", { count: "exact", head: true }).eq("status", "MENUNGGU"),
+    supabase.from("pengaduan").select("*", { count: "exact", head: true }).eq("status", "MENUNGGU"),
+    supabase.from("permohonan").select("*", { count: "exact", head: true }).eq("status", "SELESAI"),
+    supabase.from("pengaduan").select("*", { count: "exact", head: true }).eq("status", "SELESAI"),
+  ]);
 
-  const recentPermohonan = await prisma.permohonan.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 5,
-  });
+  const { data: recentPermohonan } = await supabase
+    .from("permohonan")
+    .select("*")
+    .order("createdAt", { ascending: false })
+    .limit(5);
 
-  const recentPengaduan = await prisma.pengaduan.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 5,
-  });
+  const { data: recentPengaduan } = await supabase
+    .from("pengaduan")
+    .select("*")
+    .order("createdAt", { ascending: false })
+    .limit(5);
 
   const statCards = [
     {
       label: "Total Permohonan",
-      value: totalPermohonan,
+      value: totalPermohonan ?? 0,
       icon: FileText,
       color: "bg-[#eff6ff] text-[#1e40af]",
       href: "/dashboard/permohonan",
     },
     {
       label: "Total Pengaduan",
-      value: totalPengaduan,
+      value: totalPengaduan ?? 0,
       icon: MessageSquare,
       color: "bg-[#f0fdf4] text-[#16a34a]",
       href: "/dashboard/pengaduan",
     },
     {
       label: "Menunggu",
-      value: menungguPermohonan + menungguPengaduan,
+      value: (menungguPermohonan ?? 0) + (menungguPengaduan ?? 0),
       icon: Clock,
       color: "bg-[#fff7ed] text-[#f97316]",
       href: "/dashboard/permohonan?status=MENUNGGU",
     },
     {
       label: "Selesai",
-      value: selesaiPermohonan + selesaiPengaduan,
+      value: (selesaiPermohonan ?? 0) + (selesaiPengaduan ?? 0),
       icon: CheckCircle,
       color: "bg-emerald-50 text-emerald-600",
       href: "/dashboard/permohonan?status=SELESAI",
@@ -95,7 +103,7 @@ export default async function DashboardPage() {
             </Link>
           </div>
           <div className="divide-y divide-stone-100">
-            {recentPermohonan.length === 0 ? (
+            {!recentPermohonan?.length ? (
               <p className="text-sm text-stone-400 text-center py-8">Belum ada permohonan.</p>
             ) : (
               recentPermohonan.map((p) => (
@@ -125,7 +133,7 @@ export default async function DashboardPage() {
             </Link>
           </div>
           <div className="divide-y divide-stone-100">
-            {recentPengaduan.length === 0 ? (
+            {!recentPengaduan?.length ? (
               <p className="text-sm text-stone-400 text-center py-8">Belum ada pengaduan.</p>
             ) : (
               recentPengaduan.map((p) => (

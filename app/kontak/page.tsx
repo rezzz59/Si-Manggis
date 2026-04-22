@@ -68,8 +68,8 @@ export default function KontakPage() {
     {
       icon: Mail,
       label: "Email",
-      value: "desaguntingmanggis@email.com",
-      href: "mailto:desaguntingmanggis@email.com",
+      value: "desaguntungmanggis@email.com",
+      href: "mailto:desagantungmanggis@email.com",
     },
     {
       icon: Clock,
