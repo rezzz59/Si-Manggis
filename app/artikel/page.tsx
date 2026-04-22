@@ -6,7 +6,7 @@ import { dataArtikel } from "@/src/data/artikel";
 
 export const metadata = {
   title: "Kabar Desa - Si-Manggis",
-  description: "Berita dan informasi terkini dari Kelurahan Gunting Manggis.",
+  description: "Berita dan informasi terkini dari Kelurahan Guntung Manggis.",
 };
 
 export default function ArtikelPage() {
@@ -23,7 +23,7 @@ export default function ArtikelPage() {
             Berita & Informasi
           </h1>
           <p className="text-white/70 max-w-md text-sm">
-            Kabar terbaru dari Kelurahan Gunting Manggis — pemerintahan, pembangunan, dan kehidupan warga.
+            Kabar terbaru dari Kelurahan Guntung Manggis — pemerintahan, pembangunan, dan kehidupan warga.
           </p>
         </div>
       </section>

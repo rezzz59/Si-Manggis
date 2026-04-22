@@ -9,7 +9,7 @@ import {
 
 export const metadata = {
   title: "Profil Desa - Si-Manggis",
-  description: "Profil Desa Gunting Manggis - Identitas, pemerintahan, dan potensi desa.",
+  description: "Profil Desa Guntung Manggis - Identitas, pemerintahan, dan potensi desa.",
 };
 
 export default function ProfilPage() {
@@ -26,7 +26,7 @@ export default function ProfilPage() {
             Profil Desa
           </h1>
           <p className="text-white/70 max-w-md text-sm">
-            Mengenal lebih dekat Desa Gunting Manggis — identitas, pemerintahan, dan potensi desa.
+            Mengenal lebih dekat Desa Guntung Manggis — identitas, pemerintahan, dan potensi desa.
           </p>
         </div>
       </section>
@@ -82,7 +82,7 @@ export default function ProfilPage() {
         <section>
           <span className="accent-line mb-3 block" />
           <h2 className="text-2xl font-bold text-[#1B4332] mb-2">Struktur Pemerintah Desa</h2>
-          <p className="text-sm text-stone-500 mb-6">Penanggung jawab pemerintahan Desa Gunting Manggis.</p>
+          <p className="text-sm text-stone-500 mb-6">Penanggung jawab pemerintahan Desa Guntung Manggis.</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {pejabatDesa.map((p) => (
               <div

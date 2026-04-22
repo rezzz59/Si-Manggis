@@ -75,7 +75,7 @@ export default function LoginPage() {
                 <input
                   type="email"
                   inputMode="email"
-                  placeholder="admin@desaguntingmanggis.id"
+                  placeholder="admin@desaguntungmanggis.id"
                   value={form.email}
                   onChange={(e) =>
                     setForm((f) => ({ ...f, email: e.target.value }))

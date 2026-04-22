@@ -108,7 +108,7 @@ export default function HomePage() {
         <div className="absolute inset-0">
           <Image
             src="/img/Sekilas-Tentang-Danau-Seran.jpg"
-            alt="Pemandangan Kelurahan Gunting Manggis, Danau Seran"
+            alt="Pemandangan Kelurahan Guntung Manggis, Danau Seran"
             fill
             className="object-cover object-center"
             priority
@@ -132,7 +132,7 @@ export default function HomePage() {
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight tracking-tight mb-4">
               Selamat Datang di
               <br />
-              <span className="text-[#93c5fd]">Kelurahan Gunting Manggis</span>
+              <span className="text-[#93c5fd]">Kelurahan Guntung Manggis</span>
             </h1>
 
             <p className="text-base text-white/65 mb-8 leading-relaxed max-w-sm">
@@ -222,7 +222,7 @@ export default function HomePage() {
 
               {/* Ambulans */}
               <a
-                href="https://maps.google.com/?q=Poskesdes+Kelurahan+Gunting+Manggis"
+                href="https://maps.google.com/?q=Poskesdes+Kelurahan+Guntung+Manggis"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover-lift flex items-start gap-4 rounded-sm bg-[#eff6ff] border border-[#bfdbfe] px-5 py-4 cursor-pointer block"
@@ -233,7 +233,7 @@ export default function HomePage() {
                 <div className="min-w-0">
                   <p className="text-sm font-bold text-[#1e293b] leading-tight">Ambulans</p>
                   <p className="text-xs text-[#64748b] mt-0.5 leading-snug">
-                    Poskesdes Kelurahan Gunting Manggis
+                    Poskesdes Kelurahan Guntung Manggis
                   </p>
                   <div className="mt-1.5 inline-flex items-center gap-1 text-[10px] font-semibold text-[#1e40af]">
                     <MapPin size={9} strokeWidth={2} />
@@ -269,7 +269,7 @@ export default function HomePage() {
                 {
                   tanggal: "Jan 2026",
                   judul: "Perbaikan Jembatan Guntung Manggis, Dinas PUPR Kalseltel Gerak Cepat",
-                  href: "/artikel/jembatan-gunting-manggis",
+                  href: "/artikel/jembatan-guntung-manggis",
                 },
                 {
                   tanggal: "Feb 2025",
@@ -322,7 +322,7 @@ export default function HomePage() {
                 Program Unggulan
               </h2>
               <p className="text-xs text-[#64748b] mt-1">
-                Inovasi dan keunggulan Kelurahan Gunting Manggis
+                Inovasi dan keunggulan Kelurahan Guntung Manggis
               </p>
             </div>
 
@@ -445,7 +445,7 @@ export default function HomePage() {
                 </div>
               </div>
               <p className="text-sm text-white/45 leading-relaxed">
-                Kelurahan Gunting Manggis
+                Kelurahan Guntung Manggis
                 <br />
                 Kec. Landasan Ulin, Kota Banjarbaru
                 <br />
@@ -507,7 +507,7 @@ export default function HomePage() {
               <ul className="space-y-2.5">
                 {[
                   { icon: MapPin, text: "Kode Wilayah 63.72.02.1005" },
-                  { icon: Building2, text: "Kelurahan Gunting Manggis" },
+                  { icon: Building2, text: "Kelurahan Guntung Manggis" },
                   { icon: Phone, text: "Hubungi via Portal Darurat" },
                   { icon: Newspaper, text: "Kode Pos: 70724" },
                 ].map(({ icon: Icon, text }) => (
@@ -523,7 +523,7 @@ export default function HomePage() {
           {/* Bottom bar */}
           <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2">
             <p className="text-xs text-white/30">
-              &copy; 2026 Pemerintah Kelurahan Gunting Manggis
+              &copy; 2026 Pemerintah Kelurahan Guntung Manggis
             </p>
             <p className="text-xs text-white/20">
               Dibuat dengan semangat gotong royong

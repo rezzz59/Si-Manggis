@@ -21,7 +21,7 @@ export default function DaruratPage() {
             Informasi Darurat
           </h1>
           <p className="text-white/75 max-w-md text-sm">
-            Kontak layanan darurat untuk warga Desa Guntungan Manggis. Tekan nomor untuk langsung menelepon.
+            Kontak layanan darurat untuk warga Desa Guntung Manggis. Tekan nomor untuk langsung menelepon.
           </p>
         </div>
       </section>
