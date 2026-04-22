@@ -110,4 +110,4 @@ src/
 
 ---
 
-Dibuat dengan ❤️ untuk Desa Guntung Manggis
+Dibuat untuk Desa Guntung Manggis
