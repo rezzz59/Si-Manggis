@@ -9,6 +9,7 @@ import {
   Send,
   CheckCircle,
   MessageSquare,
+  AlertCircle,
 } from "lucide-react";
 
 export default function KontakPage() {
@@ -20,10 +21,36 @@ export default function KontakPage() {
     pesan: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setError("");
+    setLoading(true);
+    try {
+      const res = await fetch("/api/pengaduan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nama: form.nama,
+          telepon: form.telepon,
+          email: form.email,
+          topik: form.subjek,
+          pesan: form.pesan,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Gagal mengirim pengaduan");
+        return;
+      }
+      setSubmitted(true);
+    } catch {
+      setError("Terjadi kesalahan. Silakan coba lagi.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const kontakInfo = [
@@ -127,6 +154,13 @@ export default function KontakPage() {
           <p className="text-sm text-stone-500 mb-8">
             Pengaduan Anda akan ditindaklanjuti oleh staff desa. Mohon isi data dengan lengkap agar kami bisa merespons dengan tepat.
           </p>
+
+          {error && (
+            <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-lg px-4 py-3 mb-5 max-w-2xl">
+              <AlertCircle size={15} className="text-red-500 flex-shrink-0" />
+              <p className="text-xs text-red-600">{error}</p>
+            </div>
+          )}
 
           {submitted ? (
             <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-8 text-center max-w-2xl">
@@ -250,10 +284,15 @@ export default function KontakPage() {
 
               <button
                 type="submit"
-                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#1B4332] text-white font-semibold text-sm px-8 py-3 rounded-lg hover:bg-[#153326] transition-colors cursor-pointer"
+                disabled={loading}
+                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#1B4332] text-white font-semibold text-sm px-8 py-3 rounded-lg hover:bg-[#153326] disabled:opacity-60 disabled:cursor-not-allowed transition-colors cursor-pointer"
               >
-                <Send size={16} />
-                Kirim Pengaduan
+                {loading ? (
+                  <span className="h-4 w-4 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                ) : (
+                  <Send size={16} />
+                )}
+                {loading ? "Mengirim..." : "Kirim Pengaduan"}
               </button>
             </form>
           )}
