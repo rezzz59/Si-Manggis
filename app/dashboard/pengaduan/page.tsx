@@ -1,8 +1,8 @@
 import { prisma } from "@/src/lib/prisma";
 import Link from "next/link";
-import { FileText } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 
-export default async function PermohonanPage({
+export default async function PengaduanPage({
   searchParams,
 }: {
   searchParams: Promise<{ status?: string; page?: string }>;
@@ -16,13 +16,13 @@ export default async function PermohonanPage({
   const where = status ? { status } : {};
 
   const [data, total] = await Promise.all([
-    prisma.permohonan.findMany({
+    prisma.pengaduan.findMany({
       where,
       orderBy: { createdAt: "desc" },
       skip,
       take: limit,
     }),
-    prisma.permohonan.count({ where }),
+    prisma.pengaduan.count({ where }),
   ]);
 
   const totalPages = Math.ceil(total / limit);
@@ -46,8 +46,8 @@ export default async function PermohonanPage({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-stone-900">Permohonan Layanan</h1>
-          <p className="text-sm text-stone-500 mt-1">{total} permohonan ditemukan.</p>
+          <h1 className="text-2xl font-bold text-stone-900">Pengaduan Warga</h1>
+          <p className="text-sm text-stone-500 mt-1">{total} pengaduan ditemukan.</p>
         </div>
       </div>
 
@@ -55,7 +55,7 @@ export default async function PermohonanPage({
         {filters.map((f) => (
           <Link
             key={f.value}
-            href={f.value ? `/dashboard/permohonan?status=${f.value}` : "/dashboard/permohonan"}
+            href={f.value ? `/dashboard/pengaduan?status=${f.value}` : "/dashboard/pengaduan"}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
               status === f.value
                 ? "bg-[#1e40af] text-white"
@@ -72,7 +72,7 @@ export default async function PermohonanPage({
           <table className="w-full">
             <thead>
               <tr className="border-b border-stone-100 bg-stone-50">
-                {["Tiket", "Nama", "Layanan", "Telepon", "Status", "Tanggal", ""].map((h) => (
+                {["Tiket", "Nama", "Topik", "Kontak", "Status", "Tanggal", ""].map((h) => (
                   <th key={h} className="text-left px-5 py-3 text-xs font-semibold text-stone-500 uppercase tracking-wide">
                     {h}
                   </th>
@@ -83,8 +83,8 @@ export default async function PermohonanPage({
               {data.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="text-center py-12 text-stone-400">
-                    <FileText size={32} className="mx-auto mb-2 opacity-40" />
-                    <p className="text-sm">Belum ada permohonan.</p>
+                    <MessageSquare size={32} className="mx-auto mb-2 opacity-40" />
+                    <p className="text-sm">Belum ada pengaduan.</p>
                   </td>
                 </tr>
               ) : (
@@ -95,10 +95,11 @@ export default async function PermohonanPage({
                     </td>
                     <td className="px-5 py-4">
                       <p className="text-sm font-semibold text-stone-800">{row.nama}</p>
-                      {row.nik && <p className="text-xs text-stone-400">{row.nik}</p>}
                     </td>
-                    <td className="px-5 py-4 text-sm text-stone-600">{row.layanan}</td>
-                    <td className="px-5 py-4 text-sm text-stone-600">{row.telepon}</td>
+                    <td className="px-5 py-4 text-sm text-stone-600">{row.topik}</td>
+                    <td className="px-5 py-4 text-sm text-stone-500">
+                      {row.telepon || row.email || <span className="text-stone-300">—</span>}
+                    </td>
                     <td className="px-5 py-4">
                       <span className={`text-[10px] font-bold px-2 py-1 rounded-full ${statusColors[row.status]}`}>
                         {row.status}
@@ -109,7 +110,7 @@ export default async function PermohonanPage({
                     </td>
                     <td className="px-5 py-4">
                       <Link
-                        href={`/dashboard/permohonan/${row.id}`}
+                        href={`/dashboard/pengaduan/${row.id}`}
                         className="text-xs font-semibold text-[#1e40af] hover:underline"
                       >
                         Detail
@@ -130,7 +131,7 @@ export default async function PermohonanPage({
             <div className="flex gap-2">
               {page > 1 && (
                 <Link
-                  href={`/dashboard/permohonan?status=${status}&page=${page - 1}`}
+                  href={`/dashboard/pengaduan?status=${status}&page=${page - 1}`}
                   className="px-3 py-1.5 text-xs font-medium bg-white border border-stone-200 rounded-lg hover:bg-stone-50"
                 >
                   Sebelumnya
@@ -138,7 +139,7 @@ export default async function PermohonanPage({
               )}
               {page < totalPages && (
                 <Link
-                  href={`/dashboard/permohonan?status=${status}&page=${page + 1}`}
+                  href={`/dashboard/pengaduan?status=${status}&page=${page + 1}`}
                   className="px-3 py-1.5 text-xs font-medium bg-white border border-stone-200 rounded-lg hover:bg-stone-50"
                 >
                   Selanjutnya

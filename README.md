@@ -1,40 +1,113 @@
-<<<<<<< HEAD
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Si-Manggis
+
+**Portal Layanan Desa Digital** untuk Desa Guntung Manggis, Kalimantan Selatan. Sistem informasi yang memfasilitasi warga desa untuk mengakses layanan pemerintahan dan mendapatkan informasi secara mudah.
+
+## Fitur
+
+### Warga (Tanpa Login)
+- **Beranda** — Informasi umum dan berita desa
+- **Profil** — Identitas desa, sejarah, visi misi, struktur pemerintah
+- **Layanan** — Daftar layanan pemerintahan desa
+- **Darurat** — Informasi kontak darurat (Damkar, Ambulans, Poskesdes)
+- **Kabar** — Artikel dan berita desa
+- **Kontak** — Hubungi kantor desa
+- **Cek Tiket** — Lacak status permohonan atau pengaduan
+
+### Staff Desa (Login Required)
+- **Dashboard Staff** — Ringkasan permohonan dan pengaduan
+- **Kelola Permohonan** — Daftar, detail, dan update status permohonan surat
+- **Kelola Pengaduan** — Daftar, detail, dan update status pengaduan warga
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router), React 19
+- **Database:** Prisma ORM + SQLite
+- **Auth:** NextAuth.js v5 (Credentials provider)
+- **Styling:** Tailwind CSS v4
+- **Icons:** Lucide React
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm / pnpm / bun
+
+### Setup
+
+```bash
+# Install dependencies
+npm install
+
+# Setup environment variables
+cp .env.example .env  # jika ada, atau cek .env
+
+# Generate Prisma client
+npx prisma generate
+
+# Buat tabel database
+npx prisma db push
+
+# Seed data awal (user staff default)
+npm run db:seed
+```
+
+### Run Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Buka [http://localhost:3000](http://localhost:3000) di browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Login Staff Default
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Field | Value |
+|-------|-------|
+| Email | `admin@desaguntingmanggis.id` |
+| Password | `staff2026` |
 
-## Learn More
+Akses dashboard di [http://localhost:3000/login](http://localhost:3000/login)
 
-To learn more about Next.js, take a look at the following resources:
+## Database Commands
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npx prisma generate    # Generate Prisma client
+npx prisma db push     # Sync schema ke database
+npx prisma studio      # Buka GUI database (http://localhost:5555)
+npm run db:seed        # Seed data awal
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Structure
 
-## Deploy on Vercel
+```
+app/
+  api/                 # API routes (auth, permohonan, pengaduan, cek-tiket)
+  dashboard/           # Halaman staff (proteksi login)
+  [halaman publik]     # Beranda, Profil, Layanan, Darurat, Kabar, Kontak, Cek Tiket
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+prisma/
+  schema.prisma        # Database schema
+  seed.ts             # Seed script
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-=======
-# Si-Manggis
->>>>>>> origin/main
+src/
+  lib/                 # Prisma client, auth config, tiket generator
+  components/          # Komponen reusable (Navbar, dll)
+  data/               # Data statis (artikel, layanan, profil)
+```
+
+## Pengembangan
+
+### Branch
+
+- `main` — Branch utama (production-ready)
+- `alamat` — Branch pengembangan fitur alamat & backend Fase 1
+
+### Rencana
+
+- **Fase 1:** Informasi darurat, profil desa, backend staff (CRUD permohonan/pengaduan) ✅
+- **Fase 2:** Formulir permohonan surat, halaman pengaduan warga
+
+---
+
+Dibuat untuk Desa Guntung Manggis

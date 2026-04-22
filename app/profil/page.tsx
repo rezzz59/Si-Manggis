@@ -106,7 +106,7 @@ export default function ProfilPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="bg-[#1B4332] rounded-xl p-6">
               <p className="text-xs font-bold text-white/60 uppercase tracking-widest mb-3">Visi</p>
-              <p className="text-white leading-relaxed font-medium">"{visiMisi.visi}"</p>
+              <p className="text-white leading-relaxed font-medium">&ldquo;{visiMisi.visi}&rdquo;</p>
             </div>
             <div>
               <p className="text-xs font-bold text-stone-400 uppercase tracking-widest mb-3">Misi</p>

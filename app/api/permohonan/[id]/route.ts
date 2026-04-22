@@ -2,19 +2,21 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/src/lib/auth";
 import { prisma } from "@/src/lib/prisma";
 
-export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { id } = await params;
 
-  const data = await prisma.permohonan.findUnique({ where: { id: params.id } });
+  const data = await prisma.permohonan.findUnique({ where: { id } });
   if (!data) return NextResponse.json({ error: "Tidak ditemukan" }, { status: 404 });
 
   return NextResponse.json(data);
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { id } = await params;
 
   const body = await req.json();
   const { status, catatan } = body;
@@ -25,7 +27,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   }
 
   const data = await prisma.permohonan.update({
-    where: { id: params.id },
+    where: { id },
     data: { ...(status && { status }), ...(catatan !== undefined && { catatan }) },
   });
 

@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Save, CheckCircle } from "lucide-react";
+import { ArrowLeft, CheckCircle } from "lucide-react";
 
-export default function PermohonanDetailPage() {
+export default function PengaduanDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [data, setData] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
@@ -13,14 +13,14 @@ export default function PermohonanDetailPage() {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/permohonan/${id}`)
+    fetch(`/api/pengaduan/${id}`)
       .then((r) => r.json())
       .then((d) => { setData(d); setLoading(false); });
   }, [id]);
 
   const handleUpdate = async (status: string) => {
     setSaving(true);
-    const res = await fetch(`/api/permohonan/${id}`, {
+    const res = await fetch(`/api/pengaduan/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status }),
@@ -30,20 +30,6 @@ export default function PermohonanDetailPage() {
       setData((prev) => ({ ...prev, ...updated }));
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
-    }
-    setSaving(false);
-  };
-
-  const handleCatatan = async (catatan: string) => {
-    setSaving(true);
-    const res = await fetch(`/api/permohonan/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ catatan }),
-    });
-    if (res.ok) {
-      const updated = await res.json();
-      setData((prev) => ({ ...prev, ...updated }));
     }
     setSaving(false);
   };
@@ -63,13 +49,13 @@ export default function PermohonanDetailPage() {
     <div className="space-y-6 max-w-3xl">
       <div className="flex items-center gap-4">
         <Link
-          href="/dashboard/permohonan"
+          href="/dashboard/pengaduan"
           className="flex items-center gap-2 text-sm text-stone-500 hover:text-[#1e40af] transition-colors"
         >
           <ArrowLeft size={16} /> Kembali
         </Link>
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold text-stone-900">Detail Permohonan</h1>
+          <h1 className="text-2xl font-bold text-stone-900">Detail Pengaduan</h1>
           {saved && (
             <span className="flex items-center gap-1 text-xs text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
               <CheckCircle size={12} /> Tersimpan
@@ -87,14 +73,13 @@ export default function PermohonanDetailPage() {
       </div>
 
       <div className="bg-white rounded-xl border border-stone-200 p-6">
-        <h2 className="text-sm font-bold text-stone-900 mb-4">Informasi Pemohon</h2>
+        <h2 className="text-sm font-bold text-stone-900 mb-4">Informasi Pengadu</h2>
         <div className="grid grid-cols-2 gap-4">
           {[
             { label: "Nama", value: data.nama },
-            { label: "NIK", value: data.nik || "-" },
-            { label: "Alamat", value: data.alamat },
-            { label: "Telepon", value: data.telepon },
-            { label: "Layanan", value: data.layanan },
+            { label: "Telepon", value: data.telepon || "-" },
+            { label: "Email", value: data.email || "-" },
+            { label: "Topik", value: data.topik },
           ].map(({ label, value }) => (
             <div key={label}>
               <p className="text-xs text-stone-400 font-semibold uppercase mb-1">{label}</p>
@@ -102,21 +87,15 @@ export default function PermohonanDetailPage() {
             </div>
           ))}
           <div className="col-span-2">
-            <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Keperluan</p>
-            <p className="text-sm text-stone-700 bg-stone-50 rounded-lg px-4 py-3">{data.keperluan}</p>
+            <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Pesan</p>
+            <p className="text-sm text-stone-700 bg-stone-50 rounded-lg px-4 py-3">{data.pesan}</p>
           </div>
-          {data.catatan && (
-            <div className="col-span-2">
-              <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Catatan Staff</p>
-              <p className="text-sm text-stone-700 bg-stone-50 rounded-lg px-4 py-3">{data.catatan}</p>
-            </div>
-          )}
         </div>
       </div>
 
       <div className="bg-white rounded-xl border border-stone-200 p-6">
         <h2 className="text-sm font-bold text-stone-900 mb-4">Update Status</h2>
-        <div className="flex flex-wrap gap-2 mb-5">
+        <div className="flex flex-wrap gap-2">
           {statuses.map((s) => (
             <button
               key={s}
@@ -131,30 +110,6 @@ export default function PermohonanDetailPage() {
               {s}
             </button>
           ))}
-        </div>
-
-        <div>
-          <label className="block text-xs font-semibold text-stone-600 mb-1.5">Catatan Staff</label>
-          <div className="flex gap-3">
-            <textarea
-              id="catatan"
-              rows={2}
-              defaultValue={data.catatan ?? ""}
-              className="flex-1 rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e40af]/30 resize-none"
-              placeholder="Tambahkan catatan..."
-            />
-            <button
-              onClick={() => {
-                const val = (document.getElementById("catatan") as HTMLTextAreaElement).value;
-                handleCatatan(val);
-              }}
-              disabled={saving}
-              className="flex items-center gap-2 px-4 py-2.5 bg-[#1e40af] text-white text-sm font-semibold rounded-lg hover:bg-[#1e3a8a] disabled:opacity-60 cursor-pointer"
-            >
-              <Save size={15} />
-              Simpan
-            </button>
-          </div>
         </div>
       </div>
     </div>
