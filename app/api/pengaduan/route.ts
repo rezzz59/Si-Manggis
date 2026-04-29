@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
   let query = supabase
     .from("pengaduan")
     .select("*", { count: "exact" })
-    .order("createdAt", { ascending: false })
+    .order("createdat", { ascending: false })
     .range(from, to);
 
   if (status) {

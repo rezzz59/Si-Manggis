@@ -33,7 +33,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
   const { data, error } = await supabase
     .from("pengaduan")
-    .update({ status, updatedAt: new Date().toISOString() })
+    .update({ status, updatedat: new Date().toISOString() })
     .eq("id", id)
     .select()
     .single();

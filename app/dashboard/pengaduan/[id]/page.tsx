@@ -43,7 +43,7 @@ export default function PengaduanDetailPage() {
     DITOLAK: "bg-red-100 text-red-700",
   };
 
-  const statuses = ["MENUNGGU", "DIPROSES", "SELESAI", "DITOLAK"];
+  const statuses = ["MENUNGGU", "DIPROSES", "SELESAI"];
 
   return (
     <div className="space-y-6 max-w-3xl">
@@ -68,7 +68,7 @@ export default function PengaduanDetailPage() {
         <p className="text-xs text-stone-400 font-semibold uppercase tracking-wide mb-1">Nomor Tiket</p>
         <p className="text-2xl font-mono font-bold text-[#1e40af]">{data.tiket}</p>
         <p className="text-xs text-stone-400 mt-1">
-          Diajukan: {new Date(data.createdAt as string).toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+          Diajukan: {new Date(data.createdat as string).toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}
         </p>
       </div>
 

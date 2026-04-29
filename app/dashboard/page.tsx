@@ -22,13 +22,13 @@ export default async function DashboardPage() {
   const { data: recentPermohonan } = await supabase
     .from("permohonan")
     .select("*")
-    .order("createdAt", { ascending: false })
+    .order("createdat", { ascending: false })
     .limit(5);
 
   const { data: recentPengaduan } = await supabase
     .from("pengaduan")
     .select("*")
-    .order("createdAt", { ascending: false })
+    .order("createdat", { ascending: false })
     .limit(5);
 
   const statCards = [

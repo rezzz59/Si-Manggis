@@ -17,7 +17,7 @@ export default async function PermohonanPage({
   let query = supabase
     .from("permohonan")
     .select("*", { count: "exact" })
-    .order("createdAt", { ascending: false })
+    .order("createdat", { ascending: false })
     .range(from, to);
 
   if (status) {
@@ -107,7 +107,7 @@ export default async function PermohonanPage({
                       </span>
                     </td>
                     <td className="px-5 py-4 text-xs text-stone-400">
-                      {new Date(row.createdAt).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })}
+                      {new Date(row.createdat).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })}
                     </td>
                     <td className="px-5 py-4">
                       <Link

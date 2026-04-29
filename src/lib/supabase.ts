@@ -26,8 +26,8 @@ export type Staff = {
   email: string;
   nama: string;
   password: string;
-  createdAt: string;
-  updatedAt: string;
+  createdat: string;
+  updatedat: string;
 };
 
 export type Permohonan = {
@@ -41,8 +41,8 @@ export type Permohonan = {
   telepon: string;
   status: string;
   catatan: string | null;
-  createdAt: string;
-  updatedAt: string;
+  createdat: string;
+  updatedat: string;
 };
 
 export type Pengaduan = {
@@ -54,6 +54,6 @@ export type Pengaduan = {
   topik: string;
   pesan: string;
   status: string;
-  createdAt: string;
-  updatedAt: string;
+  createdat: string;
+  updatedat: string;
 };
