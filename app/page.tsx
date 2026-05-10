@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
-  Search,
   ArrowRight,
   FileText,
   MapPin,
@@ -16,7 +15,10 @@ import {
   Sparkles,
   Recycle,
   Briefcase,
+  Send,
 } from "lucide-react";
+import AnimateOnScroll from "@/src/components/AnimateOnScroll";
+import SearchBar from "@/src/components/SearchBar";
 
 const PROGRAM_UNGGULAN = [
   {
@@ -24,48 +26,48 @@ const PROGRAM_UNGGULAN = [
     label: "Kampung KB",
     desc: "Program nasional — mewakili Kalseltel",
     badge: "Nasional",
-    color: "bg-[#eff6ff]",
-    iconColor: "text-[#1e40af]",
+    bg: "bg-[#eff6ff]",
+    ic: "text-[#1e40af]",
   },
   {
     icon: Droplets,
     label: "RT Mandiri",
-    desc: "Budidaya ikan papuyu &amp; ternak sapi",
+    desc: "Budidaya ikan papuyu &ternak sapi",
     badge: null,
-    color: "bg-[#f0fdf4]",
-    iconColor: "text-[#16a34a]",
+    bg: "bg-[#f0fdf4]",
+    ic: "text-[#16a34a]",
   },
   {
     icon: Heart,
     label: "Home Care Lansia",
     desc: "Pelayanan kesehatan warga lanjut usia",
     badge: null,
-    color: "bg-[#fff7ed]",
-    iconColor: "text-[#f97316]",
+    bg: "bg-[#fff7ed]",
+    ic: "text-[#f97316]",
   },
   {
     icon: Sparkles,
     label: "Kelurahan Bersinar",
     desc: "Wilayah percontohan bersih dari narkoba",
     badge: "Percontohan",
-    color: "bg-[#eff6ff]",
-    iconColor: "text-[#1e40af]",
+    bg: "bg-[#eff6ff]",
+    ic: "text-[#1e40af]",
   },
   {
     icon: Recycle,
     label: "Bank Sampah",
     desc: "8 unit beroperasi, kesadaran lingkungan tinggi",
     badge: "8 Unit",
-    color: "bg-[#f0fdf4]",
-    iconColor: "text-[#16a34a]",
+    bg: "bg-[#f0fdf4]",
+    ic: "text-[#16a34a]",
   },
   {
     icon: Briefcase,
     label: "Koperasi Merah Putih",
     desc: "Program strategis nasional — Juli 2025",
     badge: "Stranas",
-    color: "bg-[#fff7ed]",
-    iconColor: "text-[#f97316]",
+    bg: "bg-[#fff7ed]",
+    ic: "text-[#f97316]",
   },
 ];
 
@@ -76,22 +78,24 @@ const STATS = [
   { value: "5", label: "Program", sub: "Inovasi Unggulan" },
 ];
 
-const JENIS_SURAT = [
+const JENIS_LAYANAN = [
   {
     icon: FileText,
     label: "Surat Izin Tinggal",
     desc: "Izin domisili & tinggal sementara",
     href: "/layanan/surat-izin-tinggal",
-    color: "bg-white/10",
-    iconColor: "text-[#93c5fd]",
   },
   {
     icon: Building2,
     label: "Surat Keterangan",
     desc: "Domisili, pengantar, usaha",
     href: "/layanan/surat-keterangan",
-    color: "bg-white/10",
-    iconColor: "text-[#93c5fd]",
+  },
+  {
+    icon: Send,
+    label: "Ajukan Laporan",
+    desc: "Pengaduan & permohonan surat via WA RT",
+    href: "/laporan",
   },
 ];
 
@@ -100,15 +104,14 @@ export default function HomePage() {
     <main className="flex flex-col min-h-full">
 
       {/* ============================================
-          HERO — full photo
-          Mobile: gradient top | Desktop: gradient right
-         ============================================ */}
+          HERO — full photo, text reveal on load
+          ============================================ */}
       <section className="relative min-h-screen flex items-center overflow-hidden">
-        {/* Full-bleed foto */}
+        {/* Background photo */}
         <div className="absolute inset-0">
           <Image
             src="/img/Sekilas-Tentang-Danau-Seran.jpg"
-            alt="Pemandangan Kelurahan Guntung Manggis, Danau Seran"
+            alt="Pemandangan Danau Seran, Kelurahan Guntung Manggis"
             fill
             className="object-cover object-center"
             priority
@@ -116,227 +119,282 @@ export default function HomePage() {
         </div>
 
         {/* Gradient overlay */}
-        {/* Mobile: biru dari atas; Desktop: biru dari kanan */}
-        <div className="absolute inset-0 bg-gradient-to-b lg:bg-gradient-to-r from-[#1e40af] via-[#1e40af]/70 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1e293b]/95 via-[#1e40af]/55 to-transparent" />
         <div className="absolute inset-0 noise-texture pointer-events-none" />
 
-        {/* Teks overlay */}
-        <div className="relative z-10 w-full mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-lg">
-            <div className="inline-block rounded-sm bg-white/10 border border-white/20 px-3 py-1 mb-6">
-              <span className="text-xs font-semibold text-white/80 uppercase tracking-wider">
-                Portal Resmi Pemerintah
-              </span>
-            </div>
+        {/* Content */}
+        <div className="relative z-10 w-full">
+          <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+            <div className="max-w-2xl pt-24 pb-20">
 
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight tracking-tight mb-4">
-              Selamat Datang di
-              <br />
-              <span className="text-[#93c5fd]">Kelurahan Guntung Manggis</span>
-            </h1>
-
-            <p className="text-base text-white/65 mb-8 leading-relaxed max-w-sm">
-              Kecamatan Landasan Ulin, Kota Banjarbaru, Kalimantan Selatan.
-              Portal informasi dan layanan digital untuk warga.
-            </p>
-
-            {/* Search bar */}
-            <div className="relative max-w-sm">
-              <div className="absolute inset-y-0 left-3.5 flex items-center pointer-events-none">
-                <Search size={16} className="text-[#64748b]" strokeWidth={2} />
+              {/* Tag line */}
+              <div className="hero-tag flex items-center gap-3 mb-8">
+                <div className="w-[3px] h-8 bg-[#f97316]" />
+                <span className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.18em]">
+                  Portal Resmi Kelurahan Gunting Manggis
+                </span>
               </div>
-              <input
-                type="text"
-                placeholder="Cari layanan, dokumen, berita..."
-                className="w-full rounded-sm bg-white pl-10 pr-20 py-3 text-sm text-[#1e293b] placeholder-[#94a3b8] border border-[#cbd5e1] focus:outline-none focus:ring-2 focus:ring-[#93c5fd] focus:border-transparent transition-shadow duration-150"
-              />
-              <button
-                type="button"
-                className="absolute inset-y-1 right-1 my-0.5 px-4 rounded-sm bg-[#1e40af] text-white text-xs font-semibold hover:bg-[#1e3a8a] transition-colors duration-150 cursor-pointer"
-              >
-                Cari
-              </button>
-            </div>
 
-            {/* Program badges */}
-            <div className="flex flex-wrap gap-2 mt-8">
-              {["Kampung KB", "RT Mandiri", "Bank Sampah", "Koperasi Merah Putih"].map(
-                (tag) => (
+              {/* Main heading — staggered reveal */}
+              <div className="hero-line-1 overflow-hidden mb-1">
+                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-[1.15] pb-1">
+                  Guntung
+                </h1>
+              </div>
+              <div className="hero-line-2 overflow-hidden">
+                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-[1.15] pb-1">
+                  <span className="text-[#93c5fd]">Manggis</span>
+                </h1>
+              </div>
+
+              {/* Subtext */}
+              <p className="hero-sub text-base text-white/55 leading-relaxed mb-10 max-w-md">
+                Kecamatan Landasan Ulin, Kota Banjarbaru,
+                Kalimantan Selatan. Portal informasi & layanan
+                digital untuk warga.
+              </p>
+
+              {/* Search bar */}
+              <div className="hero-search">
+                <SearchBar />
+              </div>
+
+              {/* Program tags */}
+              <div className="hero-tags flex flex-wrap gap-2 mt-10">
+                {[
+                  "Kampung KB",
+                  "RT Mandiri",
+                  "Bank Sampah",
+                  "Koperasi Merah Putih",
+                  "Bersinar",
+                ].map((tag) => (
                   <span
                     key={tag}
-                    className="text-xs font-medium text-white/70 bg-white/10 border border-white/15 px-2.5 py-1 rounded-sm"
+                    className="text-[11px] font-semibold text-white/70 bg-white/10 px-3 py-1.5 rounded-sm"
                   >
                     {tag}
                   </span>
-                )
-              )}
+                ))}
+              </div>
             </div>
           </div>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-0 hero-scroll">
+          <span className="text-[10px] font-semibold text-white/40 uppercase tracking-widest">
+            Scroll
+          </span>
+          <div className="w-px h-8 bg-gradient-to-b from-white/40 to-transparent" />
         </div>
       </section>
 
 
       {/* ============================================
-          SECTION 2 — FULL WHITE
-          Unit Gawat Darurat | Berita | Alur Layanan | Layanan
-         ============================================ */}
-      <section className="bg-white pt-12 pb-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          SECTION 2 — white, scroll-animated
+          ============================================ */}
+      <section className="bg-white pt-16 pb-20">
 
-          {/* --- BLOK 1: UNIT GAWAT DARURAT --- */}
-          <div className="mb-12">
-            <div className="flex items-end justify-between mb-5">
-              <h2 className="text-lg font-bold text-[#1e293b] tracking-tight">
-                Unit Gawat Darurat
-              </h2>
+        {/* --- UNIT GAWAT DARURAT --- */}
+        <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12 mb-16">
+          <AnimateOnScroll delay={0}>
+            <div className="flex items-end justify-between mb-6">
+              <div>
+                <div className="w-10 h-[3px] bg-[#f97316] mb-3" />
+                <h2 className="text-3xl font-extrabold text-[#1e293b] tracking-tight leading-none">
+                  Unit Gawat<br />Darurat
+                </h2>
+              </div>
               <Link
                 href="/darurat"
-                className="text-xs font-semibold text-[#1e40af] hover:text-[#1e3a8a] transition-colors duration-150 flex items-center gap-1 cursor-pointer"
+                className="text-[11px] font-semibold text-[#1e40af] hover:text-[#1e3a8a] transition-colors flex items-center gap-1 cursor-pointer"
               >
-                Lihat Semua <ArrowRight size={11} />
+                Lihat Semua <ArrowRight size={10} />
               </Link>
             </div>
+          </AnimateOnScroll>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {/* Damkar */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <AnimateOnScroll delay={100}>
               <a
                 href="https://maps.google.com/?q=Dinas+Pemadam+Kebakaran+Kota+Banjarbaru"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover-lift flex items-start gap-4 rounded-sm bg-[#eff6ff] border border-[#bfdbfe] px-5 py-4 cursor-pointer block"
+                className="card-hover flex items-start gap-4 rounded-sm bg-[#eff6ff] border border-[#bfdbfe] px-6 py-5 cursor-pointer"
               >
                 <div className="flex-shrink-0 mt-0.5">
-                  <Flame size={22} className="text-[#dc2626]" strokeWidth={1.8} />
+                  <Flame size={24} className="text-[#dc2626]" strokeWidth={1.8} />
                 </div>
                 <div className="min-w-0">
                   <p className="text-sm font-bold text-[#1e293b] leading-tight">Damkar</p>
-                  <p className="text-xs text-[#64748b] mt-0.5 leading-snug">
+                  <p className="text-xs text-[#64748b] mt-1 leading-relaxed">
                     Dinas Pemadam Kebakaran Kota Banjarbaru
                   </p>
-                  <div className="mt-1.5 inline-flex items-center gap-1 text-[10px] font-semibold text-[#1e40af]">
-                    <MapPin size={9} strokeWidth={2} />
+                  <div className="mt-2 flex items-center gap-1 text-[10px] font-bold text-[#1e40af]">
+                    <MapPin size={9} strokeWidth={2.5} />
                     Lihat di Google Maps
                   </div>
                 </div>
               </a>
+            </AnimateOnScroll>
 
-              {/* Ambulans */}
+            <AnimateOnScroll delay={200}>
               <a
                 href="https://maps.google.com/?q=Poskesdes+Kelurahan+Guntung+Manggis"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover-lift flex items-start gap-4 rounded-sm bg-[#eff6ff] border border-[#bfdbfe] px-5 py-4 cursor-pointer block"
+                className="card-hover flex items-start gap-4 rounded-sm bg-[#f0fdf4] border border-[#bbf7d0] px-6 py-5 cursor-pointer"
               >
                 <div className="flex-shrink-0 mt-0.5">
-                  <Siren size={22} className="text-[#16a34a]" strokeWidth={1.8} />
+                  <Siren size={24} className="text-[#16a34a]" strokeWidth={1.8} />
                 </div>
                 <div className="min-w-0">
                   <p className="text-sm font-bold text-[#1e293b] leading-tight">Ambulans</p>
-                  <p className="text-xs text-[#64748b] mt-0.5 leading-snug">
+                  <p className="text-xs text-[#64748b] mt-1 leading-relaxed">
                     Poskesdes Kelurahan Guntung Manggis
                   </p>
-                  <div className="mt-1.5 inline-flex items-center gap-1 text-[10px] font-semibold text-[#1e40af]">
-                    <MapPin size={9} strokeWidth={2} />
+                  <div className="mt-2 flex items-center gap-1 text-[10px] font-bold text-[#16a34a]">
+                    <MapPin size={9} strokeWidth={2.5} />
                     Lihat di Google Maps
                   </div>
                 </div>
               </a>
-            </div>
+            </AnimateOnScroll>
           </div>
+        </div>
 
-          {/* Divider */}
-          <div className="h-px bg-[#e2e8f0] mb-12" />
+        {/* Divider */}
+        <div className="h-px bg-[#e2e8f0] mx-6 sm:mx-8 lg:mx-12 mb-16" />
 
-          {/* --- BLOK 2: BERITA TERKINI --- */}
-          <div className="mb-12">
-            <div className="flex items-end justify-between mb-5">
-              <div>
-                <span className="accent-line mb-2 block" />
-                <h2 className="text-lg font-bold text-[#1e293b] tracking-tight">
-                  Berita Terkini
+
+        {/* --- BERITA TERKINI --- */}
+        <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12 mb-16">
+          <AnimateOnScroll delay={0}>
+            <div className="flex items-end justify-between mb-6">
+              <div className="max-w-xs">
+                <div className="w-10 h-[3px] bg-[#1e40af] mb-3" />
+                <h2 className="text-3xl font-extrabold text-[#1e293b] tracking-tight leading-none">
+                  Berita<br />Terkini
                 </h2>
+                <p className="text-[11px] text-[#94a3b8] mt-2 leading-relaxed">
+                  Kabar terbaru dari Kelurahan Guntung Manggis
+                </p>
               </div>
               <Link
                 href="/artikel"
-                className="text-xs font-semibold text-[#1e40af] hover:text-[#1e3a8a] transition-colors duration-150 flex items-center gap-1 whitespace-nowrap cursor-pointer"
+                className="text-[11px] font-semibold text-[#1e40af] hover:text-[#1e3a8a] transition-colors flex items-center gap-1 whitespace-nowrap cursor-pointer"
               >
-                Lihat Lebih Banyak <ArrowRight size={11} />
+                Semua Artikel <ArrowRight size={10} />
               </Link>
             </div>
+          </AnimateOnScroll>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[
-                {
-                  tanggal: "Jan 2026",
-                  judul: "Perbaikan Jembatan Guntung Manggis, Dinas PUPR Kalseltel Gerak Cepat",
-                  href: "/artikel/jembatan-guntung-manggis",
-                },
-                {
-                  tanggal: "Feb 2025",
-                  judul: "Pasar Murah Mandiri Komplek Wengga Kuda: Pengendalian Inflasi",
-                  href: "/artikel/pasar-murah-wengga-kuda",
-                },
-                {
-                  tanggal: "Okt 2025",
-                  judul: "Pemekaran 52 RT, Kelurahan Tumbuh Cepat di Landasan Ulin",
-                  href: "/artikel/pemekaran-rt-52",
-                },
-              ].map((b) => (
-                <Link
-                  key={b.href}
-                  href={b.href}
-                  className="hover-lift block bg-white rounded-sm overflow-hidden border border-[#cbd5e1] card-shadow cursor-pointer"
-                >
-                  <div className="relative h-28 overflow-hidden bg-[#e2e8f0]">
-                    <Image
-                      src="/img/Sekilas-Tentang-Danau-Seran.jpg"
-                      alt={b.judul}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    />
-                    <div className="absolute top-2 left-2">
-                      <span className="text-[10px] font-bold text-white bg-[#f97316] px-2 py-0.5 rounded-sm">
-                        {b.tanggal}
-                      </span>
-                    </div>
+          {/* Asymmetric grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            {/* Big card — spans 2 cols */}
+            <AnimateOnScroll delay={0} className="lg:col-span-2">
+              <div className="group cursor-pointer">
+                <div className="relative h-[300px] rounded-sm overflow-hidden">
+                  <Image
+                    src="/img/Sekilas-Tentang-Danau-Seran.jpg"
+                    alt="Perbaikan Jembatan Guntung Manggis"
+                    fill
+                    className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <span className="text-[10px] font-bold text-white bg-[#f97316] px-2.5 py-1 rounded-sm mb-3 inline-block">
+                      Jan 2026
+                    </span>
+                    <h3 className="text-lg font-bold text-white leading-snug">
+                      Perbaikan Jembatan Guntung Manggis,
+                      Dinas PUPR Kalseltel Gerak Cepat
+                    </h3>
+                    <p className="text-[11px] text-white/60 mt-2">
+                      Baca selengkapnya →
+                    </p>
                   </div>
-                  <div className="p-3">
-                    <h3 className="text-xs font-bold text-[#1e293b] leading-snug line-clamp-2">
-                      {b.judul}
+                </div>
+              </div>
+            </AnimateOnScroll>
+
+            {/* Two stacked cards */}
+            <AnimateOnScroll delay={100} className="flex flex-col gap-4">
+              <Link href="/artikel/pasar-murah-wengga-kuda" className="group cursor-pointer">
+                <div className="relative h-[142px] rounded-sm overflow-hidden">
+                  <Image
+                    src="/img/Sekilas-Tentang-Danau-Seran.jpg"
+                    alt="Pasar Murah"
+                    fill
+                    className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                    <span className="text-[9px] font-bold text-white bg-[#16a34a] px-2 py-0.5 rounded-sm mb-2 inline-block">
+                      Feb 2025
+                    </span>
+                    <h3 className="text-[13px] font-bold text-white leading-snug line-clamp-2">
+                      Pasar Murah Mandiri Komplek Wengga Kuda
                     </h3>
                   </div>
-                </Link>
-              ))}
-            </div>
+                </div>
+              </Link>
+
+              <Link href="/artikel/pemekaran-rt-52" className="group cursor-pointer">
+                <div className="relative h-[142px] rounded-sm overflow-hidden">
+                  <Image
+                    src="/img/bg.png"
+                    alt="Pemekaran RT"
+                    fill
+                    className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                    <span className="text-[9px] font-bold text-white bg-[#1e40af] px-2 py-0.5 rounded-sm mb-2 inline-block">
+                      Okt 2025
+                    </span>
+                    <h3 className="text-[13px] font-bold text-white leading-snug line-clamp-2">
+                      Pemekaran 52 RT, Kelurahan Tumbuh Cepat
+                    </h3>
+                  </div>
+                </div>
+              </Link>
+            </AnimateOnScroll>
           </div>
+        </div>
 
-          {/* Divider */}
-          <div className="h-px bg-[#e2e8f0] mb-12" />
+        {/* Divider */}
+        <div className="h-px bg-[#e2e8f0] mx-6 sm:mx-8 lg:mx-12 mb-16" />
 
-          {/* --- BLOK 3: PROGRAM UNGGULAN --- */}
-          <div className="mb-12">
-            <div className="mb-5">
-              <span className="accent-line mb-2 block" />
-              <h2 className="text-lg font-bold text-[#1e293b] tracking-tight">
+
+        {/* --- PROGRAM UNGGULAN --- */}
+        <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12 mb-16">
+          <AnimateOnScroll delay={0}>
+            <div className="mb-6">
+              <div className="w-10 h-[3px] bg-[#f97316] mb-3" />
+              <h2 className="text-3xl font-extrabold text-[#1e293b] tracking-tight leading-none">
                 Program Unggulan
               </h2>
-              <p className="text-xs text-[#64748b] mt-1">
+              <p className="text-[11px] text-[#94a3b8] mt-2">
                 Inovasi dan keunggulan Kelurahan Guntung Manggis
               </p>
             </div>
+          </AnimateOnScroll>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {PROGRAM_UNGGULAN.map((prog) => (
+          {/* Program cards grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {PROGRAM_UNGGULAN.map((prog, i) => (
+              <AnimateOnScroll key={prog.label} delay={i * 80}>
                 <div
-                  key={prog.label}
-                  className="hover-lift bg-white rounded-sm border border-[#cbd5e1] card-shadow p-4"
+                  className={`rounded-sm bg-white border border-[#e2e8f0] p-5 ${
+                    i === 0 ? "sm:col-span-2 lg:col-span-2" : ""
+                  } card-hover`}
                 >
-                  <div className="flex items-start gap-3">
+                  <div className="flex items-start gap-4">
                     <div
-                      className={`flex h-10 w-10 items-center justify-center rounded-sm flex-shrink-0 ${prog.color}`}
+                      className={`flex h-11 w-11 items-center justify-center rounded-sm flex-shrink-0 ${prog.bg}`}
                     >
-                      <prog.icon size={18} className={prog.iconColor} strokeWidth={1.8} />
+                      <prog.icon size={18} className={prog.ic} strokeWidth={1.8} />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 flex-wrap">
@@ -344,82 +402,65 @@ export default function HomePage() {
                           {prog.label}
                         </p>
                         {prog.badge && (
-                          <span className="text-[9px] font-bold text-white bg-[#1e40af] px-1.5 py-0.5 rounded-sm uppercase tracking-wide">
+                          <span className="text-[9px] font-bold text-white bg-[#1e40af] px-2 py-0.5 rounded-sm uppercase tracking-wide">
                             {prog.badge}
                           </span>
                         )}
                       </div>
                       <p
-                        className="text-xs text-[#64748b] mt-0.5 leading-snug"
+                        className="text-xs text-[#64748b] mt-1 leading-relaxed"
                         dangerouslySetInnerHTML={{ __html: prog.desc }}
                       />
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
+              </AnimateOnScroll>
+            ))}
           </div>
+        </div>
 
-          {/* Divider */}
-          <div className="h-px bg-[#e2e8f0] mb-12" />
+        {/* Divider */}
+        <div className="h-px bg-[#e2e8f0] mx-6 sm:mx-8 lg:mx-12 mb-16" />
 
-          {/* --- BLOK 4: LAYANAN WARGA --- */}
-          <div>
-            <div className="flex items-end justify-between mb-5">
-              <h2 className="text-lg font-bold text-[#1e293b] tracking-tight">
-                Layanan Warga
-              </h2>
+
+        {/* --- LAYANAN WARGA --- */}
+        <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+          <AnimateOnScroll delay={0}>
+            <div className="flex items-end justify-between mb-6">
+              <div>
+                <div className="w-10 h-[3px] bg-[#1e40af] mb-3" />
+                <h2 className="text-3xl font-extrabold text-[#1e293b] tracking-tight leading-none">
+                  Layanan<br />Warga
+                </h2>
+              </div>
               <Link
                 href="/layanan"
-                className="text-xs font-semibold text-[#1e40af] hover:text-[#1e3a8a] transition-colors duration-150 flex items-center gap-1 cursor-pointer"
+                className="text-[11px] font-semibold text-[#1e40af] hover:text-[#1e3a8a] transition-colors flex items-center gap-1 whitespace-nowrap cursor-pointer"
               >
-                Ajukan Sekarang <ArrowRight size={11} />
+                Ajukan Sekarang <ArrowRight size={10} />
               </Link>
             </div>
+          </AnimateOnScroll>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {JENIS_SURAT.map((surat) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {JENIS_LAYANAN.map((layanan, i) => (
+              <AnimateOnScroll key={layanan.label} delay={i * 100}>
                 <Link
-                  key={surat.label}
-                  href={surat.href}
-                  className="hover-lift flex items-center gap-4 rounded-sm bg-white border border-[#cbd5e1] px-5 py-4 cursor-pointer"
+                  href={layanan.href}
+                  className="card-hover flex items-center gap-4 rounded-sm bg-white border border-[#cbd5e1] px-6 py-5 cursor-pointer"
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-[#eff6ff] flex-shrink-0">
-                    <surat.icon size={18} className="text-[#1e40af]" strokeWidth={1.8} />
+                  <div className="flex h-11 w-11 items-center justify-center rounded-sm bg-[#eff6ff] flex-shrink-0">
+                    <layanan.icon size={18} className="text-[#1e40af]" strokeWidth={1.8} />
                   </div>
                   <div>
                     <p className="text-sm font-bold text-[#1e293b] leading-tight">
-                      {surat.label}
+                      {layanan.label}
                     </p>
-                    <p className="text-xs text-[#64748b] mt-0.5">{surat.desc}</p>
+                    <p className="text-xs text-[#64748b] mt-0.5">{layanan.desc}</p>
                   </div>
                   <ArrowRight size={14} className="text-[#cbd5e1] ml-auto flex-shrink-0" />
                 </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-      {/* ============================================
-          STATISTIK BAR — biru gelap
-         ============================================ */}
-      <section className="bg-[#1e3a5f] py-7">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4">
-            {STATS.map((stat) => (
-              <div key={stat.label} className="flex items-center gap-3 px-6 py-2">
-                <span className="text-2xl lg:text-3xl font-bold text-white leading-none">
-                  {stat.value}
-                </span>
-                <div>
-                  <p className="text-xs font-semibold text-white/90 leading-tight">
-                    {stat.label}
-                  </p>
-                  <p className="text-[10px] text-white/40 mt-0.5">{stat.sub}</p>
-                </div>
-              </div>
+              </AnimateOnScroll>
             ))}
           </div>
         </div>
@@ -427,21 +468,54 @@ export default function HomePage() {
 
 
       {/* ============================================
-          FOOTER — gelap
-         ============================================ */}
-      <footer className="bg-[#0f172a] pt-12 pb-8">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+          STATISTIK BAR — dark navy, animated counter
+          ============================================ */}
+      <section className="bg-[#1e3a5f] py-10">
+        <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+          <AnimateOnScroll delay={0}>
+            <div className="grid grid-cols-2 lg:grid-cols-4">
+              {STATS.map((stat, i) => (
+                <div
+                  key={stat.label}
+                  className="flex items-center gap-3 px-5 py-4"
+                  style={{
+                    borderLeft: i === 0 ? "none" : "1px solid rgba(255,255,255,0.1)",
+                    paddingLeft: i === 0 ? "0" : "20px",
+                  }}
+                >
+                  <span className="text-4xl lg:text-5xl font-extrabold text-white leading-none tracking-tight tabular-nums">
+                    {stat.value}
+                  </span>
+                  <div>
+                    <p className="text-xs font-semibold text-white/80 leading-tight">
+                      {stat.label}
+                    </p>
+                    <p className="text-[10px] text-white/30 mt-0.5">{stat.sub}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </AnimateOnScroll>
+        </div>
+      </section>
+
+
+      {/* ============================================
+          FOOTER
+          ============================================ */}
+      <footer className="bg-[#0f172a] pt-16 pb-8">
+        <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
 
             {/* Brand */}
             <div className="sm:col-span-2 lg:col-span-1">
-              <div className="flex items-center gap-2.5 mb-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-[#1e40af]">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="flex h-11 w-11 items-center justify-center rounded-sm bg-[#1e40af]">
                   <span className="text-base font-bold text-white">SM</span>
                 </div>
                 <div>
                   <p className="text-base font-bold text-white leading-tight">Si-Manggis</p>
-                  <p className="text-[10px] text-white/40">Portal Kelurahan Digital</p>
+                  <p className="text-[10px] text-white/40 uppercase tracking-wider">Portal Kelurahan Digital</p>
                 </div>
               </div>
               <p className="text-sm text-white/45 leading-relaxed">
@@ -455,10 +529,10 @@ export default function HomePage() {
 
             {/* Navigasi */}
             <div>
-              <p className="text-xs font-bold text-white/70 uppercase tracking-wider mb-3">
+              <p className="text-[10px] font-bold text-white/50 uppercase tracking-[0.15em] mb-4">
                 Navigasi
               </p>
-              <ul className="space-y-2">
+              <ul className="space-y-2.5">
                 {[
                   { label: "Beranda", href: "/" },
                   { label: "Profil", href: "/profil" },
@@ -480,10 +554,10 @@ export default function HomePage() {
 
             {/* Program */}
             <div>
-              <p className="text-xs font-bold text-white/70 uppercase tracking-wider mb-3">
+              <p className="text-[10px] font-bold text-white/50 uppercase tracking-[0.15em] mb-4">
                 Program Unggulan
               </p>
-              <ul className="space-y-2">
+              <ul className="space-y-2.5">
                 {[
                   "Kampung KB (Nasional)",
                   "RT Mandiri",
@@ -501,10 +575,10 @@ export default function HomePage() {
 
             {/* Kontak */}
             <div>
-              <p className="text-xs font-bold text-white/70 uppercase tracking-wider mb-3">
+              <p className="text-[10px] font-bold text-white/50 uppercase tracking-[0.15em] mb-4">
                 Kontak
               </p>
-              <ul className="space-y-2.5">
+              <ul className="space-y-3">
                 {[
                   { icon: MapPin, text: "Kode Wilayah 63.72.02.1005" },
                   { icon: Building2, text: "Kelurahan Guntung Manggis" },
@@ -512,7 +586,7 @@ export default function HomePage() {
                   { icon: Newspaper, text: "Kode Pos: 70724" },
                 ].map(({ icon: Icon, text }) => (
                   <li key={text} className="flex items-start gap-2 text-sm text-white/45">
-                    <Icon size={14} className="flex-shrink-0 mt-0.5" strokeWidth={1.8} />
+                    <Icon size={13} className="flex-shrink-0 mt-0.5" strokeWidth={1.8} />
                     {text}
                   </li>
                 ))}
@@ -521,11 +595,11 @@ export default function HomePage() {
           </div>
 
           {/* Bottom bar */}
-          <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-1.5">
             <p className="text-xs text-white/30">
               &copy; 2026 Pemerintah Kelurahan Guntung Manggis
             </p>
-            <p className="text-xs text-white/20">
+            <p className="text-[11px] text-white/20 italic">
               Dibuat dengan semangat gotong royong
             </p>
           </div>

@@ -218,7 +218,26 @@ export default function LayananPage() {
               </Link>
             </div>
           ) : (
-            <form
+            <div className="space-y-8">
+              {/* CTA: Ajukan via WA RT */}
+              <div className="bg-[#1e40af] rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div className="flex-1">
+                  <h3 className="text-white font-bold text-lg mb-1">
+                    Ajukan via WA RT
+                  </h3>
+                  <p className="text-white/70 text-sm">
+                    Pengajuan akan langsung dikirim ke WA RT terkait untuk persetujuan lebih cepat. Lacak status di portal.
+                  </p>
+                </div>
+                <Link
+                  href="/laporan"
+                  className="flex-shrink-0 inline-flex items-center gap-2 bg-white text-[#1e40af] text-sm font-bold px-6 py-3 rounded-lg hover:bg-[#eff6ff] transition-colors"
+                >
+                  Ajukan Sekarang <Send size={14} />
+                </Link>
+              </div>
+
+              <form
               onSubmit={handleSubmit}
               className="bg-stone-50 rounded-2xl border border-stone-200 p-6 lg:p-8 space-y-5"
             >
@@ -341,6 +360,7 @@ export default function LayananPage() {
                 {loading ? "Mengirim..." : "Kirim Permohonan"}
               </button>
             </form>
+            </div>
           )}
         </div>
       </section>

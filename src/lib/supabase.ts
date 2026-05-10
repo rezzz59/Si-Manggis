@@ -43,6 +43,16 @@ export type Permohonan = {
   catatan: string | null;
   createdAt: string;
   updatedAt: string;
+  // New fields for RT routing
+  nomor_rt: string | null;
+  sub_layanan: string | null;
+  deskripsi: string | null;
+  lampiran_url: string[] | null;
+  fonnte_msg_id: string | null;
+  rt_approved_at: string | null;
+  rt_approved_via: string | null;
+  kelurahan_approved_at: string | null;
+  surat_url: string | null;
 };
 
 export type Pengaduan = {

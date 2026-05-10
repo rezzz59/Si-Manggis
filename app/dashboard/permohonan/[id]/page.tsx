@@ -52,12 +52,14 @@ export default function PermohonanDetailPage() {
 
   const statusColors: Record<string, string> = {
     MENUNGGU: "bg-yellow-100 text-yellow-700",
+    DISETUJAI_RT: "bg-teal-100 text-teal-700",
     DIPROSES: "bg-blue-100 text-blue-700",
     SELESAI: "bg-green-100 text-green-700",
+    DITOLAK_RT: "bg-orange-100 text-orange-700",
     DITOLAK: "bg-red-100 text-red-700",
   };
 
-  const statuses = ["MENUNGGU", "DIPROSES", "SELESAI", "DITOLAK"];
+  const statuses = ["MENUNGGU", "DISETUJAI_RT", "DIPROSES", "SELESAI", "DITOLAK_RT", "DITOLAK"];
 
   return (
     <div className="space-y-6 max-w-3xl">
@@ -82,7 +84,7 @@ export default function PermohonanDetailPage() {
         <p className="text-xs text-stone-400 font-semibold uppercase tracking-wide mb-1">Nomor Tiket</p>
         <p className="text-2xl font-mono font-bold text-[#1e40af]">{data.tiket}</p>
         <p className="text-xs text-stone-400 mt-1">
-          Diajukan: {new Date(data.createdAt as string).toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+          Diajukan: {new Date(data.createdat as string).toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}
         </p>
       </div>
 
@@ -93,6 +95,7 @@ export default function PermohonanDetailPage() {
             { label: "Nama", value: data.nama },
             { label: "NIK", value: data.nik || "-" },
             { label: "Alamat", value: data.alamat },
+            { label: "RT", value: data.nomor_rt ? `RT ${data.nomor_rt}` : "-" },
             { label: "Telepon", value: data.telepon },
             { label: "Layanan", value: data.layanan },
           ].map(({ label, value }) => (
@@ -101,14 +104,34 @@ export default function PermohonanDetailPage() {
               <p className="text-sm font-semibold text-stone-800">{value}</p>
             </div>
           ))}
-          <div className="col-span-2">
-            <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Keperluan</p>
-            <p className="text-sm text-stone-700 bg-stone-50 rounded-lg px-4 py-3">{data.keperluan}</p>
-          </div>
+          {data.sub_layanan && (
+            <div>
+              <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Sub Jenis</p>
+              <p className="text-sm font-semibold text-stone-800">{data.sub_layanan}</p>
+            </div>
+          )}
+          {data.deskripsi && (
+            <div className="col-span-2">
+              <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Deskripsi</p>
+              <p className="text-sm text-stone-700 bg-stone-50 rounded-lg px-4 py-3">{data.deskripsi}</p>
+            </div>
+          )}
+          {data.keperluan && !data.deskripsi && (
+            <div className="col-span-2">
+              <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Keperluan</p>
+              <p className="text-sm text-stone-700 bg-stone-50 rounded-lg px-4 py-3">{data.keperluan}</p>
+            </div>
+          )}
           {data.catatan && (
             <div className="col-span-2">
               <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Catatan Staff</p>
               <p className="text-sm text-stone-700 bg-stone-50 rounded-lg px-4 py-3">{data.catatan}</p>
+            </div>
+          )}
+          {data.rt_approved_at && (
+            <div className="col-span-2">
+              <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Disetujui RT Pada</p>
+              <p className="text-sm text-stone-700">{new Date(data.rt_approved_at).toLocaleString("id-ID")}</p>
             </div>
           )}
         </div>

@@ -17,7 +17,7 @@ export default async function PermohonanPage({
   let query = supabase
     .from("permohonan")
     .select("*", { count: "exact" })
-    .order("createdAt", { ascending: false })
+    .order("createdat", { ascending: false })
     .range(from, to);
 
   if (status) {
@@ -31,14 +31,17 @@ export default async function PermohonanPage({
 
   const statusColors: Record<string, string> = {
     MENUNGGU: "bg-yellow-100 text-yellow-700",
+    DISETUJAI_RT: "bg-teal-100 text-teal-700",
     DIPROSES: "bg-blue-100 text-blue-700",
     SELESAI: "bg-green-100 text-green-700",
+    DITOLAK_RT: "bg-orange-100 text-orange-700",
     DITOLAK: "bg-red-100 text-red-700",
   };
 
   const filters = [
     { label: "Semua", value: "" },
-    { label: "Menunggu", value: "MENUNGGU" },
+    { label: "Menunggu RT", value: "MENUNGGU" },
+    { label: "Disetujui RT", value: "DISETUJAI_RT" },
     { label: "Diproses", value: "DIPROSES" },
     { label: "Selesai", value: "SELESAI" },
     { label: "Ditolak", value: "DITOLAK" },
@@ -74,7 +77,7 @@ export default async function PermohonanPage({
           <table className="w-full">
             <thead>
               <tr className="border-b border-stone-100 bg-stone-50">
-                {["Tiket", "Nama", "Layanan", "Telepon", "Status", "Tanggal", ""].map((h) => (
+                {["Tiket", "Nama", "RT", "Layanan", "Telepon", "Status", "Tanggal", ""].map((h) => (
                   <th key={h} className="text-left px-5 py-3 text-xs font-semibold text-stone-500 uppercase tracking-wide">
                     {h}
                   </th>
@@ -84,7 +87,7 @@ export default async function PermohonanPage({
             <tbody className="divide-y divide-stone-100">
               {error || !data?.length ? (
                 <tr>
-                  <td colSpan={7} className="text-center py-12 text-stone-400">
+                  <td colSpan={8} className="text-center py-12 text-stone-400">
                     <FileText size={32} className="mx-auto mb-2 opacity-40" />
                     <p className="text-sm">Belum ada permohonan.</p>
                   </td>
@@ -99,6 +102,9 @@ export default async function PermohonanPage({
                       <p className="text-sm font-semibold text-stone-800">{row.nama}</p>
                       {row.nik && <p className="text-xs text-stone-400">{row.nik}</p>}
                     </td>
+                    <td className="px-5 py-4 text-sm text-stone-600">
+                      {row.nomor_rt ? `RT ${row.nomor_rt}` : "-"}
+                    </td>
                     <td className="px-5 py-4 text-sm text-stone-600">{row.layanan}</td>
                     <td className="px-5 py-4 text-sm text-stone-600">{row.telepon}</td>
                     <td className="px-5 py-4">
@@ -107,7 +113,7 @@ export default async function PermohonanPage({
                       </span>
                     </td>
                     <td className="px-5 py-4 text-xs text-stone-400">
-                      {new Date(row.createdAt).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })}
+                      {new Date(row.createdat).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })}
                     </td>
                     <td className="px-5 py-4">
                       <Link

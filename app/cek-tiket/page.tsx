@@ -110,7 +110,7 @@ function PermohonanResult({ data }: { data: Record<string, unknown> }) {
             { label: "Layanan", value: data.layanan as string },
             { label: "Telepon", value: data.telepon as string },
             { label: "Alamat", value: data.alamat as string },
-            { label: "Diajukan", value: new Date(data.createdAt as string).toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric" }) },
+            { label: "Diajukan", value: new Date(data.createdat as string).toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric" }) },
           ].map(({ label, value }) => (
             <div key={label}>
               <p className="text-xs text-stone-400 font-semibold uppercase mb-1">{label}</p>
@@ -174,7 +174,7 @@ function PengaduanResult({ data }: { data: Record<string, unknown> }) {
             { label: "Topik", value: data.topik as string },
             { label: "Telepon", value: (data.telepon as string) || "—" },
             { label: "Email", value: (data.email as string) || "—" },
-            { label: "Diajukan", value: new Date(data.createdAt as string).toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric" }) },
+            { label: "Diajukan", value: new Date(data.createdat as string).toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric" }) },
           ].map(({ label, value }) => (
             <div key={label}>
               <p className="text-xs text-stone-400 font-semibold uppercase mb-1">{label}</p>

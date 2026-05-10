@@ -5,18 +5,27 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ tik
   const { tiket: rawTiket } = await params;
   const tiket = rawTiket.toUpperCase().trim();
 
-  const [permohonanResult, pengaduanResult] = await Promise.all([
-    supabase.from("permohonan").select("*").eq("tiket", tiket).single(),
-    supabase.from("pengaduan").select("*").eq("tiket", tiket).single(),
-  ]);
+  // Prioritas: permohonan (laporan/aduan baru)
+  const { data: permohonan } = await supabase
+    .from("permohonan")
+    .select("*")
+    .eq("tiket", tiket)
+    .single();
 
-  if (!permohonanResult.data && !pengaduanResult.data) {
-    return NextResponse.json({ error: "Tiket tidak ditemukan" }, { status: 404 });
+  if (permohonan) {
+    return NextResponse.json(permohonan);
   }
 
-  return NextResponse.json({
-    tiket,
-    permohonan: permohonanResult.data,
-    pengaduan: pengaduanResult.data,
-  });
+  // Fallback: pengaduan lama
+  const { data: pengaduan } = await supabase
+    .from("pengaduan")
+    .select("*")
+    .eq("tiket", tiket)
+    .single();
+
+  if (pengaduan) {
+    return NextResponse.json(pengaduan);
+  }
+
+  return NextResponse.json({ error: "Tiket tidak ditemukan" }, { status: 404 });
 }

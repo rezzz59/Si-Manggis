@@ -1,6 +1,6 @@
 import { supabase } from "@/src/lib/supabase";
 import Link from "next/link";
-import { FileText, MessageSquare, Clock, CheckCircle } from "lucide-react";
+import { FileText, MessageSquare, Clock, CheckCircle, ShieldCheck } from "lucide-react";
 
 export default async function DashboardPage() {
   const [
@@ -22,13 +22,13 @@ export default async function DashboardPage() {
   const { data: recentPermohonan } = await supabase
     .from("permohonan")
     .select("*")
-    .order("createdAt", { ascending: false })
+    .order("createdat", { ascending: false })
     .limit(5);
 
   const { data: recentPengaduan } = await supabase
     .from("pengaduan")
     .select("*")
-    .order("createdAt", { ascending: false })
+    .order("createdat", { ascending: false })
     .limit(5);
 
   const statCards = [
@@ -47,11 +47,18 @@ export default async function DashboardPage() {
       href: "/dashboard/pengaduan",
     },
     {
-      label: "Menunggu",
-      value: (menungguPermohonan ?? 0) + (menungguPengaduan ?? 0),
+      label: "Menunggu RT",
+      value: menungguPermohonan ?? 0,
       icon: Clock,
       color: "bg-[#fff7ed] text-[#f97316]",
       href: "/dashboard/permohonan?status=MENUNGGU",
+    },
+    {
+      label: "Disetujui RT",
+      value: 0,
+      icon: ShieldCheck,
+      color: "bg-teal-50 text-teal-600",
+      href: "/dashboard/permohonan?status=DISETUJAI_RT",
     },
     {
       label: "Selesai",
@@ -64,8 +71,10 @@ export default async function DashboardPage() {
 
   const statusColors: Record<string, string> = {
     MENUNGGU: "bg-yellow-100 text-yellow-700",
+    DISETUJAI_RT: "bg-teal-100 text-teal-700",
     DIPROSES: "bg-blue-100 text-blue-700",
     SELESAI: "bg-green-100 text-green-700",
+    DITOLAK_RT: "bg-orange-100 text-orange-700",
     DITOLAK: "bg-red-100 text-red-700",
   };
 

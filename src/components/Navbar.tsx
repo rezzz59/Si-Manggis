@@ -8,10 +8,11 @@ const navLinks = [
   { label: "Beranda", href: "/" },
   { label: "Profil", href: "/profil" },
   { label: "Layanan", href: "/layanan" },
+  { label: "Ajukan Laporan", href: "/laporan" },
+  { label: "Lacak Status", href: "/lacak" },
   { label: "Darurat", href: "/darurat" },
   { label: "Kabar", href: "/artikel" },
   { label: "Kontak", href: "/kontak" },
-  { label: "Cek Tiket", href: "/cek-tiket" },
 ];
 
 export default function Navbar() {
