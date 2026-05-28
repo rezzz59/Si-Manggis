@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/src/lib/auth";
-import { supabase } from "@/src/lib/supabase";
+import { supabaseAdmin } from "@/src/lib/supabase-admin";
 import { generateTiket } from "@/src/lib/tiket";
 
 export async function GET(req: NextRequest) {
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
   const from = (page - 1) * limit;
   const to = from + limit - 1;
 
-  let query = supabase
+  let query = supabaseAdmin
     .from("pengaduan")
     .select("*", { count: "exact" })
     .order("createdat", { ascending: false })
@@ -33,16 +33,16 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { nama, telepon, email, topik, pesan } = body;
+  const { nama, telepon, email, pesan, lampiran_url, lokasi } = body;
 
-  if (!nama || !topik || !pesan) {
-    return NextResponse.json({ error: "Field wajib kosong" }, { status: 400 });
+  if (!nama || !pesan) {
+    return NextResponse.json({ error: "Nama dan pesan wajib diisi" }, { status: 400 });
   }
 
   let tiket: string;
   do {
     tiket = generateTiket();
-    const { data: existing } = await supabase
+    const { data: existing } = await supabaseAdmin
       .from("pengaduan")
       .select("tiket")
       .eq("tiket", tiket)
@@ -50,13 +50,34 @@ export async function POST(req: NextRequest) {
     if (!existing) break;
   } while (true);
 
-  const { data, error } = await supabase
-    .from("pengaduan")
-    .insert({ tiket, nama, telepon: telepon || null, email: email || null, topik, pesan })
-    .select()
-    .single();
+  const lampiranArray: string[] | null = Array.isArray(lampiran_url)
+    ? lampiran_url.filter((u: unknown) => typeof u === "string" && u)
+    : null;
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  const { data: insertedData, error } = await supabaseAdmin
+    .from("pengaduan")
+    .insert({
+      tiket,
+      nama,
+      telepon: telepon || null,
+      email: email || null,
+      pesan,
+      lampiran_url: lampiranArray,
+      lokasi: lokasi || null,
+      topik: null,
+      status: "DIPROSES",
+    })
+    .select();
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  const data = insertedData && insertedData.length > 0 ? insertedData[0] : null;
+
+  if (!data) {
+    return NextResponse.json({ error: "Gagal menyimpan data pengaduan" }, { status: 500 });
+  }
 
   return NextResponse.json(data, { status: 201 });
 }

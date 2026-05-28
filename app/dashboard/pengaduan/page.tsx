@@ -74,7 +74,7 @@ export default async function PengaduanPage({
           <table className="w-full">
             <thead>
               <tr className="border-b border-stone-100 bg-stone-50">
-                {["Tiket", "Nama", "Topik", "Kontak", "Status", "Tanggal", ""].map((h) => (
+                {["Tiket", "Nama", "Kontak", "Lokasi", "Lampiran", "Status", "Tanggal", ""].map((h) => (
                   <th key={h} className="text-left px-5 py-3 text-xs font-semibold text-stone-500 uppercase tracking-wide">
                     {h}
                   </th>
@@ -98,9 +98,37 @@ export default async function PengaduanPage({
                     <td className="px-5 py-4">
                       <p className="text-sm font-semibold text-stone-800">{row.nama}</p>
                     </td>
-                    <td className="px-5 py-4 text-sm text-stone-600">{row.topik}</td>
-                    <td className="px-5 py-4 text-sm text-stone-500">
+                    <td className="px-5 py-4 text-sm text-stone-600">
                       {row.telepon || row.email || <span className="text-stone-300">—</span>}
+                    </td>
+                    <td className="px-5 py-4 text-sm text-stone-400 text-xs max-w-[160px] truncate">
+                      {row.lokasi ? (
+                        <span title={row.lokasi}>{row.lokasi}</span>
+                      ) : (
+                        <span className="text-stone-300">—</span>
+                      )}
+                    </td>
+                    <td className="px-5 py-4">
+                      {row.lampiran_url && Array.isArray(row.lampiran_url) && row.lampiran_url.length > 0 ? (
+                        <div className="flex gap-1">
+                          {row.lampiran_url.slice(0, 3).map((url: string, i: number) => (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              key={i}
+                              src={url}
+                              alt={`Lampiran ${i + 1}`}
+                              className="w-10 h-10 object-cover rounded border border-stone-200"
+                            />
+                          ))}
+                          {row.lampiran_url.length > 3 && (
+                            <span className="text-xs text-stone-400 flex items-center">
+                              +{row.lampiran_url.length - 3}
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="text-stone-300">—</span>
+                      )}
                     </td>
                     <td className="px-5 py-4">
                       <span className={`text-[10px] font-bold px-2 py-1 rounded-full ${statusColors[row.status]}`}>

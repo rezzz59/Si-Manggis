@@ -44,6 +44,20 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Field wajib kosong" }, { status: 400 });
   }
 
+  if (nik && (nik.length !== 16 || !/^\d{16}$/.test(nik))) {
+    return NextResponse.json({ error: "NIK harus 16 digit angka" }, { status: 400 });
+  }
+
+  const { data: rtExists } = await supabase
+    .from("rt")
+    .select("nomor_rt")
+    .eq("nomor_rt", nomor_rt)
+    .single();
+
+  if (!rtExists) {
+    return NextResponse.json({ error: "Nomor RT tidak valid" }, { status: 400 });
+  }
+
   // Generate unique tiket
   let tiket: string;
   do {

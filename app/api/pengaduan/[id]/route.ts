@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/src/lib/auth";
 import { supabase } from "@/src/lib/supabase";
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const session = await auth();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const { id } = await params;
 
   const { data, error } = await supabase
@@ -19,12 +16,19 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 }
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const session = await auth();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const { id } = await params;
 
   const body = await req.json();
-  const { status } = body;
+  const rawStatus = body.status as string | undefined;
+  const statusMap: Record<string, string> = {
+    proses: "DIPROSES",
+    selesai: "SELESAI",
+    ditolak: "DITOLAK",
+    menunggu: "MENUNGGU",
+  };
+  const status = rawStatus
+    ? (statusMap[rawStatus.toLowerCase()] ?? rawStatus.toUpperCase())
+    : undefined;
 
   const validStatuses = ["MENUNGGU", "DIPROSES", "SELESAI", "DITOLAK"];
   if (status && !validStatuses.includes(status)) {
@@ -33,7 +37,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
   const { data, error } = await supabase
     .from("pengaduan")
-    .update({ status, updatedat: new Date().toISOString() })
+    .update({ status })
     .eq("id", id)
     .select()
     .single();

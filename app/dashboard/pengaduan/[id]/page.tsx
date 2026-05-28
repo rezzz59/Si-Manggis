@@ -43,7 +43,14 @@ export default function PengaduanDetailPage() {
     DITOLAK: "bg-red-100 text-red-700",
   };
 
-  const statuses = ["MENUNGGU", "DIPROSES", "SELESAI", "DITOLAK"];
+  const statusLabels: Record<string, string> = {
+    MENUNGGU: "Menunggu",
+    DIPROSES: "Diproses",
+    SELESAI: "Selesai",
+    DITOLAK: "Ditolak",
+  };
+
+  const statuses = ["DIPROSES", "SELESAI", "DITOLAK", "MENUNGGU"];
 
   return (
     <div className="space-y-6 max-w-3xl">
@@ -79,13 +86,31 @@ export default function PengaduanDetailPage() {
             { label: "Nama", value: data.nama },
             { label: "Telepon", value: data.telepon || "-" },
             { label: "Email", value: data.email || "-" },
-            { label: "Topik", value: data.topik },
+            { label: "Lokasi", value: data.lokasi || "-" },
           ].map(({ label, value }) => (
             <div key={label}>
               <p className="text-xs text-stone-400 font-semibold uppercase mb-1">{label}</p>
               <p className="text-sm font-semibold text-stone-800">{value}</p>
             </div>
           ))}
+          {/* Lampiran */}
+          {data.lampiran_url && (
+            <div className="col-span-2">
+              <p className="text-xs text-stone-400 font-semibold uppercase mb-2">Lampiran Foto</p>
+              <div className="flex flex-wrap gap-2">
+                {(Array.isArray(data.lampiran_url) ? data.lampiran_url : [data.lampiran_url]).map((url: string, i: number) => (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    key={i}
+                    src={url}
+                    alt={`Lampiran ${i + 1}`}
+                    className="w-20 h-20 object-cover rounded-lg border border-stone-200 cursor-pointer hover:opacity-80"
+                    onClick={() => window.open(url, "_blank")}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
           <div className="col-span-2">
             <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Pesan</p>
             <p className="text-sm text-stone-700 bg-stone-50 rounded-lg px-4 py-3">{data.pesan}</p>
@@ -98,7 +123,7 @@ export default function PengaduanDetailPage() {
         <div className="flex flex-wrap gap-2">
           {statuses.map((s) => (
             <button
-              key={s}
+              key={statusLabels[s]}
               onClick={() => handleUpdate(s)}
               disabled={saving}
               className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
@@ -107,7 +132,7 @@ export default function PengaduanDetailPage() {
                   : "bg-stone-100 text-stone-500 hover:bg-stone-200"
               } ${saving ? "opacity-60 cursor-not-allowed" : ""}`}
             >
-              {s}
+              {statusLabels[s]}
             </button>
           ))}
         </div>

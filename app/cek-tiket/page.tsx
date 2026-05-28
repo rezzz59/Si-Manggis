@@ -119,7 +119,7 @@ function PermohonanResult({ data }: { data: Record<string, unknown> }) {
           ))}
           <div className="col-span-2">
             <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Keperluan</p>
-            <p className="text-sm text-stone-700 bg-stone-50 rounded-lg px-4 py-3">{data.keperluan as string}</p>
+            <p className="text-sm text-stone-700 bg-stone-50 rounded-lg px-4 py-3">{(data.deskripsi as string) || (data.keperluan as string) || "—"}</p>
           </div>
           {(data.catatan as string) && (
             <div className="col-span-2">

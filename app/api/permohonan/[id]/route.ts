@@ -26,7 +26,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const body = await req.json();
   const { status, catatan } = body;
 
-  const validStatuses = ["MENUNGGU", "DIPROSES", "SELESAI", "DITOLAK"];
+  const validStatuses = ["MENUNGGU", "DISETUJAI_RT", "DITOLAK_RT", "DIPROSES", "SELESAI", "DITOLAK"];
   if (status && !validStatuses.includes(status)) {
     return NextResponse.json({ error: "Status tidak valid" }, { status: 400 });
   }
@@ -43,6 +43,24 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  if (status) {
+    const current = await supabase
+      .from("permohonan")
+      .select("status")
+      .eq("id", id)
+      .single();
+    if (current.data) {
+      await supabase.from("laporan_status_log").insert({
+        laporan_id: id,
+        from_status: current.data.status,
+        to_status: status,
+        changed_by: session.user.email ?? "staff",
+        changed_at: new Date().toISOString(),
+        note: catatan ?? null,
+      });
+    }
+  }
 
   return NextResponse.json(data);
 }

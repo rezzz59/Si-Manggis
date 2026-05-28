@@ -42,6 +42,7 @@ export default async function PermohonanPage({
     { label: "Semua", value: "" },
     { label: "Menunggu RT", value: "MENUNGGU" },
     { label: "Disetujui RT", value: "DISETUJAI_RT" },
+    { label: "Ditolak RT", value: "DITOLAK_RT" },
     { label: "Diproses", value: "DIPROSES" },
     { label: "Selesai", value: "SELESAI" },
     { label: "Ditolak", value: "DITOLAK" },

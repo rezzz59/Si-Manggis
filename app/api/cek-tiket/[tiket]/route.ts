@@ -13,7 +13,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ tik
     .single();
 
   if (permohonan) {
-    return NextResponse.json(permohonan);
+    return NextResponse.json({ permohonan, pengaduan: null, error: "" });
   }
 
   // Fallback: pengaduan lama
@@ -24,8 +24,8 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ tik
     .single();
 
   if (pengaduan) {
-    return NextResponse.json(pengaduan);
+    return NextResponse.json({ permohonan: null, pengaduan, error: "" });
   }
 
-  return NextResponse.json({ error: "Tiket tidak ditemukan" }, { status: 404 });
+  return NextResponse.json({ permohonan: null, pengaduan: null, error: "Tiket tidak ditemukan" }, { status: 404 });
 }
