@@ -30,9 +30,24 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# env files
+.env
+.env.local
+.env.*.local
+
+# claude code (machine-specific)
+/.claude/settings.local.json
+/.claude/skills/
+.claude/skills/
+.agents/
+.superpowers/
+skills-lock.json
+
+# mcp config (machine-specific)
 .mcp.json
+
+# docs - auto-generated diagrams, reference images, local docs
+docs/
 
 # vercel
 .vercel
