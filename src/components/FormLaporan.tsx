@@ -4,17 +4,17 @@ import { useState } from "react";
 import RtDropdown from "./RtDropdown";
 
 const JENIS_LAYANAN = [
-  { id: "surat_keterangan", label: "Surat Keterangan" },
-  { id: "surat_izin", label: "Surat Izin Tinggal" },
-  { id: "surat_pengantar", label: "Surat Pengantar" },
-  { id: "aduan", label: "Pengaduan / Aspirasi" },
+  { id: "surat-keterangan", label: "Surat Keterangan" },
+  { id: "ktp-kk", label: "KTP & Kartu Keluarga" },
+  { id: "surat-nikah", label: "Surat Pengantar Nikah" },
+  { id: "izin-keramaian", label: "Izin Keramaian" },
 ];
 
 const SUB_JENIS: Record<string, string[]> = {
-  surat_keterangan: ["Domisili", "Usaha", "Pengantar", "Keterangan Lain"],
-  surat_izin: ["Izin Tinggal Sementara", "Perpanjangan Izin"],
-  surat_pengantar: ["Nikah", "Pergi keluar kota", "Lainnya"],
-  aduan: ["Infrastruktur", "Lingkungan", "Keamanan", "Lainnya"],
+  "surat-keterangan": ["Domisili", "Usaha", "Pengantar", "Keterangan Lain"],
+  "ktp-kk": ["KTP Hilang/Rusak", "Penambahan Anggota Keluarga", "Perubahan Data", "Lainnya"],
+  "surat-nikah": ["Nikah", "Pergi keluar kota", "Lainnya"],
+  "izin-keramaian": ["Keramaian", "Kesenian", "Olahraga", "Lainnya"],
 };
 
 export default function FormLaporan() {
@@ -64,7 +64,7 @@ export default function FormLaporan() {
           WA akan dikirim ke RT terkait untuk persetujuan.
         </p>
         <a
-          href="/lacak"
+          href="/cek-tiket"
           className="inline-block mt-6 text-sm font-semibold text-[#1e40af] hover:text-[#1e3a8a] underline"
         >
           Lacak Status →

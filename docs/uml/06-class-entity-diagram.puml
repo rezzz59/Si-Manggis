@@ -1,0 +1,136 @@
+@startuml SiManggis-ClassDiagram
+!theme plain
+skinparam classAttributeIconSize 0
+
+package "Entities" {
+
+  class Staff {
+    - id: uuid
+    - email: string
+    - nama: string
+    - password: string (bcrypt hash)
+    - role: enum(admin|staff)
+    - created_at, updated_at
+  }
+
+  class RT {
+    - id: uuid
+    - nomor_rt: string (01-52)
+    - nama_ketua: string
+    - no_wa_rt: string (08xx...)
+    - rw_id: string
+    - created_at, updated_at
+  }
+
+  class Permohonan {
+    - id: uuid
+    - tiket: string (MGH-XXXXXXXX)
+    - nama: string
+    - nik: string
+    - alamat: string
+    - telepon: string
+    - layanan: string
+    - sub_layanan: string
+    - deskripsi: text
+    - nomor_rt: string (FK ke RT.nomor_rt)
+    - status: enum(MENUNGGU|DISETUJAI_RT|DITOLAK_RT|DIPROSES|SELESAI|DITOLAK)
+    - catatan: text
+    - lampiran_url: text[]
+    - fonnte_msg_id: string
+    - rt_approved_at: timestamp
+    - rt_approved_via: string (whatsapp)
+    - kelurahan_approved_at: timestamp
+    - surat_url: string
+    - created_at, updated_at
+  }
+
+  class Pengaduan {
+    - id: uuid
+    - tiket: string
+    - nama: string
+    - telepon: string
+    - email: string
+    - topik: string
+    - pesan: text
+    - status: enum(MENUNGGU|DIPROSES|SELESAI|DITOLAK)
+    - created_at, updated_at
+  }
+
+  class Artikel {
+    - id: uuid
+    - judul: string
+    - slug: string
+    - excerpt: text
+    - konten: text
+    - gambar_url: string
+    - kategori: string
+    - penulis: string
+    - tgl_publish: timestamp
+    - is_featured: boolean
+    - is_published: boolean
+    - created_at, updated_at
+  }
+
+  class WebsiteAssets {
+    - id: uuid
+    - filename: string
+    - storage_url: string
+    - category: enum(hero|slider|galeri|lainnya)
+    - alt_text: string
+    - caption: string
+    - is_active: boolean
+    - sort_order: integer
+    - metadata: jsonb
+    - created_by: uuid (FK Staff)
+    - created_at, updated_at
+  }
+
+  class HomepageConfig {
+    - id: uuid
+    - section: enum(hero|stat_bar|berita_featured|program_unggulan|footer)
+    - config: jsonb
+    - updated_at
+  }
+
+  class LaporanStatusLog {
+    - id: uuid
+    - laporan_id: uuid
+    - from_status: string
+    - to_status: string
+    - changed_by: string
+    - changed_at: timestamp
+    - note: text
+  }
+}
+
+' === RELATIONSHIPS ===
+
+RT "1" -- "N" Permohonan : "mengelola"
+Staff "1" -- "N" WebsiteAssets : "mengelola"
+Permohonan "1" -- "N" LaporanStatusLog : "log status"
+
+note top of Permohonan
+  Status flow (permohonan perlu persetujuan RT):
+  MENUNGGU → DISETUJAI_RT → DIPROSES → SELESAI
+              ↘ DITOLAK_RT ↘ DITOLAK
+end note
+
+note top of Pengaduan
+  Status flow (tanpa persetujuan RT):
+  MENUNGGU → DIPROSES → SELESAI
+            ↘ DITOLAK
+end note
+
+note top of RT
+  RT TIDAK login ke dashboard.
+  Approval dilakukan via WA.
+  Setiap RT punya nomor WA
+  untuk terima notif.
+end note
+
+note top of Staff
+  Staff login ke dashboard.
+  Mengelola permohonan & pengaduan.
+end note
+
+@enduml

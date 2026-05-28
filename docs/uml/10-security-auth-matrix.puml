@@ -1,0 +1,90 @@
+@startuml SiManggis-SecurityModel
+!theme plain
+
+package "🔓 PUBLIC (No Auth)" as public {
+  usecase "POST /api/permohonan\n(submit permohonan warga)" as UC_PUBLIC_POST_PERM
+  usecase "POST /api/pengaduan\n(submit pengaduan warga)" as UC_PUBLIC_POST_PENG
+  usecase "GET /api/cek-tiket/:tiket\n(lacak status by tiket)" as UC_PUBLIC_CEK
+  usecase "GET /api/rt\n(daftar RT untuk dropdown)" as UC_PUBLIC_RT
+  usecase "GET /api/artikel\n(artikel published)" as UC_PUBLIC_ART
+  usecase "GET /api/assets\n(assets aktif)" as UC_PUBLIC_ASSETS
+  usecase "GET /api/homepage\n(konfigurasi homepage)" as UC_PUBLIC_HOME
+}
+
+package "🔑 AUTH: Staff Session (Next-Auth JWT)" as authStaff {
+  usecase "GET /api/permohonan\n(list semua permohonan)" as UC_AUTH_GET_PERM
+  usecase "GET /api/permohonan/:id\n(detail permohonan)" as UC_AUTH_GET_PERM_ID
+  usecase "PATCH /api/permohonan/:id\n(update status)" as UC_AUTH_PATCH_PERM
+  usecase "GET /api/pengaduan\n(list semua pengaduan)" as UC_AUTH_GET_PENG
+  usecase "GET /api/pengaduan/:id\n(detail pengaduan)" as UC_AUTH_GET_PENG_ID
+  usecase "PATCH /api/pengaduan/:id\n(update status)" as UC_AUTH_PATCH_PENG
+}
+
+package "🔐 AUTH: Admin (supabaseAdmin — service role)" as authAdmin {
+  usecase "POST/PATCH/DELETE /api/artikel\n(kelola artikel)" as UC_ADMIN_ARTIKEL
+  usecase "GET/PUT /api/homepage\n(edit homepage config)" as UC_ADMIN_HOME
+  usecase "POST /api/assets\n(upload asset)" as UC_ADMIN_ASSET_POST
+  usecase "PATCH /api/assets/:id\n(edit asset)" as UC_ADMIN_ASSET_PATCH
+  usecase "DELETE /api/assets/:id\n(hapus asset)" as UC_ADMIN_ASSET_DEL
+}
+
+package "🤖 SYSTEM (No User Auth — Internal)" as authSystem {
+  usecase "POST /api/fonnte/send\n(kirim WA — env token only)" as UC_SYS_FONNTE_SEND
+  usecase "POST /api/fonnte/webhook\n(terima balasan WA — phone match only)" as UC_SYS_FONNTE_WEBHOOK
+}
+
+package "🛡️ MIDDLEWARE PROTECTION" as middleware {
+  note "Middleware (Edge Runtime)\nproteksi dilakukan sebelum\nhandler dipanggil"
+}
+
+package "⚠️ SECURITY GAPS" as gaps {
+  note as gap1
+    CRITICAL GAPS:
+    1. supabase (browser) pakai
+       service role key → RLS bypass
+    2. Semua staff bisa akses
+       semua record (IDOR)
+    3. Fonnte webhook tanpa
+       signature verification
+    4. Rate limiting tidak ada
+  end note
+}
+
+' Middleware protection visualization
+middleware -[hidden]- authStaff
+middleware -[hidden]- authAdmin
+
+UC_PUBLIC_POST_PERM -[dashed,#red]-> gaps
+UC_PUBLIC_POST_PENG -[dashed,#red]-> gaps
+UC_SYS_FONNTE_WEBHOOK -[dashed,#red]-> gaps
+UC_AUTH_PATCH_PERM -[dashed,#orange]-> gaps
+UC_AUTH_PATCH_PENG -[dashed,#orange]-> gaps
+
+note right of gaps
+  Impact:
+  🔴 Siapa pun bisa spam submission
+  🔴 Attacker bisa approve
+     permohonan RT lain
+  🔴 Semua staff bisa modifikasi
+     record RT lain
+  🔴 Billing Fonnte bisa
+     dikuras attacker
+end note
+
+note top of authStaff
+  ⚠️ CURRENT: hanya cek session.exists()
+  ✅ NEEDED: cek staff role + record ownership
+end note
+
+note top of authAdmin
+  ✅ Current: supabaseAdmin bypasses RLS
+  ⚠️ RISK: Jika service key exposed → full DB access
+end note
+
+note top of public
+  ✅ Current: warga bisa submit tanpa login
+  ✅ Good: mengurangi friction untuk warga
+  ⚠️ Risk: bisa di-spam tanpa rate limiting
+end note
+
+@enduml

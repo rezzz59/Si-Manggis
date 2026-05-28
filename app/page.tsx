@@ -95,7 +95,7 @@ const JENIS_LAYANAN = [
     icon: Send,
     label: "Ajukan Laporan",
     desc: "Pengaduan & permohonan surat via WA RT",
-    href: "/laporan",
+    href: "/layanan",
   },
 ];
 

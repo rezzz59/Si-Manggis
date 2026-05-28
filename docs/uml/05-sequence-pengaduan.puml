@@ -1,0 +1,80 @@
+@startuml
+skinparam backgroundColor #FEFCF3
+
+title Si-Manggis — Sequence Diagram: End-to-End Pengaduan (Keluhan)\n\nactor Warga order 10
+participant "Frontend\n/Web" as FE order 20
+participant "API Route\n/api/pengaduan" as API order 30
+participant "Supabase DB" as DB order 40
+participant "StaffDashboard" as STAFF order 50
+participant "Fonnte API" as FONNTE order 60
+
+== Warga Submit Pengaduan ==
+
+Warga -> FE : 1. Isi form pengaduan\n(nama, telepon/email, topik, pesan)
+FE -> API : 2. POST /api/pengaduan\n({ nama, telepon, email, topik, pesan })
+
+API -> DB : 3. INSERT ke tabel pengaduan\n(status: MENUNGGU, generate tiket)\nnote: TIDAK ada proses RT\nini langsung ke Kelurahan
+
+alt Insert sukses
+  API -> DB : 4. INSERT\nlaporan_status_log\n(status: MENUNGGU)
+  API -> FE : 5. Response\n{ tiket: "#PD-A1B2", status: "MENUNGGU" }
+  FE -> FE : 6. Tampilkan halaman\n"Pengaduan Anda telah\nditerima - tiket #PD-A1B2"
+else Insert gagal
+  API -> FE : 5x. ERROR 400/500
+end
+
+== Staff Proses Pengaduan ==
+
+activate STAFF
+STAFF -> DB : 7. Ambil daftar pengaduan\nGET /api/pengaduan?status=MENUNGGU
+DB --> STAFF : 8. List pengaduan\n(GROUP BY topik jika perlu)
+
+note right STAFF
+  Staff urutan berdasarkan:
+  - Topik: keamanan, infrastruktur, dll
+  - Tanggal terbaru
+  - Prioritas危
+
+  ⚠️ Tidak ada RT dalam flow ini
+end note
+
+loop Setiap pengaduan diproses
+
+  alt Pengaduan valid & ditindaklanjuti
+    STAFF -> DB : 9a. UPDATE status\n→ DIPROSES\n+ catatan proses
+    STAFF -> FONNTE : 10a. Kirim WA warga\n"Pengaduan Anda sedang\nkami tindaklanjuti"
+    FONNTE -> Warga : 11a. ✅ WA notifikasi\nke warga (opsional, email jg bisa)
+
+    ... beberapa waktu ...
+
+    STAFF -> DB : 12a. UPDATE status\n→ SELESAI
+    STAFF -> FONNTE : 13a. Kirim WA warga\n"Pengaduan Anda telah\ndiselesaikan.\nTerima kasih atas\nlaporannya."
+    FONNTE -> Warga : 14a. ✅ WA selesai\nke warga
+
+  else Pengaduan tidak valid/out of scope
+    STAFF -> DB : 9b. UPDATE status\n→ DITOLAK_KELURAHAN
+    STAFF -> FONNTE : 10b. Kirim WA warga\n"Pengaduan Anda ditolak.\nAlasan: [catatan]"
+    FONNTE -> Warga : 11b. WA penolakan
+  end
+
+  STAFF -> DB : 15. INSERT\nlaporan_status_log\n(setiap perubahan status)
+
+end loop
+
+deactivate STAFF
+
+== Warga Cek Status ==
+
+Warga -> FE : 16. Buka halaman\n/cek-tiket
+FE -> FE : 17. Input nomor tiket\n"[tiket]"
+FE -> API : 18. GET /api/cek-tiket/[tiket]
+
+alt Ditemukan di tabel pengaduan
+  API -> DB : 19. SELECT WHERE\ntiket = [nilai]
+  DB --> FE : 20. Data pengaduan\n(jenis, status, tanggal, catatan)
+  FE -> FE : 21. Tampilkan status\n& detail pengaduan
+else Tidak ditemukan
+  FE -> FE : 20x. Pesan error\n"Tiket tidak ditemukan"
+end
+
+@enduml

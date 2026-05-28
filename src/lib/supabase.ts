@@ -1,3 +1,5 @@
+// Client-side Supabase client with RLS policies enforced.
+// For server-side admin operations that need to bypass RLS, use: src/lib/supabase-admin.ts
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
 let _supabase: SupabaseClient | null = null;

@@ -1,0 +1,111 @@
+@startuml SiManggis-BusinessOverview
+!theme plain
+skinparam backgroundColor #FEFEFE
+skinparam defaultFontSize 12
+
+package "🏘️ WARGA" #lightblue {
+  actor "Warga" as warga
+}
+
+package "👥 RT (52 RT)" #lightgreen {
+  actor "Ketua RT" as rt
+}
+
+package "🏛️ KELURAHAN" #lightyellow {
+  actor "Staff Kelurahan\n(Proses permohonan)" as staffOps
+  actor "Admin Website\n(Kelola konten)" as staffAdmin
+}
+
+package "🤖 SISTEM OTOMATIS" #lightgray {
+  database "Si-Manggis\n(Next.js + Supabase)" as sistem
+  database "WhatsApp\n(Fonnte API)" as fonnte
+}
+
+' ===== PERMOHONAN FLOW =====
+
+note as N1
+  **ALUR PERMOHONAN SURAT / LAYANAN**
+  1. Warga submit → Sistem (tanpa login)
+  2. Sistem kirimi WA ke RT terkait
+  3. RT approve via WA ("SETUJU")
+  4. Sistem → Notif ke Kelurahan
+  5. Staff proses di dashboard
+  6. Status selesai → warga bisa download
+end note
+
+warga -right-> sistem : "1. Submit Permohonan\n(nama, NIK, alamat, telepon,\njenis layanan, nomor RT)\n→ tanpa login"
+
+sistem -right-> fonnte : "2. Kirim notif WA ke RT\n(nomor WA dari tabel rt)"
+fonnte -right-> rt : "WA message:\n'Ada permohonan baru dari [nama]'\nBalas SETUJU / TOLAK [alasan]"
+
+rt -left-> fonnte : "3. Balas 'SETUJU'"
+fonnte -left-> sistem : "4. Webhook:\nfrom=[no_wa_rt]\nmessage='SETUJU'"
+
+sistem --> sistem : "5. Update status:\nMENUNGGU → DISETUJAI_RT\nLog ke laporan_status_log"
+
+sistem -right-> fonnte : "6. Kirim notif ke\nKELURAHAN_WA_NUMBER"
+fonnte -right-> staffOps : "WA: 'Permohonan baru\nsudah di-approve RT [nomor]'"
+
+staffOps -down-> sistem : "7. Login dashboard\n→ Proses permohonan\n→ Update: DIPROSES → SELESAI"
+
+sistem -down-> warga : "8. Warga cek /cek-tiket\n→ Lihat status SELESAI\n→ Download surat"
+
+' ===== PENGADUAN FLOW =====
+
+note as N2 at 5,35
+  **ALUR PENGADUAN**
+  1. Warga submit pengaduan (tanpa login)
+  2. Langsung masuk dashboard staff
+  3. TIDAK ada tahap RT approval
+  4. Staff proses: DIPROSES → SELESAI
+end note
+
+warga -down-> sistem : "A. Submit Pengaduan\n(topik, pesan, nama, telepon)\n→ tanpa login"
+
+sistem -down-> staffOps : "B. Notifikasi internal\n(masuk daftar pengaduan\ndashboard)"
+
+staffOps -down-> sistem : "C. Proses:\nDIPROSES → SELESAI"
+
+sistem -down-> warga : "D. Warga cek status\nvia /cek-tiket"
+
+' ===== KONTEN WEBSITE FLOW =====
+
+note as N3 at 28,35
+  **ALUR KONTEN WEBSITE**
+  Admin website login
+  → Dashboard /dashboard/homepage
+  → Edit hero, stat, program
+  → Dashboard /dashboard/aset
+  → Upload gambar
+  → Dashboard /dashboard/artikel
+  → Tambah artikel berita
+end note
+
+staffAdmin -right-> sistem : "E. Login admin\n→ Kelola konten website\n(artikel, homepage, aset)"
+
+' ===== ROLE SUMMARY =====
+
+note as N4
+  **PERAN DALAM SISTEM**
+
+  👤 Warga:
+  - Submit permohonan & pengaduan (tanpa login)
+  - Lacak status via nomor tiket
+
+  👤 RT:
+  - TIDAK login dashboard
+  - Cuma terima & balas WA
+  - Approve / Tolak permohonan warga
+
+  👤 Staff Kelurahan:
+  - Login dashboard → proses permohonan & pengaduan
+  - Lihat semua data (semua RT)
+  - Update status hingga SELESAI
+  - Generate surat
+
+  👤 Admin Website:
+  - Login dashboard → kelola CMS website
+  - Kelola: homepage, aset, artikel
+end note
+
+@enduml

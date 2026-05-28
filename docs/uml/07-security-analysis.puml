@@ -1,0 +1,83 @@
+@startuml SiManggis-SecurityAnalysis
+!theme plain
+
+left to right direction
+
+package "AKTUAL — Apa yang Terjadi Sekarang" {
+
+  package "✅ YANG SUDAH BAIK" {
+    rectangle "Staff login pakai bcrypt + JWT session" as ok1
+    rectangle "RT approval via WA (tidak perlu login)" as ok2
+    rectangle "Validasi required fields di form warga" as ok3
+    rectangle "File upload: whitelist tipe + limit 5MB" as ok4
+    rectangle "Status enum divalidasi sebelum update" as ok5
+    rectangle "DB rollback kalau upload gagal" as ok6
+  }
+
+  package "⚠️ RISIKO SEDANG" {
+    rectangle "nomor_rt tidak divalidasi\nada di tabel RT saat warga submit" as mid1
+    note bottom of mid1
+      Warga bisa submit permohonan
+      dengan nomor_rt apapun (misal: "99")
+      → notif WA tidak pernah terkirim
+      → permohonan jadi limbo
+    end note
+
+    rectangle "Fonnte webhook tanpa\nsignature verification" as mid2
+    note bottom of mid2
+      Siapa pun bisa POST ke webhook
+      dengan phone number RT → bisa
+      approve permohonan sendiri
+    end note
+
+    rectangle "Staff bisa ubah status\nSEMUA permohonan (IDOR)" as mid3
+    note bottom of mid3
+      Tidak ada cek apakah staff
+      berhak memproses permohonan
+      dari RT tertentu
+    end note
+
+    rectangle "Email tidak divalidasi\nformatnya (regex)" as mid4
+  }
+
+  package "🚨 RISIKO TINGGI" {
+    rectangle "Supabase service role key\ndigunakan di semua API routes" as high1
+    note bottom of high1
+      supabase.ts menggunakan
+      SUPABASE_SERVICE_ROLE_KEY
+      → RLS di-database tidak berlaku
+      → semua query bypass RLS
+    end note
+
+    rectangle "Tidak ada rate limiting\ndi endpoint public" as high2
+    note bottom of high2
+      Attacker bisa brute force
+      generate tiket atau spam
+      submission formulário
+    end note
+
+    rectangle "NIK tidak divalidasi\n16 digit (checksum)" as high3
+    note bottom of high3
+      NIK warga tidak divalidasi
+      formatnya → data tidak konsisten
+    end note
+  }
+}
+
+package "PERLU — Yang Harus Ditambahkan" {
+  rectangle "Validasi nomor_rt harus ada\ndi tabel RT saat submit" as need1
+  rectangle "Fonnte webhook signature\nverification (secret token)" as need2
+  rectangle "Rate limiting (misal: 10 req/menit)\npada endpoint public" as need3
+  rectangle "NIK format validation\n(16 digit)" as need4
+  rectangle "Staff role: admin vs staff\n(dashboard permission check)" as need5
+}
+
+ok1 -[hidden]down- ok2
+ok2 -[hidden]down- ok3
+mid1 -[hidden]down- mid2
+mid2 -[hidden]down- mid3
+mid3 -[hidden]down- mid4
+high1 -[hidden]down- high2
+high2 -[hidden]down- high3
+
+@enduml

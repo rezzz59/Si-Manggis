@@ -1,0 +1,48 @@
+@startuml
+skinparam backgroundColor #FEFCF3
+
+title Si-Manggis — Permohonan Status State Machine
+
+[*] --> MENUNGGU : Warga submit\nvia /api/permohonan
+
+state MENUNGGU {
+  state "RT punya WA" as RT_Y
+  state "RT tanpa WA" as RT_N
+  RT_Y --> RT_N : 24 jam\ntanpa balasan
+}
+
+note right of MENUNGGU
+  Staff bisa lihat di dashboard
+  Tampilkan badge: "⚠️ RT tanpa WA"
+end note
+
+MENUNGGU --> DISETUJAI_RT : RT balas\n"SETUJU"\n(via WA / Telepon)
+MENUNGGU --> DITOLAK_RT : RT balas\n"TOLAK [alasan]"\n(via WA)
+
+note bottom of DISETUJAI_RT
+  Terjadi juga ketika:
+  - Staff telepon RT, RT approve
+  - Staff override di dashboard
+  - Auto-approve 24 jam (jika diaktifkan)
+end note
+
+DISETUJAI_RT --> DIPROSES : Staff mulai\nproses surat
+
+DIPROSES --> SELESAI : Surat selesai\nsiap diambil warga
+DIPROSES --> DITOLAK_KELURAHAN : Staff menolak\ndi level Kelurahan
+
+DITOLAK_RT --> [*]
+DITOLAK_KELURAHAN --> [*]
+SELESAI --> [*]
+
+note top of DITOLAK_KELURAHAN
+  Contoh: Data tidak valid,
+  warga perlu perbaikan
+end note
+
+note bottom of SELESAI
+  Sistem kirim WA ke warga:
+  "Surat Anda siap diambil\ndi Kantor Kelurahan"
+end note
+
+@enduml

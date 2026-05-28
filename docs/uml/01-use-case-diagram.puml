@@ -1,0 +1,77 @@
+@startuml SiManggis-UseCase
+left to right direction
+
+actor Warga
+actor RT
+actor "Staff Kelurahan" as Staff
+actor "Admin Website" as Admin
+
+note right of RT
+  RT TIDAK login.
+  Cukup balas WA dari sistem.
+end note
+
+note right of Staff
+  Staff login ke dashboard.
+  Proses permohonan &
+  pengaduan.
+end note
+
+' ---- Warga Use Cases ----
+usecase "Kirim Permohonan" as UC1
+usecase "Kirim Pengaduan" as UC2
+usecase "Lacak Status" as UC3
+
+' ---- RT Use Cases ----
+usecase "Terima Notif WA" as UC4
+usecase "Approve via WA" as UC5
+usecase "Tolak via WA" as UC6
+
+' ---- Staff Use Cases ----
+usecase "Lihat Semua Permohonan" as UC7
+usecase "Lihat Semua Pengaduan" as UC8
+usecase "Update Status" as UC9
+usecase "Selesai + Upload Surat" as UC10
+
+' ---- Admin Use Cases ----
+usecase "Kelola Artikel" as UC11
+usecase "Kelola Homepage" as UC12
+usecase "Kelola Aset" as UC13
+
+' ---- System Use Cases ----
+usecase "Generate Tiket" as UC14
+usecase "Kirim WA ke RT" as UC15
+usecase "Parse Balasan WA" as UC16
+usecase "Kirim WA ke Kelurahan" as UC17
+
+' ---- Associations ----
+Warga --> UC1
+Warga --> UC2
+Warga --> UC3
+
+RT --> UC4
+RT --> UC5
+RT --> UC6
+
+Staff --> UC7
+Staff --> UC8
+Staff --> UC9
+Staff --> UC10
+
+Admin --> UC11
+Admin --> UC12
+Admin --> UC13
+
+' RT receives notification
+UC15 .. UC4 : <<extends>>
+UC17 .. UC4 : <<extends>>
+
+' Include relationships
+UC1 ..> UC14 : <<include>>
+UC2 ..> UC14 : <<include>>
+UC1 ..> UC15 : <<include>>
+UC5 ..> UC17 : <<include>>
+UC5 ..> UC16 : <<include>>
+UC6 ..> UC16 : <<include>>
+
+@enduml

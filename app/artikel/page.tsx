@@ -2,14 +2,24 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Calendar, User } from "lucide-react";
-import { dataArtikel } from "@/src/data/artikel";
+import { supabaseAdmin } from "@/src/lib/supabase-admin";
 
 export const metadata = {
   title: "Kabar Desa - Si-Manggis",
   description: "Berita dan informasi terkini dari Kelurahan Guntung Manggis.",
 };
 
-export default function ArtikelPage() {
+function formatTanggal(dateStr: string) {
+  const d = new Date(dateStr + "T00:00:00");
+  return d.toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+}
+
+export default async function ArtikelPage() {
+  const { data: artikelList } = await supabaseAdmin
+    .from("artikel")
+    .select("*")
+    .eq("is_published", true)
+    .order("tgl_publish", { ascending: false });
   return (
     <main className="flex flex-col">
 
@@ -38,7 +48,7 @@ export default function ArtikelPage() {
 
           {/* Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {dataArtikel.map((artikel) => (
+            {(artikelList ?? []).map((artikel) => (
               <Link
                 key={artikel.slug}
                 href={`/artikel/${artikel.slug}`}
@@ -47,7 +57,7 @@ export default function ArtikelPage() {
                 {/* Gambar */}
                 <div className="relative h-44 overflow-hidden bg-stone-100">
                   <Image
-                    src={artikel.gambar}
+                    src={artikel.gambar_url ?? "/img/bg.png"}
                     alt={artikel.judul}
                     fill
                     className="object-cover"
@@ -66,14 +76,14 @@ export default function ArtikelPage() {
                     {artikel.judul}
                   </h3>
                   <p className="text-xs text-stone-500 leading-relaxed line-clamp-2 mb-4">
-                    {artikel.cuplikan}
+                    {artikel.excerpt}
                   </p>
 
                   {/* Meta */}
                   <div className="flex items-center justify-between text-[11px] text-stone-400 pt-3 border-t border-stone-100">
                     <span className="flex items-center gap-1">
                       <Calendar size={11} />
-                      {artikel.tanggal}
+                      {formatTanggal(artikel.tgl_publish)}
                     </span>
                     <span className="flex items-center gap-1">
                       <User size={11} />

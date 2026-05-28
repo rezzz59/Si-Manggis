@@ -7,6 +7,7 @@ import {
   MessageSquare,
   LogOut,
   Home,
+  Images,
 } from "lucide-react";
 
 export default async function DashboardLayout({
@@ -19,6 +20,8 @@ export default async function DashboardLayout({
 
   const navItems = [
     { href: "/dashboard", icon: LayoutDashboard, label: "Beranda" },
+    { href: "/dashboard/homepage", icon: Home, label: "Homepage" },
+    { href: "/dashboard/aset", icon: Images, label: "Aset Website" },
     { href: "/dashboard/permohonan", icon: FileText, label: "Permohonan" },
     { href: "/dashboard/pengaduan", icon: MessageSquare, label: "Pengaduan" },
   ];

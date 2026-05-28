@@ -1,18 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import FormLaporan from "@/src/components/FormLaporan";
 import {
   FileText,
   IdCard,
   Heart,
   PartyPopper,
-  CheckCircle,
   ChevronDown,
   ChevronUp,
-  Clock,
   File,
-  Send,
 } from "lucide-react";
 import { dataLayanan } from "@/src/data/layanan";
 
@@ -25,40 +22,6 @@ const iconMap: Record<string, React.ElementType> = {
 
 export default function LayananPage() {
   const [openId, setOpenId] = useState<string | null>(null);
-  const [form, setForm] = useState({
-    nama: "",
-    nik: "",
-    alamat: "",
-    layanan: "",
-    keperluan: "",
-    telepon: "",
-  });
-  const [submitted, setSubmitted] = useState(false);
-  const [tiket, setTiket] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const res = await fetch("/api/permohonan", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        alert(data.error || "Gagal mengirim permohonan");
-        return;
-      }
-      setTiket(data.tiket);
-      setSubmitted(true);
-    } catch {
-      alert("Terjadi kesalahan. Silakan coba lagi.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const toggle = (id: string) => setOpenId(openId === id ? null : id);
 
@@ -75,7 +38,8 @@ export default function LayananPage() {
             Layanan untuk Warga
           </h1>
           <p className="text-white/70 max-w-md text-sm">
-            Ajukan surat dan layanan desa tanpa perlu ke kantor. Isi formulir di bawah dan kami akan menghubungi Anda.
+            Ajukan surat dan layanan desa tanpa perlu ke kantor. Isi formulir di
+            bawah dan kami akan menghubungi Anda.
           </p>
         </div>
       </section>
@@ -156,7 +120,7 @@ export default function LayananPage() {
         </div>
       </section>
 
-      {/* Formulir */}
+      {/* Ajukan Permohonan */}
       <section className="py-16 lg:py-20 bg-white">
         <div className="mx-auto max-w-3xl px-6 lg:px-8">
           <span className="accent-line mb-3 block" />
@@ -164,204 +128,13 @@ export default function LayananPage() {
             Ajukan Permohonan
           </h2>
           <p className="text-sm text-stone-500 mb-8">
-            Isi formulir di bawah. Staff desa akan menghubungi Anda melalui nomor yang diberikan.
+            Pengajuan akan langsung dikirim ke WA RT terkait untuk persetujuan
+            lebih cepat. Lacak status di portal.
           </p>
 
-          {submitted ? (
-            <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-8 text-center">
-              <CheckCircle
-                size={48}
-                className="text-emerald-500 mx-auto mb-4"
-              />
-              <h3 className="text-lg font-bold text-emerald-700 mb-2">
-                Permohonan Terkirim
-              </h3>
-              <p className="text-sm text-emerald-600 max-w-sm mx-auto mb-4">
-                Terima kasih. Staff desa akan menghubungi Anda dalam 1–2 hari kerja.
-              </p>
-              {tiket && (
-                <div className="inline-block bg-white border border-emerald-300 rounded-xl px-6 py-4">
-                  <p className="text-xs text-emerald-500 font-semibold uppercase tracking-wide mb-1">
-                    Nomor Tiket Anda
-                  </p>
-                  <p className="text-2xl font-bold font-mono text-emerald-700">
-                    {tiket}
-                  </p>
-                  <p className="text-xs text-stone-400 mt-1">
-                    Simpan nomor ini untuk mengecek status
-                  </p>
-                </div>
-              )}
-              <button
-                type="button"
-                onClick={() => {
-                  setSubmitted(false);
-                  setTiket("");
-                  setForm({
-                    nama: "",
-                    nik: "",
-                    alamat: "",
-                    layanan: "",
-                    keperluan: "",
-                    telepon: "",
-                  });
-                }}
-                className="mt-6 text-sm font-semibold text-emerald-600 hover:text-emerald-700 underline cursor-pointer"
-              >
-                Ajukan permohonan lain
-              </button>
-              <Link
-                href="/cek-tiket"
-                className="mt-3 block text-sm font-semibold text-[#1e40af] hover:underline cursor-pointer"
-              >
-                Cek Status Tiket
-              </Link>
-            </div>
-          ) : (
-            <div className="space-y-8">
-              {/* CTA: Ajukan via WA RT */}
-              <div className="bg-[#1e40af] rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                <div className="flex-1">
-                  <h3 className="text-white font-bold text-lg mb-1">
-                    Ajukan via WA RT
-                  </h3>
-                  <p className="text-white/70 text-sm">
-                    Pengajuan akan langsung dikirim ke WA RT terkait untuk persetujuan lebih cepat. Lacak status di portal.
-                  </p>
-                </div>
-                <Link
-                  href="/laporan"
-                  className="flex-shrink-0 inline-flex items-center gap-2 bg-white text-[#1e40af] text-sm font-bold px-6 py-3 rounded-lg hover:bg-[#eff6ff] transition-colors"
-                >
-                  Ajukan Sekarang <Send size={14} />
-                </Link>
-              </div>
-
-              <form
-              onSubmit={handleSubmit}
-              className="bg-stone-50 rounded-2xl border border-stone-200 p-6 lg:p-8 space-y-5"
-            >
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div>
-                  <label className="block text-xs font-semibold text-stone-600 mb-1.5">
-                    Nama Lengkap <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Nama Anda"
-                    value={form.nama}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, nama: e.target.value }))
-                    }
-                    className="w-full rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1e40af]/30 focus:border-[#1e40af]"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-stone-600 mb-1.5">
-                    NIK (Nomor Induk Kependudukan)
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="16 digit NIK"
-                    value={form.nik}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, nik: e.target.value }))
-                    }
-                    className="w-full rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1e40af]/30 focus:border-[#1e40af]"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-stone-600 mb-1.5">
-                  Alamat <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Alamat lengkap di Desa Guntung Manggis"
-                  value={form.alamat}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, alamat: e.target.value }))
-                  }
-                  className="w-full rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1e40af]/30 focus:border-[#1e40af]"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div>
-                  <label className="block text-xs font-semibold text-stone-600 mb-1.5">
-                    Jenis Layanan <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    required
-                    value={form.layanan}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, layanan: e.target.value }))
-                    }
-                    className="w-full rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#1e40af]/30 focus:border-[#1e40af]"
-                  >
-                    <option value="">Pilih layanan</option>
-                    {dataLayanan.map((l) => (
-                      <option key={l.id} value={l.id}>
-                        {l.nama}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-stone-600 mb-1.5">
-                    No. Telepon / WhatsApp <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    placeholder="08xxxxxxxxxx"
-                    value={form.telepon}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, telepon: e.target.value }))
-                    }
-                    className="w-full rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1e40af]/30 focus:border-[#1e40af]"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-stone-600 mb-1.5">
-                  Keperluan / Keterangan <span className="text-red-500">*</span>
-                </label>
-                <textarea
-                  required
-                  rows={3}
-                  placeholder="Ceritakan keperluan Anda..."
-                  value={form.keperluan}
-                  onChange={(e) =>
-                    setForm((f) => ({ ...f, keperluan: e.target.value }))
-                  }
-                  className="w-full rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-[#1e40af]/30 focus:border-[#1e40af] resize-none"
-                />
-              </div>
-
-              <div className="bg-[#eff6ff] rounded-lg px-4 py-3 flex items-start gap-2">
-                <Clock size={15} className="text-[#1e40af] mt-0.5 flex-shrink-0" />
-                <p className="text-xs text-[#1e40af]">
-                  Estimasi proses: 1–7 hari kerja tergantung jenis layanan.
-                  Staff desa akan menghubungi Anda setelah permohonan diverifikasi.
-                </p>
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#1e40af] text-white font-semibold text-sm px-8 py-3 rounded-lg hover:bg-[#1e3a8a] transition-colors cursor-pointer disabled:opacity-60"
-              >
-                <Send size={16} />
-                {loading ? "Mengirim..." : "Kirim Permohonan"}
-              </button>
-            </form>
-            </div>
-          )}
+          <div className="bg-stone-50 rounded-2xl border border-stone-200 p-6 lg:p-8">
+            <FormLaporan />
+          </div>
         </div>
       </section>
     </main>
