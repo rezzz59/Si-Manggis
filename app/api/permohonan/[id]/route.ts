@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/src/lib/auth";
 import { supabase } from "@/src/lib/supabase";
+import { supabaseAdmin } from "@/src/lib/supabase-admin";
+import { sendFonnteWA } from "@/src/lib/fonnte";
+import { normalizePhone } from "@/src/lib/fonnte-parser";
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -59,6 +62,44 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
         changed_at: new Date().toISOString(),
         note: catatan ?? null,
       });
+    }
+
+    // WA notifikasi ke warga
+    const { data: pengajuan } = await supabaseAdmin
+      .from("permohonan")
+      .select("nama, telepon, tiket, status")
+      .eq("id", id)
+      .single();
+
+    if (pengajuan?.telepon) {
+      const statusMessages: Record<string, string> = {
+        SELESAI: "Surat Anda telah siap dan dapat diunduh di halaman Cek Tiket.",
+        DITOLAK: "Mohon maaf, permohonan Anda telah ditolak. Hubungi kantor desa untuk informasi lebih lanjut.",
+        DIPROSES: "Permohonan Anda sedang diproses oleh staff kelurahan.",
+        DISETUJAI_RT: "Permohonan Anda telah disetujui RT dan diteruskan ke Kelurahan.",
+      };
+
+      const msg = statusMessages[status];
+      if (msg) {
+        const waMsg = [
+          `Halo ${pengajuan.nama},`,
+          ``,
+          `Update status permohonan #${pengajuan.tiket}:`,
+          ``,
+          `${msg}`,
+          ``,
+          `Terima kasih.`,
+        ].join("\n");
+
+        try {
+          await sendFonnteWA({
+            target: normalizePhone(pengajuan.telepon),
+            message: waMsg,
+          });
+        } catch (waErr) {
+          console.warn("[permohonan PATCH] Gagal kirim WA:", waErr);
+        }
+      }
     }
   }
 
