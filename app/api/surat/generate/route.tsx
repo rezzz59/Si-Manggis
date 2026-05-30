@@ -4,8 +4,15 @@ import { supabaseAdmin } from "@/src/lib/supabase-admin";
 import { sendFonnteWA } from "@/src/lib/fonnte";
 import { normalizePhone } from "@/src/lib/fonnte-parser";
 import { SuratPdfDocument } from "@/src/components/surat-pdf-template";
+import { auth } from "@/src/lib/auth";
 
 export async function POST(req: NextRequest) {
+  // 0. Auth check
+  const session = await auth();
+  if (!session?.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const body = await req.json();
   const { permohonanId } = body as { permohonanId: string };
 
@@ -60,34 +67,43 @@ export async function POST(req: NextRequest) {
     });
 
   if (uploadError) {
-    return NextResponse.json({ error: `Upload gagal: ${uploadError.message}` }, { status: 500 });
+    return NextResponse.json({ error: "Gagal mengunggah surat. Silakan coba lagi." }, { status: 500 });
   }
 
-  const { data: urlData } = supabaseAdmin.storage
+  const { data: urlData } = await supabaseAdmin.storage
     .from("surat")
     .getPublicUrl(`${tahun}/${bulan}/${filename}`);
 
   const suratUrl = urlData.publicUrl;
 
   // 4. Update kolom surat_url
-  await supabaseAdmin
+  const { error: updateError } = await supabaseAdmin
     .from("permohonan")
     .update({ surat_url: suratUrl })
     .eq("id", permohonanId);
 
+  if (updateError) {
+    console.error("[surat/generate] Gagal update surat_url:", updateError);
+    return NextResponse.json({ error: "Gagal menyimpan URL surat. Silakan coba lagi." }, { status: 500 });
+  }
+
   // 5. Kirim WA ke Warga
   if (permohonan.telepon) {
-    await sendFonnteWA({
-      target: normalizePhone(permohonan.telepon),
-      message: [
-        `Surat Anda telah siap.`,
-        ``,
-        `Tiket  : #${permohonan.tiket}`,
-        `Layanan: ${permohonan.layanan}`,
-        ``,
-        `Download: ${suratUrl}`,
-      ].join("\n"),
-    });
+    try {
+      await sendFonnteWA({
+        target: normalizePhone(permohonan.telepon),
+        message: [
+          `Surat Anda telah siap.`,
+          ``,
+          `Tiket  : #${permohonan.tiket}`,
+          `Layanan: ${permohonan.layanan}`,
+          ``,
+          `Download: ${suratUrl}`,
+        ].join("\n"),
+      });
+    } catch (waError) {
+      console.error("[surat/generate] Gagal kirim WA:", waError);
+    }
   }
 
   return NextResponse.json({ success: true, suratUrl });
