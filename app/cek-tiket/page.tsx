@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Search, FileText, MessageSquare, Clock, CheckCircle, XCircle, AlertCircle, Ticket } from "lucide-react";
+import { Search, FileText, MessageSquare, Clock, CheckCircle, XCircle, AlertCircle, Ticket, Download } from "lucide-react";
 
 type StatusConfig = {
   label: string;
@@ -130,6 +130,23 @@ function PermohonanResult({ data }: { data: Record<string, unknown> }) {
             </div>
           )}
         </div>
+
+        {data.status === "SELESAI" && (data.surat_url as string) && (
+          <a
+            href={data.surat_url as string}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-xl p-5 hover:bg-emerald-100 transition-colors"
+          >
+            <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-emerald-500 text-white flex-shrink-0">
+              <Download size={22} />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-emerald-800">Surat Anda Sudah Siap</p>
+              <p className="text-xs text-emerald-600">Klik untuk download dokumen PDF</p>
+            </div>
+          </a>
+        )}
       </div>
 
       <div className="bg-blue-50 rounded-xl border border-blue-100 p-4 flex items-start gap-3">

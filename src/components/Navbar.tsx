@@ -8,6 +8,7 @@ const navLinks = [
   { label: "Beranda", href: "/" },
   { label: "Profil", href: "/profil" },
   { label: "Layanan", href: "/layanan" },
+  { label: "Cek Tiket", href: "/cek-tiket" },
   { label: "Pengaduan", href: "/pengaduan" },
   { label: "Darurat", href: "/darurat" },
   { label: "Kabar", href: "/artikel" },
