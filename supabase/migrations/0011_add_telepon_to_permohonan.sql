@@ -1,0 +1,1 @@
+ALTER TABLE public.permohonan ADD COLUMN IF NOT EXISTS telepon text;
