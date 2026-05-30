@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Save, CheckCircle } from "lucide-react";
+import { ArrowLeft, Save, CheckCircle, FileText, AlertCircle } from "lucide-react";
 
 export default function PermohonanDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -11,6 +11,8 @@ export default function PermohonanDetailPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [generateError, setGenerateError] = useState<string | null>(null);
+  const [generateSuccess, setGenerateSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     fetch(`/api/permohonan/${id}`)
@@ -180,6 +182,88 @@ export default function PermohonanDetailPage() {
           </div>
         </div>
       </div>
+
+      {data.status === "SELESAI" && (
+        <div className="bg-white rounded-xl border border-stone-200 p-6">
+          <h2 className="text-sm font-bold text-stone-900 mb-4">Surat</h2>
+          {data.surat_url ? (
+            <div className="flex flex-col sm:flex-row gap-3">
+              <a
+                href={data.surat_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2.5 bg-emerald-50 text-emerald-700 text-sm font-semibold rounded-lg hover:bg-emerald-100 transition-colors"
+              >
+                <FileText size={15} />
+                Download Surat
+              </a>
+              <button
+                onClick={async () => {
+                  if (!confirm("Kirim ulang WA notifikasi ke warga?")) return;
+                  const res = await fetch("/api/surat/generate", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ permohonanId: id }),
+                  });
+                  const resData = await res.json();
+                  if (resData.success) alert("WA berhasil dikirim ulang");
+                  else alert("Gagal: " + (resData.error ?? "Unknown error"));
+                }}
+                className="flex items-center gap-2 px-4 py-2.5 bg-stone-100 text-stone-700 text-sm font-semibold rounded-lg hover:bg-stone-200 transition-colors cursor-pointer"
+              >
+                <FileText size={15} />
+                Kirim Ulang WA
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <p className="text-sm text-stone-500">Surat belum dibuat. Klik tombol di bawah untuk generate dan kirim ke warga.</p>
+              <button
+                onClick={async () => {
+                  setSaving(true);
+                  setGenerateError(null);
+                  setGenerateSuccess(null);
+                  try {
+                    const res = await fetch("/api/surat/generate", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ permohonanId: id }),
+                    });
+                    const resData = await res.json();
+                    if (resData.success) {
+                      setGenerateSuccess("Surat berhasil dibuat dan WA terkirim!");
+                      setData((prev) => ({ ...prev, surat_url: resData.suratUrl }));
+                    } else {
+                      setGenerateError(resData.error ?? "Gagal generate surat");
+                    }
+                  } catch (e) {
+                    setGenerateError("Terjadi kesalahan saat generate surat");
+                  } finally {
+                    setSaving(false);
+                  }
+                }}
+                disabled={saving}
+                className="flex items-center gap-2 px-5 py-2.5 bg-[#1e40af] text-white text-sm font-semibold rounded-lg hover:bg-[#1e3a8a] disabled:opacity-60 cursor-pointer"
+              >
+                <FileText size={15} />
+                {saving ? "Generating..." : "Generate & Kirim Surat"}
+              </button>
+              {generateError && (
+                <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+                  <AlertCircle size={15} />
+                  {generateError}
+                </div>
+              )}
+              {generateSuccess && (
+                <div className="flex items-center gap-2 text-sm text-emerald-600 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-3">
+                  <CheckCircle size={15} />
+                  {generateSuccess}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
