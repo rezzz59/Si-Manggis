@@ -11,7 +11,7 @@ CREATE POLICY "Public read surat"
 -- Allow authenticated users to upload
 CREATE POLICY "Authenticated can upload surat"
   ON storage.objects FOR INSERT
-  WITH CHECK (bucket_id = 'surat');
+  WITH CHECK (bucket_id = 'surat' AND auth.role() = 'authenticated');
 
 -- Allow owners to delete their own files
 CREATE POLICY "Owner can delete surat"
