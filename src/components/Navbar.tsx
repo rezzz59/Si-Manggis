@@ -69,7 +69,7 @@ export default function Navbar() {
               </Link>
             ))}
             <Link
-              href="/masuk"
+              href="/login"
               className={`rounded-sm px-5 py-2 text-sm font-semibold transition-colors duration-150 cursor-pointer ${
                 transparent
                   ? "bg-white text-[#1e40af] hover:bg-white/90"
@@ -110,7 +110,7 @@ export default function Navbar() {
                 </Link>
               ))}
               <Link
-                href="/masuk"
+                href="/login"
                 onClick={() => setIsOpen(false)}
                 className="mx-1 mt-2 block rounded-sm bg-[#1e40af] px-4 py-2.5 text-center text-sm font-semibold text-white hover:bg-[#1e3a8a] transition-colors duration-150 cursor-pointer"
               >

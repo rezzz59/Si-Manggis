@@ -6,14 +6,12 @@ import RtDropdown from "./RtDropdown";
 const JENIS_LAYANAN = [
   { id: "surat-keterangan", label: "Surat Keterangan" },
   { id: "ktp-kk", label: "KTP & Kartu Keluarga" },
-  { id: "surat-nikah", label: "Surat Pengantar Nikah" },
   { id: "izin-keramaian", label: "Izin Keramaian" },
 ];
 
 const SUB_JENIS: Record<string, string[]> = {
   "surat-keterangan": ["Domisili", "Usaha", "Pengantar", "Keterangan Lain"],
   "ktp-kk": ["KTP Hilang/Rusak", "Penambahan Anggota Keluarga", "Perubahan Data", "Lainnya"],
-  "surat-nikah": ["Nikah", "Pergi keluar kota", "Lainnya"],
   "izin-keramaian": ["Keramaian", "Kesenian", "Olahraga", "Lainnya"],
 };
 

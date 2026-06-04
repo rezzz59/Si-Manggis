@@ -30,20 +30,6 @@ export const dataLayanan: EntriLayanan[] = [
     warnaText: "text-indigo-600",
   },
   {
-    id: "surat-nikah",
-    nama: "Surat Pengantar Nikah",
-    icon: "heart",
-    estimasi: "2–5 hari kerja",
-    dokumen: [
-      "KTP calon pasangan",
-      "KK asli",
-      "Akta lahir masing-masing",
-      "Pas foto 4x6 (2 lembar)",
-    ],
-    warnaBg: "bg-rose-50",
-    warnaText: "text-rose-600",
-  },
-  {
     id: "izin-keramaian",
     nama: "Izin Keramaian",
     icon: "party-popper",

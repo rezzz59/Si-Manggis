@@ -70,7 +70,7 @@ const SEMUA_HALAMAN = [
   { label: "Kabar & Artikel", href: "/artikel" },
   { label: "Unit Darurat", href: "/darurat" },
   { label: "Cek Tiket", href: "/cek-tiket" },
-  { label: "Login Admin", href: "/masuk" },
+  { label: "Login Admin", href: "/login" },
 ];
 
 export default function SearchBar() {
