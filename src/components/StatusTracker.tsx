@@ -2,18 +2,32 @@
 
 import { useState } from "react";
 
-type Status = "MENUNGGU" | "DISETUJAI_RT" | "DIPROSES" | "SELESAI" | "DITOLAK_RT" | "DITOLAK";
+type Status =
+  | "MENUNGGU"
+  | "DISETUJAI_RT"
+  | "DIPROSES"
+  | "SELESAI"
+  | "DITOLAK_RT"
+  | "DITOLAK"
+  | "ESKALASI_STAF";
 
 const STATUS_CONFIG: Record<string, { label: string; icon: string; color: string; bg: string }> = {
-  MENUNGGU:      { label: "Menunggu Persetujuan RT",   icon: "⏳", color: "text-[#f97316]", bg: "bg-[#fff7ed]" },
-  DISETUJAI_RT:   { label: "Disetujui RT",              icon: "✅", color: "text-[#16a34a]", bg: "bg-[#f0fdf4]" },
-  DIPROSES:       { label: "Sedang Diproses Kelurahan", icon: "🔄", color: "text-[#1e40af]", bg: "bg-[#eff6ff]" },
-  SELESAI:        { label: "Selesai",                   icon: "🎉", color: "text-[#16a34a]", bg: "bg-[#f0fdf4]" },
-  DITOLAK_RT:     { label: "Ditolak RT",                icon: "❌", color: "text-[#dc2626]", bg: "bg-[#fef2f2]" },
-  DITOLAK:        { label: "Ditolak Kelurahan",         icon: "❌", color: "text-[#dc2626]", bg: "bg-[#fef2f2]" },
+  MENUNGGU:        { label: "Menunggu Persetujuan RT",   icon: "⏳", color: "text-[#f97316]", bg: "bg-[#fff7ed]" },
+  DISETUJAI_RT:    { label: "Disetujui RT",              icon: "✅", color: "text-[#16a34a]", bg: "bg-[#f0fdf4]" },
+  DIPROSES:        { label: "Sedang Diproses Kelurahan", icon: "🔄", color: "text-[#1e40af]", bg: "bg-[#eff6ff]" },
+  SELESAI:         { label: "Selesai",                   icon: "🎉", color: "text-[#16a34a]", bg: "bg-[#f0fdf4]" },
+  DITOLAK_RT:      { label: "Ditolak RT",                icon: "❌", color: "text-[#dc2626]", bg: "bg-[#fef2f2]" },
+  DITOLAK:         { label: "Ditolak Kelurahan",         icon: "❌", color: "text-[#dc2626]", bg: "bg-[#fef2f2]" },
+  ESKALASI_STAF:   { label: "Dibesarkan ke Admin Desa",  icon: "⚠️", color: "text-[#eab308]", bg: "bg-[#fefce8]" },
 };
 
-const STEPS: Status[] = ["MENUNGGU", "DISETUJAI_RT", "DIPROSES", "SELESAI"];
+const STEPS: Status[] = [
+  "MENUNGGU",
+  "DISETUJAI_RT",
+  "DIPROSES",
+  "ESKALASI_STAF",
+  "SELESAI",
+];
 
 export default function StatusTracker({ status }: { status: string }) {
   const currentIdx = STEPS.indexOf(status as Status);
@@ -23,7 +37,7 @@ export default function StatusTracker({ status }: { status: string }) {
       {STEPS.map((step, i) => {
         const cfg = STATUS_CONFIG[step];
         const done = i < currentIdx;
-        const active = i === currentIdx;
+        const active = i === currentIdx || status === "ESKALASI_STAF";
 
         return (
           <div key={step} className="flex items-start gap-3">

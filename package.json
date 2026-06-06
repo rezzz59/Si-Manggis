@@ -9,7 +9,8 @@
     "lint": "eslint",
     "db:seed": "tsx prisma/seed.ts",
     "staff:seed": "tsx scripts/seed-staff.ts",
-    "staff:list": "tsx scripts/list-staff.ts"
+    "staff:list": "tsx scripts/list-staff.ts",
+    "check:surat-url": "tsx scripts/check-surat-url.ts"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.5.1",
