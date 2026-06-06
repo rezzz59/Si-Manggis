@@ -10,6 +10,9 @@ export default async function DashboardPage() {
     { count: menungguPengaduan },
     { count: selesaiPermohonan },
     { count: selesaiPengaduan },
+    { count: disetujuiRt },
+    { count: sedangDiproses },
+    { count: eskalasiStaf },
   ] = await Promise.all([
     supabase.from("permohonan").select("*", { count: "exact", head: true }),
     supabase.from("pengaduan").select("*", { count: "exact", head: true }),
@@ -17,6 +20,10 @@ export default async function DashboardPage() {
     supabase.from("pengaduan").select("*", { count: "exact", head: true }).eq("status", "MENUNGGU"),
     supabase.from("permohonan").select("*", { count: "exact", head: true }).eq("status", "SELESAI"),
     supabase.from("pengaduan").select("*", { count: "exact", head: true }).eq("status", "SELESAI"),
+    supabase.from("pengaduan").select("*", { count: "exact", head: true }).eq("status", "DIPROSES"),
+    supabase.from("permohonan").select("*", { count: "exact", head: true }).eq("status", "DISETUJAI_RT"),
+    supabase.from("permohonan").select("*", { count: "exact", head: true }).eq("status", "DIPROSES"),
+    supabase.from("permohonan").select("*", { count: "exact", head: true }).eq("status", "ESKALASI_STAF"),
   ]);
 
   const { data: recentPermohonan } = await supabase
@@ -55,10 +62,24 @@ export default async function DashboardPage() {
     },
     {
       label: "Disetujui RT",
-      value: 0,
+      value: disetujuiRt ?? 0,
       icon: ShieldCheck,
       color: "bg-teal-50 text-teal-600",
       href: "/dashboard/permohonan?status=DISETUJAI_RT",
+    },
+    {
+      label: "Sedang Diproses",
+      value: sedangDiproses ?? 0,
+      icon: Clock,
+      color: "bg-blue-50 text-blue-600",
+      href: "/dashboard/permohonan?status=DIPROSES",
+    },
+    {
+      label: "Eskalasi Staf",
+      value: eskalasiStaf ?? 0,
+      icon: ShieldCheck,
+      color: "bg-rose-50 text-rose-600",
+      href: "/dashboard/permohonan?status=ESKALASI_STAF",
     },
     {
       label: "Selesai",
@@ -73,6 +94,7 @@ export default async function DashboardPage() {
     MENUNGGU: "bg-yellow-100 text-yellow-700",
     DISETUJAI_RT: "bg-teal-100 text-teal-700",
     DIPROSES: "bg-blue-100 text-blue-700",
+    ESKALASI_STAF: "bg-rose-100 text-rose-700",
     SELESAI: "bg-green-100 text-green-700",
     DITOLAK_RT: "bg-orange-100 text-orange-700",
     DITOLAK: "bg-red-100 text-red-700",

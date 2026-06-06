@@ -11,13 +11,14 @@ type StatusConfig = {
 };
 
 const statusConfig: Record<string, StatusConfig> = {
-  MENUNGGU: { label: "Menunggu", color: "text-yellow-700", bg: "bg-yellow-50 border-yellow-200", icon: Clock },
-  DIPROSES: { label: "Diproses", color: "text-blue-700", bg: "bg-blue-50 border-blue-200", icon: AlertCircle },
-  SELESAI:  { label: "Selesai",  color: "text-emerald-700", bg: "bg-emerald-50 border-emerald-200", icon: CheckCircle },
-  DITOLAK:  { label: "Ditolak",  color: "text-red-700", bg: "bg-red-50 border-red-200", icon: XCircle },
+  MENUNGGU:    { label: "Menunggu",     color: "text-yellow-700",  bg: "bg-yellow-50 border-yellow-200", icon: Clock },
+  DIPROSES:    { label: "Diproses",     color: "text-blue-700",    bg: "bg-blue-50 border-blue-200", icon: AlertCircle },
+  SELESAI:     { label: "Selesai",      color: "text-emerald-700", bg: "bg-emerald-50 border-emerald-200", icon: CheckCircle },
+  DITOLAK:     { label: "Ditolak",      color: "text-red-700",     bg: "bg-red-50 border-red-200", icon: XCircle },
+  ESKALASI_STAF: { label: "Dibesarkan", color: "text-amber-700",    bg: "bg-amber-50 border-amber-200", icon: AlertCircle },
 };
 
-const STATUS_STEPS = ["MENUNGGU", "DIPROSES", "SELESAI"];
+const STATUS_STEPS = ["MENUNGGU", "DIPROSES", "ESKALASI_STAF", "SELESAI"];
 
 function ProgressTracker({ status }: { status: string }) {
   const currentIndex = STATUS_STEPS.indexOf(status);
@@ -30,7 +31,7 @@ function ProgressTracker({ status }: { status: string }) {
         {STATUS_STEPS.map((step, i) => {
           const cfg = statusConfig[step];
           const Icon = cfg.icon;
-          const done = currentIndex >= i && !isRejected;
+          const done = currentIndex > i && !isRejected;
           const active = currentIndex === i && !isRejected;
 
           return (
@@ -100,6 +101,16 @@ function PermohonanResult({ data }: { data: Record<string, unknown> }) {
 
       <ProgressTracker status={data.status as string} />
 
+      {/* Eskalasi Banner */}
+      {data.status === "ESKALASI_STAF" && (
+        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+          <AlertCircle size={18} className="text-amber-600 mt-0.5 flex-shrink-0" />
+          <p className="text-xs text-amber-800">
+            Permohonan ini telah dibesarkan ke admin desa untuk ditindaklanjuti. Staf desa akan menghubungi Anda melalui nomor telepon yang terdaftar.
+          </p>
+        </div>
+      )}
+
       {/* Details */}
       <div className="bg-white rounded-xl border border-stone-200 p-6">
         <h3 className="text-sm font-bold text-stone-900 mb-4">Detail Permohonan</h3>
@@ -131,21 +142,35 @@ function PermohonanResult({ data }: { data: Record<string, unknown> }) {
           )}
         </div>
 
-        {data.status === "SELESAI" && (data.surat_url as string) && (
-          <a
-            href={data.surat_url as string}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-4 flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-xl p-5 hover:bg-emerald-100 transition-colors"
-          >
-            <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-emerald-500 text-white flex-shrink-0">
-              <Download size={22} />
-            </div>
-            <div>
-              <p className="text-sm font-bold text-emerald-800">Surat Anda Sudah Siap</p>
-              <p className="text-xs text-emerald-600">Klik untuk download dokumen PDF</p>
-            </div>
-          </a>
+        {data.status === "SELESAI" && (
+          <div className="mt-4">
+            {(data.surat_url as string) ? (
+              <a
+                href={data.surat_url as string}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-xl p-5 hover:bg-emerald-100 transition-colors"
+              >
+                <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-emerald-500 text-white flex-shrink-0">
+                  <Download size={22} />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-emerald-800">Surat Anda Sudah Siap</p>
+                  <p className="text-xs text-emerald-600">Klik untuk download dokumen PDF</p>
+                </div>
+              </a>
+            ) : (
+              <div className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-xl p-5">
+                <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-amber-500 text-white flex-shrink-0">
+                  <Clock size={22} />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-amber-800">Surat Sedang Diproses</p>
+                  <p className="text-xs text-amber-600">Dokumen surat akan segera tersedia. Silakan cek kembali nanti.</p>
+                </div>
+              </div>
+            )}
+          </div>
         )}
       </div>
 

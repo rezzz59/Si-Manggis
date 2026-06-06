@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import { auth } from "@/src/lib/auth";
 import Navbar from "@/src/components/Navbar";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -16,18 +17,19 @@ export const metadata: Metadata = {
     "Sistem Informasi Desa Digital Guntung Manggis. Kabar desa, layanan online, dan informasi untuk warga.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
   return (
     <html lang="id" className={`${plusJakartaSans.variable} scroll-smooth`}>
       <body
         className="min-h-full flex flex-col antialiased"
         style={{ fontFamily: "var(--font-jakarta), sans-serif" }}
       >
-        <Navbar />
+        {!session && <Navbar />}
         {children}
       </body>
     </html>

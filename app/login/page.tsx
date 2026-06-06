@@ -29,7 +29,9 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/dashboard");
+    // Full reload agar root layout re-render dengan session baru
+    // (router.push soft-navigate tidak trigger auth() di RootLayout yang di-cache)
+    window.location.href = "/dashboard";
   };
 
   return (

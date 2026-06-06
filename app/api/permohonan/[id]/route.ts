@@ -29,7 +29,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const body = await req.json();
   const { status, catatan } = body;
 
-  const validStatuses = ["MENUNGGU", "DISETUJAI_RT", "DITOLAK_RT", "DIPROSES", "SELESAI", "DITOLAK"];
+  const validStatuses = ["MENUNGGU", "DISETUJAI_RT", "DITOLAK_RT", "DIPROSES", "SELESAI", "DITOLAK", "ESKALASI_STAF"];
   if (status && !validStatuses.includes(status)) {
     return NextResponse.json({ error: "Status tidak valid" }, { status: 400 });
   }
