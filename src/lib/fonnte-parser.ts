@@ -8,6 +8,14 @@ export interface FonnteWebhookPayload {
   is_group?: boolean;
 }
 
+export type ApprovalAction = "SETUJU" | "TOLAK";
+
+export interface ApprovalMessageResult {
+  action: ApprovalAction;
+  tiket: string;
+  alasan?: string;
+}
+
 /**
  * Normalisasi nomor HP Indonesia: "081234567890" → "6281234567890"
  */
@@ -18,25 +26,37 @@ export function normalizePhone(phone: string): string {
   return digits;
 }
 
+function normalizeTicket(rawTicket: string): string {
+  return rawTicket.replace(/[^A-Za-z0-9-]/g, "").toUpperCase();
+}
+
 /**
- * Parse pesan balasan RT.
- * "SETUJU" → { action: "SETUJU" }
- * "TOLAK [alasan]" → { action: "TOLAK", alasan: "alasan" }
+ * Parse pesan balasan RT berbasis tiket.
+ * "SETUJU 062026-0001" → { action: "SETUJU", tiket: "062026-0001" }
+ * "TOLAK 062026-0001 data tidak sesuai" → { action: "TOLAK", tiket: "062026-0001", alasan: "data tidak sesuai" }
  */
-export function parseApprovalMessage(
-  msg: string
-): { action: "SETUJU" | "TOLAK"; alasan?: string } | null {
-  const normalized = msg.trim().toUpperCase();
-
-  if (normalized === "SETUJU") {
-    return { action: "SETUJU" };
+export function parseApprovalMessage(msg: string): ApprovalMessageResult | null {
+  const trimmed = msg.trim();
+  if (!trimmed) {
+    return null;
   }
 
-  if (normalized.startsWith("TOLAK")) {
-    const parts = msg.trim().split(/\s+/);
-    const alasan = parts.slice(1).join(" ");
-    return { action: "TOLAK", alasan: alasan || "(tanpa alasan)" };
+  const parts = trimmed.split(/\s+/);
+  const action = parts[0]?.toUpperCase();
+
+  if (action !== "SETUJU" && action !== "TOLAK") {
+    return null;
   }
 
-  return null;
+  const tiket = normalizeTicket(parts[1] ?? "");
+  if (!tiket) {
+    return null;
+  }
+
+  if (action === "SETUJU") {
+    return { action, tiket };
+  }
+
+  const alasan = parts.slice(2).join(" ").trim();
+  return { action, tiket, alasan: alasan || "(tanpa alasan)" };
 }

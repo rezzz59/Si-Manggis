@@ -12,8 +12,21 @@ export async function POST(req: NextRequest) {
   const result = await sendFonnteWA({ target, message });
 
   if (!result.success) {
-    return NextResponse.json({ error: result.error }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        error: result.error,
+        statusCode: result.statusCode,
+        raw: result.raw,
+      },
+      { status: 500 }
+    );
   }
 
-  return NextResponse.json({ success: true, messageId: result.messageId });
+  return NextResponse.json({
+    success: true,
+    messageId: result.messageId,
+    statusCode: result.statusCode,
+    raw: result.raw,
+  });
 }
