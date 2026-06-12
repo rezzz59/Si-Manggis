@@ -128,6 +128,50 @@ function PermohonanResult({ data }: { data: Record<string, unknown> }) {
               <p className="text-sm font-semibold text-stone-800">{value}</p>
             </div>
           ))}
+
+          {/* Field tambahan khusus Surat Pengantar (kondisional) */}
+          {Boolean(data.tempat_lahir || data.tanggal_lahir) && (
+            <div className="col-span-2">
+              <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Tempat, Tgl. Lahir</p>
+              <p className="text-sm font-semibold text-stone-800">
+                {String(data.tempat_lahir ?? "—")},{" "}
+                {data.tanggal_lahir
+                  ? new Date(String(data.tanggal_lahir)).toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric" })
+                  : "—"}
+              </p>
+            </div>
+          )}
+          {data.jenis_kelamin ? (
+            <div>
+              <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Jenis Kelamin</p>
+              <p className="text-sm font-semibold text-stone-800">{String(data.jenis_kelamin)}</p>
+            </div>
+          ) : null}
+          {data.agama ? (
+            <div>
+              <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Agama</p>
+              <p className="text-sm font-semibold text-stone-800">{String(data.agama)}</p>
+            </div>
+          ) : null}
+          {data.status_kawin ? (
+            <div>
+              <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Status Perkawinan</p>
+              <p className="text-sm font-semibold text-stone-800">{String(data.status_kawin)}</p>
+            </div>
+          ) : null}
+          {data.pendidikan_terakhir ? (
+            <div>
+              <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Pendidikan Terakhir</p>
+              <p className="text-sm font-semibold text-stone-800">{String(data.pendidikan_terakhir)}</p>
+            </div>
+          ) : null}
+          {data.pekerjaan ? (
+            <div>
+              <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Pekerjaan</p>
+              <p className="text-sm font-semibold text-stone-800">{String(data.pekerjaan)}</p>
+            </div>
+          ) : null}
+
           <div className="col-span-2">
             <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Keperluan</p>
             <p className="text-sm text-stone-700 bg-stone-50 rounded-lg px-4 py-3">{(data.deskripsi as string) || (data.keperluan as string) || "—"}</p>

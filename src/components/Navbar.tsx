@@ -16,14 +16,22 @@ const navLinks = [
 ];
 
 export default function Navbar() {
+  const [isMounted, setIsMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
+    if (window.location.pathname.startsWith("/dashboard")) {
+      return;
+    }
     const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  if (!isMounted) return null;
+  if (window.location.pathname.startsWith("/dashboard")) return null;
 
   const transparent = !scrolled;
 

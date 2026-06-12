@@ -106,6 +106,50 @@ export default function PermohonanDetailPage() {
               <p className="text-sm font-semibold text-stone-800">{value}</p>
             </div>
           ))}
+
+          {/* Field tambahan khusus Surat Pengantar (kondisional) */}
+          {(data.tempat_lahir || data.tanggal_lahir) && (
+            <div className="col-span-2">
+              <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Tempat, Tgl. Lahir</p>
+              <p className="text-sm font-semibold text-stone-800">
+                {data.tempat_lahir || "-"},{" "}
+                {data.tanggal_lahir
+                  ? new Date(data.tanggal_lahir as string).toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric" })
+                  : "-"}
+              </p>
+            </div>
+          )}
+          {data.jenis_kelamin && (
+            <div>
+              <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Jenis Kelamin</p>
+              <p className="text-sm font-semibold text-stone-800">{data.jenis_kelamin as string}</p>
+            </div>
+          )}
+          {data.agama && (
+            <div>
+              <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Agama</p>
+              <p className="text-sm font-semibold text-stone-800">{data.agama as string}</p>
+            </div>
+          )}
+          {data.status_kawin && (
+            <div>
+              <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Status Perkawinan</p>
+              <p className="text-sm font-semibold text-stone-800">{data.status_kawin as string}</p>
+            </div>
+          )}
+          {data.pendidikan_terakhir && (
+            <div>
+              <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Pendidikan Terakhir</p>
+              <p className="text-sm font-semibold text-stone-800">{data.pendidikan_terakhir as string}</p>
+            </div>
+          )}
+          {data.pekerjaan && (
+            <div>
+              <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Pekerjaan</p>
+              <p className="text-sm font-semibold text-stone-800">{data.pekerjaan as string}</p>
+            </div>
+          )}
+
           {data.sub_layanan && (
             <div>
               <p className="text-xs text-stone-400 font-semibold uppercase mb-1">Sub Jenis</p>

@@ -55,6 +55,16 @@ export type Permohonan = {
   rt_approved_via: string | null;
   kelurahan_approved_at: string | null;
   surat_url: string | null;
+  // Field tambahan khusus Surat Pengantar (migration 0015)
+  tempat_lahir: string | null;
+  tanggal_lahir: string | null;
+  jenis_kelamin: string | null;
+  agama: string | null;
+  status_kawin: string | null;
+  pendidikan_terakhir: string | null;
+  pekerjaan: string | null;
+  jenis_surat: string | null;
+  eskalasi_at: string | null;
 };
 
 export type Pengaduan = {
