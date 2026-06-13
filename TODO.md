@@ -20,3 +20,14 @@
   - [x] Fallback insert untuk mismatch kolom `pendidikan_terakhir` vs `pendidikan`
   - [x] Jadikan insert `laporan_status_log` non-fatal (jangan memicu 500)
 - [ ] Uji ulang alur submit permohonan dan pastikan tidak 500
+
+## TODO - Fix WA RT tidak terkirim saat user kirim layanan
+
+- [ ] Audit end-to-end alur kirim WA RT (`/api/permohonan` -> `sendFonnteWA` -> webhook)
+- [x] Hardening `src/lib/fonnte.ts`:
+  - [x] Normalisasi target nomor WA ke format aman `62...`
+  - [x] Tambah header `Content-Type: application/x-www-form-urlencoded`
+  - [x] Tambah validasi target kosong/tidak valid sebelum request
+  - [x] Perjelas error mapping dari respons Fonnte (HTTP/JSON/body string)
+- [ ] Pastikan payload kirim dari `app/api/permohonan/route.ts` selalu kirim nomor RT yang ternormalisasi
+- [ ] Verifikasi kompatibilitas respons di endpoint test `/api/fonnte/send`

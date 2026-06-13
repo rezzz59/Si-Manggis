@@ -12,7 +12,9 @@ export type ApprovalAction = "SETUJU" | "TOLAK";
 
 export interface ApprovalMessageResult {
   action: ApprovalAction;
-  tiket: string;
+  /** Tiket optional — kalau RT menyebut tiket di pesan, kita pakai itu untuk disambiguasi. */
+  tiket?: string;
+  /** Alasan optional (untuk aksi TOLAK). */
   alasan?: string;
 }
 
@@ -26,37 +28,65 @@ export function normalizePhone(phone: string): string {
   return digits;
 }
 
-function normalizeTicket(rawTicket: string): string {
-  return rawTicket.replace(/[^A-Za-z0-9-]/g, "").toUpperCase();
-}
-
 /**
- * Parse pesan balasan RT berbasis tiket.
- * "SETUJU 062026-0001" → { action: "SETUJU", tiket: "062026-0001" }
- * "TOLAK 062026-0001 data tidak sesuai" → { action: "TOLAK", tiket: "062026-0001", alasan: "data tidak sesuai" }
+ * Parse pesan balasan RT.
+ *
+ * Aturan SIMPLE:
+ * - Case-insensitive: "setuju", "SETUJU", "Setuju", "sEtUjU" → semua dianggap SETUJU.
+ * - Cukup ada kata "setuju" / "tolak" di pesan → langsung dipakai.
+ * - Tiket OPTIONAL: kalau RT cuma balas "setuju" (tanpa angka apapun), sistem akan
+ *   otomatis ambil permohonan terbaru status MENUNGGU_KONFIRMASI_RT untuk RT itu.
+ *   Lihat: app/api/fonnte/webhook/route.ts.
+ * - Kalau RT menulis 5 digit angka, itu dianggap tiket (untuk disambiguasi
+ *   bila RT punya >1 permohonan pending).
+ * - Untuk TOLAK, sisa kata (selain "tolak" dan tiket) dianggap alasan.
+ * - Prioritas TOLAK: kalau pesan mengandung kata "setuju" DAN "tolak" sekaligus
+ *   (mis. "saya tidak setuju, tolak saja"), ambil TOLAK (lebih aman).
+ *
+ * Contoh balasan valid:
+ *   "setuju"               → SETUJU
+ *   "SETUJU"               → SETUJU
+ *   "Setuju"               → SETUJU
+ *   "tolak"                → TOLAK
+ *   "tolak ktp belum ada"  → TOLAK, alasan = "ktp belum ada"
+ *   "setuju 49302"         → SETUJU, tiket = "49302"
+ *   "tolak 49302 alamat salah" → TOLAK, tiket = "49302", alasan = "alamat salah"
  */
 export function parseApprovalMessage(msg: string): ApprovalMessageResult | null {
-  const trimmed = msg.trim();
-  if (!trimmed) {
+  if (!msg || typeof msg !== "string") return null;
+
+  const lower = msg.toLowerCase().trim();
+  if (!lower) return null;
+
+  const hasSetuju = /\bsetuju\b/.test(lower);
+  const hasTolak = /\btolak\b/.test(lower);
+
+  if (!hasSetuju && !hasTolak) {
     return null;
   }
 
-  const parts = trimmed.split(/\s+/);
-  const action = parts[0]?.toUpperCase();
+  // Prioritas TOLAK: lebih aman menolak kalau bingung.
+  const action: ApprovalAction = hasTolak ? "TOLAK" : "SETUJU";
 
-  if (action !== "SETUJU" && action !== "TOLAK") {
-    return null;
+  // Ekstrak tiket (optional) — ambil angka terpanjang (5-12 digit) agar
+  // "setuju 111112" tidak salah kebaca sebagai "11111".
+  const numberMatches = msg.match(/\d{5,12}/g);
+  let tiket: string | undefined;
+  if (numberMatches && numberMatches.length > 0) {
+    tiket = numberMatches.sort((a, b) => b.length - a.length)[0];
   }
 
-  const tiket = normalizeTicket(parts[1] ?? "");
-  if (!tiket) {
-    return null;
+  // Untuk TOLAK, sisa kata (selain "tolak", "setuju", dan tiket) jadi alasan.
+  let alasan: string | undefined;
+  if (action === "TOLAK") {
+    const cleaned = msg
+      .replace(/\bsetuju\b/gi, " ")
+      .replace(/\btolak\b/gi, " ")
+      .replace(/\b\d{5}\b/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    alasan = cleaned.length > 0 ? cleaned : undefined;
   }
 
-  if (action === "SETUJU") {
-    return { action, tiket };
-  }
-
-  const alasan = parts.slice(2).join(" ").trim();
-  return { action, tiket, alasan: alasan || "(tanpa alasan)" };
+  return { action, tiket, alasan };
 }

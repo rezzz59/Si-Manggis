@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/src/lib/supabase-admin";
 import { sendFonnteWA } from "@/src/lib/fonnte";
 import { normalizePhone } from "@/src/lib/fonnte-parser";
+import { generateTiket } from "@/src/lib/tiket";
 
 export const runtime = "nodejs";
 
@@ -40,27 +41,24 @@ const isMissingColumnError = (error: unknown, columnName: string): boolean => {
 };
 
 async function getTiketNumber(): Promise<string> {
-  const today = new Date();
-  const month = String(today.getMonth() + 1).padStart(2, "0");
-  const year = today.getFullYear();
-
-  for (let attempt = 0; attempt < 10; attempt++) {
-    const seq = String(attempt + 1).padStart(4, "0");
-    const newTiket = `${month}${year}-${seq}`;
+  // Coba sampai 20x untuk dapat tiket unik 5-digit.
+  for (let attempt = 0; attempt < 20; attempt++) {
+    const candidate = generateTiket();
 
     const { data } = await supabaseAdmin
       .from("permohonan")
       .select("id")
-      .eq("tiket", newTiket)
+      .eq("tiket", candidate)
       .limit(1);
 
     if (!data || data.length === 0) {
-      return newTiket;
+      return candidate;
     }
   }
 
-  const ts = String(Math.floor(Date.now() / 1000)).slice(-6);
-  return `9999${Date.now()}-${ts}`;
+  // Fallback (sangat jarang): append 2 digit random agar tetap pendek.
+  const extra = Math.floor(10 + Math.random() * 90).toString();
+  return `${generateTiket()}${extra}`;
 }
 
 function buildRtApprovalMessage({
@@ -85,13 +83,15 @@ function buildRtApprovalMessage({
     `📍 RT      : ${nomorRt}`,
     `📄 Layanan : ${layanan}${subLayanan ? `\n   Sub     : ${subLayanan}` : ""}`,
     `━━━━━━━━━━━━━━━━━━`,
-    `Balas salah satu format berikut:`,
-    `SETUJU ${tiket}`,
-    `TOLAK ${tiket} alasan`,
+    `Mohon konfirmasi Pak/Bu RT 🙏`,
+    ``,
+    `Cukup balas dengan salah satu kata berikut (huruf besar/kecil bebas):`,
+    `• *setuju*`,
+    `• *tolak* (boleh ditambah alasan)`,
     ``,
     `Contoh:`,
-    `SETUJU ${tiket}`,
-    `TOLAK ${tiket} data domisili belum sesuai`,
+    `setuju`,
+    `tolak data domisili belum lengkap`,
   ].join("\n");
 }
 

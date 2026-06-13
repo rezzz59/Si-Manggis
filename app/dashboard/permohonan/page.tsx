@@ -31,7 +31,8 @@ export default async function PermohonanPage({
 
   const statusColors: Record<string, string> = {
     MENUNGGU: "bg-yellow-100 text-yellow-700",
-    DISETUJAI_RT: "bg-teal-100 text-teal-700",
+    MENUNGGU_KONFIRMASI_RT: "bg-yellow-100 text-yellow-700",
+    DISETUJUI_RT: "bg-teal-100 text-teal-700",
     DIPROSES: "bg-blue-100 text-blue-700",
     SELESAI: "bg-green-100 text-green-700",
     DITOLAK_RT: "bg-orange-100 text-orange-700",
@@ -40,8 +41,8 @@ export default async function PermohonanPage({
 
   const filters = [
     { label: "Semua", value: "" },
-    { label: "Menunggu RT", value: "MENUNGGU" },
-    { label: "Disetujui RT", value: "DISETUJAI_RT" },
+    { label: "Menunggu RT", value: "MENUNGGU_KONFIRMASI_RT" },
+    { label: "Disetujui RT", value: "DISETUJUI_RT" },
     { label: "Ditolak RT", value: "DITOLAK_RT" },
     { label: "Diproses", value: "DIPROSES" },
     { label: "Selesai", value: "SELESAI" },

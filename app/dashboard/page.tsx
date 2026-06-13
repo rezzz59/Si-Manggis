@@ -16,12 +16,11 @@ export default async function DashboardPage() {
   ] = await Promise.all([
     supabase.from("permohonan").select("*", { count: "exact", head: true }),
     supabase.from("pengaduan").select("*", { count: "exact", head: true }),
-    supabase.from("permohonan").select("*", { count: "exact", head: true }).eq("status", "MENUNGGU"),
+    supabase.from("permohonan").select("*", { count: "exact", head: true }).eq("status", "MENUNGGU_KONFIRMASI_RT"),
     supabase.from("pengaduan").select("*", { count: "exact", head: true }).eq("status", "MENUNGGU"),
     supabase.from("permohonan").select("*", { count: "exact", head: true }).eq("status", "SELESAI"),
     supabase.from("pengaduan").select("*", { count: "exact", head: true }).eq("status", "SELESAI"),
-    supabase.from("pengaduan").select("*", { count: "exact", head: true }).eq("status", "DIPROSES"),
-    supabase.from("permohonan").select("*", { count: "exact", head: true }).eq("status", "DISETUJAI_RT"),
+    supabase.from("permohonan").select("*", { count: "exact", head: true }).eq("status", "DISETUJUI_RT"),
     supabase.from("permohonan").select("*", { count: "exact", head: true }).eq("status", "DIPROSES"),
     supabase.from("permohonan").select("*", { count: "exact", head: true }).eq("status", "ESKALASI_STAF"),
   ]);
@@ -58,14 +57,14 @@ export default async function DashboardPage() {
       value: menungguPermohonan ?? 0,
       icon: Clock,
       color: "bg-[#fff7ed] text-[#f97316]",
-      href: "/dashboard/permohonan?status=MENUNGGU",
+      href: "/dashboard/permohonan?status=MENUNGGU_KONFIRMASI_RT",
     },
     {
       label: "Disetujui RT",
       value: disetujuiRt ?? 0,
       icon: ShieldCheck,
       color: "bg-teal-50 text-teal-600",
-      href: "/dashboard/permohonan?status=DISETUJAI_RT",
+      href: "/dashboard/permohonan?status=DISETUJUI_RT",
     },
     {
       label: "Sedang Diproses",
@@ -92,7 +91,8 @@ export default async function DashboardPage() {
 
   const statusColors: Record<string, string> = {
     MENUNGGU: "bg-yellow-100 text-yellow-700",
-    DISETUJAI_RT: "bg-teal-100 text-teal-700",
+    MENUNGGU_KONFIRMASI_RT: "bg-yellow-100 text-yellow-700",
+    DISETUJUI_RT: "bg-teal-100 text-teal-700",
     DIPROSES: "bg-blue-100 text-blue-700",
     ESKALASI_STAF: "bg-rose-100 text-rose-700",
     SELESAI: "bg-green-100 text-green-700",

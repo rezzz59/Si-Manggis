@@ -1,0 +1,15 @@
+
+> si-manggis@0.1.0 dev
+> next dev
+
+⚠ Port 3000 is in use by an unknown process, using available port 3001 instead.
+▲ Next.js 16.2.3 (Turbopack)
+- Local:         http://localhost:3001
+- Network:       http://192.168.1.8:3001
+- Environments: .env
+✓ Ready in 655ms
+
+○ Compiling / ...
+ GET /layanan 200 in 928ms (next.js: 826ms, application-code: 102ms)
+ GET / 200 in 3.4s (next.js: 2.8s, application-code: 631ms)
+ GET /api/rt 200 in 949ms (next.js: 578ms, application-code: 371ms)

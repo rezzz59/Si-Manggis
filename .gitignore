@@ -58,3 +58,6 @@ next-env.d.ts
 
 /src/generated/prisma
 .blackboxcli/
+
+# surat pengantar debug preview
+/surat-debug.pdf
