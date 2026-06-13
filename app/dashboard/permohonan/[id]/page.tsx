@@ -244,7 +244,7 @@ export default function PermohonanDetailPage() {
               <button
                 onClick={async () => {
                   if (!confirm("Kirim ulang WA notifikasi ke warga?")) return;
-                  const res = await fetch("/api/surat/generate", {
+                  const res = await fetch("/api/surat/generate/pos", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ permohonanId: id }),
@@ -268,7 +268,7 @@ export default function PermohonanDetailPage() {
                   setGenerateError(null);
                   setGenerateSuccess(null);
                   try {
-                    const res = await fetch("/api/surat/generate", {
+                    const res = await fetch("/api/surat/generate/pos", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({ permohonanId: id }),
