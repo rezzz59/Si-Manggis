@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/src/components/Navbar";
+import ChatWidget from "@/src/components/ChatWidget";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -22,13 +23,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className={`${plusJakartaSans.variable} scroll-smooth`}>
+    <html
+      lang="id"
+      className={`${plusJakartaSans.variable} scroll-smooth`}
+      data-scroll-behavior="smooth"
+    >
       <body
         className="min-h-full flex flex-col antialiased"
         style={{ fontFamily: "var(--font-jakarta), sans-serif" }}
       >
         <Navbar />
         {children}
+        <ChatWidget />
       </body>
     </html>
   );

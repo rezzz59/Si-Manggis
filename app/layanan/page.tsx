@@ -10,8 +10,10 @@ import {
   ChevronDown,
   ChevronUp,
   File,
+  ArrowRight,
 } from "lucide-react";
 import { dataLayanan } from "@/src/data/layanan";
+import PublicHeroBanner from "@/src/components/PublicHeroBanner";
 
 const iconMap: Record<string, React.ElementType> = {
   "file-text": FileText,
@@ -28,41 +30,47 @@ export default function LayananPage() {
   return (
     <main className="flex flex-col">
 
-      {/* Hero */}
-      <section className="bg-[#1e40af] pt-32 pb-16">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <p className="text-xs font-bold text-white/60 uppercase tracking-widest mb-2">
-            Layanan Desa
-          </p>
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3">
-            Layanan untuk Warga
-          </h1>
-          <p className="text-white/70 max-w-md text-sm">
-            Ajukan surat dan layanan desa tanpa perlu ke kantor. Isi formulir di
-            bawah dan kami akan menghubungi Anda.
-          </p>
-        </div>
-      </section>
+      <PublicHeroBanner
+        kicker="Layanan Warga"
+        title="Layanan untuk Warga"
+        description="Ajukan surat dan layanan desa tanpa perlu ke kantor. Isi formulir di bawah, dan kami akan menghubungi Anda."
+        visual={
+          <div className="space-y-3">
+            <div className="rounded-xl border border-[#dcebe3] bg-white p-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#64748b]">Fitur Utama</p>
+              <p className="mt-1 text-sm font-bold text-[#0f172a]">Pengajuan Online + Verifikasi WA RT</p>
+            </div>
+            <div className="rounded-xl border border-[#dcebe3] bg-[#f7fbf9] p-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#64748b]">Tracking</p>
+              <p className="mt-1 text-sm font-bold text-[#0f172a]">Pantau status tiket secara real-time</p>
+            </div>
+          </div>
+        }
+      >
+        <a href="#form-permohonan" className="public-btn-primary px-5 py-3 text-sm">
+          Ajukan Sekarang <ArrowRight size={15} />
+        </a>
+      </PublicHeroBanner>
 
       {/* Daftar Layanan */}
-      <section className="py-16 lg:py-20 bg-stone-50">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <span className="accent-line mb-3 block" />
-          <h2 className="text-2xl font-bold text-[#1e40af] mb-2">
+      <section className="public-section bg-[#f7fbf8]">
+        <div className="public-shell">
+          <span className="section-kicker">Pelayanan Utama</span>
+          <h2 className="public-title mt-3 mb-2">
             Daftar Layanan
           </h2>
-          <p className="text-sm text-stone-500 mb-8">
+          <p className="public-subtitle !mt-0 !max-w-2xl mb-8">
             Klik salah satu untuk melihat detail dokumen yang diperlukan.
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4.5">
             {dataLayanan.map((layanan) => {
               const Icon = iconMap[layanan.icon] ?? FileText;
               const isOpen = openId === layanan.id;
               return (
                 <div
                   key={layanan.id}
-                  className="bg-white rounded-xl border border-stone-200 overflow-hidden hover-lift"
+                  className="public-card overflow-hidden hover-lift"
                 >
                   <button
                     type="button"
@@ -76,14 +84,14 @@ export default function LayananPage() {
                         <Icon size={18} className={layanan.warnaText} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-stone-900 leading-snug">
+                        <p className="text-sm font-bold text-slate-900 leading-snug">
                           {layanan.nama}
                         </p>
-                        <p className="text-xs text-stone-400 mt-0.5">
+                        <p className="text-xs text-slate-400 mt-0.5">
                           {layanan.estimasi}
                         </p>
                       </div>
-                      <div className="flex-shrink-0 text-stone-400">
+                      <div className="flex-shrink-0 text-slate-400">
                         {isOpen ? (
                           <ChevronUp size={16} />
                         ) : (
@@ -94,8 +102,8 @@ export default function LayananPage() {
                   </button>
 
                   {isOpen && (
-                    <div className="px-5 pb-5 border-t border-stone-100 pt-4">
-                      <p className="text-xs text-stone-500 mb-3 font-semibold uppercase tracking-wide">
+                    <div className="px-5 pb-5 border-t border-[#edf4ef] pt-4">
+                      <p className="public-label !mb-2">
                         Dokumen yang diperlukan:
                       </p>
                       <ul className="space-y-1.5">
@@ -103,9 +111,9 @@ export default function LayananPage() {
                           <li key={i} className="flex items-start gap-2">
                             <File
                               size={13}
-                              className="text-stone-400 mt-0.5 flex-shrink-0"
+                              className="text-slate-400 mt-0.5 flex-shrink-0"
                             />
-                            <span className="text-xs text-stone-600">
+                            <span className="text-xs text-slate-600">
                               {doc}
                             </span>
                           </li>
@@ -121,18 +129,18 @@ export default function LayananPage() {
       </section>
 
       {/* Ajukan Permohonan */}
-      <section className="py-16 lg:py-20 bg-white">
-        <div className="mx-auto max-w-3xl px-6 lg:px-8">
-          <span className="accent-line mb-3 block" />
-          <h2 className="text-2xl font-bold text-[#1e40af] mb-2">
+      <section id="form-permohonan" className="public-section bg-white">
+        <div className="public-shell max-w-3xl">
+          <span className="section-kicker">Pengajuan Online</span>
+          <h2 className="public-title mt-3 mb-2">
             Ajukan Permohonan
           </h2>
-          <p className="text-sm text-stone-500 mb-8">
+          <p className="public-subtitle !mt-0 !max-w-2xl mb-8">
             Pengajuan akan langsung dikirim ke WA RT terkait untuk persetujuan
             lebih cepat. Lacak status di portal.
           </p>
 
-          <div className="bg-stone-50 rounded-2xl border border-stone-200 p-6 lg:p-8">
+          <div className="public-card bg-[#f8fbf9] p-6 lg:p-8">
             <FormLaporan />
           </div>
         </div>

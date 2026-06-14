@@ -10,41 +10,40 @@ export const metadata = {
 export default function DaruratPage() {
   return (
     <main className="flex flex-col">
-
       {/* Hero */}
-      <section className="bg-[#EA580C] pt-32 pb-16">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <p className="text-xs font-bold text-white/70 uppercase tracking-widest mb-2">
+      <section className="public-hero">
+        <div className="public-shell">
+          <p className="public-kicker !border-white/40 !bg-white/10 !text-white before:!bg-white">
             Kontak Penting
           </p>
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3">
+          <h1 className="mt-3 text-3xl font-extrabold leading-tight text-white sm:text-4xl">
             Informasi Darurat
           </h1>
-          <p className="text-white/75 max-w-md text-sm">
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/85 sm:text-base">
             Kontak layanan darurat untuk warga Desa Guntung Manggis. Tekan nomor untuk langsung menelepon.
           </p>
         </div>
       </section>
 
       {/* Cards */}
-      <section className="py-16 lg:py-20 bg-stone-50">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <section className="public-section public-muted-bg">
+        <div className="public-shell">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {dataDarurat.map((item) => (
               <div
                 key={item.id}
-                className="bg-white rounded-2xl overflow-hidden border border-stone-200 shadow-sm hover-lift"
+                className="public-card overflow-hidden"
               >
                 {/* Header */}
-                <div className={`${item.warnaBg} px-6 py-5`}>
-                  <p className={`text-xs font-bold uppercase tracking-wide ${item.warnaText} mb-1`}>
+                <div className="bg-[#f2f8f4] px-6 py-5 border-b border-[#e4eee7]">
+                  <p className="text-xs font-bold uppercase tracking-wide text-[#1f7a4f] mb-1">
                     {item.kategori === "damkar"
                       ? "Pemadam Kebakaran"
                       : item.kategori === "ambulans"
                       ? "Ambulans"
                       : "Pos Kesehatan Desa"}
                   </p>
-                  <h2 className="text-lg font-bold text-stone-900 leading-snug">
+                  <h2 className="text-lg font-bold text-slate-900 leading-snug">
                     {item.nama}
                   </h2>
                 </div>
@@ -65,9 +64,9 @@ export default function DaruratPage() {
                   >
                     <Phone
                       size={16}
-                      className="text-[#EA580C] flex-shrink-0"
+                      className="text-[#1f7a4f] flex-shrink-0"
                     />
-                    <span className="text-sm font-semibold text-[#EA580C] group-hover:underline">
+                    <span className="text-sm font-semibold text-[#1f7a4f] group-hover:underline">
                       {item.telepon}
                     </span>
                   </a>
@@ -78,7 +77,7 @@ export default function DaruratPage() {
                       className="flex items-center gap-3 group"
                     >
                       <Phone size={16} className="text-stone-400 flex-shrink-0" />
-                      <span className="text-sm text-stone-500 group-hover:text-[#EA580C] transition-colors">
+                      <span className="text-sm text-stone-500 group-hover:text-[#1f7a4f] transition-colors">
                         {item.teleponCadangan}
                       </span>
                     </a>
@@ -114,10 +113,10 @@ export default function DaruratPage() {
           </div>
 
           {/* Note */}
-          <div className="mt-8 bg-[#FEFCE8] rounded-xl border border-stone-200 px-6 py-4">
+          <div className="mt-8 public-card bg-[#f7fbf9] px-6 py-4">
             <p className="text-sm text-stone-600">
-              <span className="font-semibold text-[#92400E]">Catatan:</span> Hubungi nomor di atas hanya untuk keadaan darurat. Untuk pengajuan layanan desa, silakan gunakan{" "}
-              <a href="/layanan" className="text-[#EA580C] font-semibold hover:underline">
+              <span className="font-semibold text-[#14532d]">Catatan:</span> Hubungi nomor di atas hanya untuk keadaan darurat. Untuk pengajuan layanan desa, silakan gunakan{" "}
+              <a href="/layanan" className="text-[#1f7a4f] font-semibold hover:underline">
                 halaman layanan
               </a>
               .

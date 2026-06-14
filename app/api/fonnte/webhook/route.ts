@@ -205,6 +205,15 @@ export async function POST(req: NextRequest) {
     const rt = rtList?.find((item) => normalizePhone(item.no_wa_rt) === normalizedFrom);
 
     if (!rt) {
+      console.log("[fonnte:webhook] RT not found for sender", {
+        fromRaw: from,
+        fromNormalized: normalizedFrom,
+        registeredRtPhones: (rtList ?? []).map((item) => ({
+          nomor_rt: item.nomor_rt,
+          no_wa_rt_raw: item.no_wa_rt,
+          no_wa_rt_normalized: normalizePhone(item.no_wa_rt),
+        })),
+      });
       return NextResponse.json({ ok: false, reason: "RT not found" }, { status: 200 });
     }
 
@@ -214,22 +223,25 @@ export async function POST(req: NextRequest) {
       fromNormalized: normalizedFrom,
     });
 
-    if (!parsed) {
-      await sendFonnteWA({
-        target: from,
-        message: [
-          `🙏 Maaf Pak/Bu RT, sistem tidak mengenali balasan Anda.`,
-          ``,
-          `Mohon balas dengan format:`,
-          `• setuju <nomor_tiket>`,
-          `• tolak <nomor_tiket> <alasan>`,
-          ``,
-          `Contoh:`,
-          `setuju 42239`,
-          `tolak 42239 data belum lengkap`,
-        ].join("\n"),
+    // Guard anti-loop: jika payload tampak seperti template outbound SI-MANGGIS,
+    // jangan diproses sebagai approval dan jangan kirim balasan apa pun.
+    const lowerMessage = String(message).toLowerCase();
+    const looksLikeTemplate =
+      lowerMessage.includes("si-manggis — konfirmasi permohonan warga") ||
+      lowerMessage.includes("mohon konfirmasi pak/bu rt") ||
+      lowerMessage.includes("cukup balas dengan salah satu kata berikut");
+
+    if (looksLikeTemplate) {
+      console.log("[fonnte:webhook] ignored template-like inbound payload", {
+        fromNormalized: normalizedFrom,
+        messagePreview: String(message).slice(0, 120),
       });
-      return NextResponse.json({ ok: true, reason: "Pesan tidak dikenali" });
+      return NextResponse.json({ ok: true, ignored: true, reason: "Template-like payload ignored" });
+    }
+
+    if (!parsed) {
+      // Hindari spam auto-reply; cukup acknowledge tanpa kirim WA balasan.
+      return NextResponse.json({ ok: true, ignored: true, reason: "Pesan tidak dikenali" });
     }
 
     let permohonan:
@@ -313,6 +325,12 @@ export async function POST(req: NextRequest) {
     }
 
     if (permohonan.nomor_rt !== rt.nomor_rt) {
+      console.log("[fonnte:webhook] RT mismatch", {
+        tiket: permohonan.tiket,
+        permohonan_nomor_rt: permohonan.nomor_rt,
+        sender_rt: rt.nomor_rt,
+        fromNormalized: normalizedFrom,
+      });
       await sendFonnteWA({
         target: from,
         message: `⚠️ Tiket ${permohonan.tiket} bukan milik RT ${rt.nomor_rt}. Mohon cek kembali.`,
@@ -321,6 +339,11 @@ export async function POST(req: NextRequest) {
     }
 
     if (permohonan.status !== STATUS_MENUNGGU_RT) {
+      console.log("[fonnte:webhook] permohonan already processed", {
+        tiket: permohonan.tiket,
+        status: permohonan.status,
+        expectedStatus: STATUS_MENUNGGU_RT,
+      });
       await sendFonnteWA({
         target: from,
         message: `ℹ️ Tiket ${permohonan.tiket} sudah diproses sebelumnya (status: ${permohonan.status}).`,

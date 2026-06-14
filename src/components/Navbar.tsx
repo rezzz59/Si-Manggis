@@ -1,126 +1,177 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { AlertTriangle, Menu, X } from "lucide-react";
 
-const navLinks = [
+type NavLink = {
+  label: string;
+  href: string;
+  emergency?: boolean;
+};
+
+const navLinks: NavLink[] = [
   { label: "Beranda", href: "/" },
   { label: "Profil", href: "/profil" },
   { label: "Layanan", href: "/layanan" },
   { label: "Cek Tiket", href: "/cek-tiket" },
   { label: "Pengaduan", href: "/pengaduan" },
-  { label: "Darurat", href: "/darurat" },
+  { label: "Darurat", href: "/darurat", emergency: true },
   { label: "Kabar", href: "/artikel" },
   { label: "Kontak", href: "/kontak" },
 ];
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [isMounted, setIsMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
+  const isDashboardArea = useMemo(() => pathname?.startsWith("/dashboard"), [pathname]);
+
   useEffect(() => {
     setIsMounted(true);
-    if (window.location.pathname.startsWith("/dashboard")) {
-      return;
-    }
-    const onScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  if (!isMounted) return null;
-  if (window.location.pathname.startsWith("/dashboard")) return null;
+  useEffect(() => {
+    if (!isMounted || isDashboardArea) return;
 
-  const transparent = !scrolled;
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isMounted, isDashboardArea]);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
+  if (!isMounted) return null;
+  if (isDashboardArea) return null;
+
+  const transparent = pathname === "/" && !scrolled && !isOpen;
+  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname?.startsWith(href));
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         transparent
-          ? "bg-transparent border-b border-transparent"
-          : "bg-white border-b border-[#e2e8f0] shadow-sm"
+          ? "border-b border-transparent bg-transparent"
+          : "border-b border-[#dbe6df]/80 bg-white/95 shadow-[0_8px_30px_rgba(15,23,42,0.06)] backdrop-blur"
       }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <div className="flex-shrink-0">
-            <Link href="/" className="flex items-center gap-2.5">
-              <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-[#1e40af]">
-                <span className="text-base font-bold text-white">SM</span>
-              </div>
-              <span
-                className={`text-xl font-bold transition-colors duration-200 ${
-                  transparent ? "text-white" : "text-[#1e293b]"
-                }`}
-              >
-                Si-Manggis
-              </span>
-            </Link>
-          </div>
+        <div className="flex h-[74px] items-center justify-between">
+          <Link href="/" className="group flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-[#16a34a] to-[#15803d] shadow-sm ring-1 ring-[#15803d]/20 transition-transform duration-200 group-hover:scale-[1.03]">
+              <span className="text-sm font-extrabold tracking-wide text-white">SM</span>
+            </div>
+            <div className="leading-tight">
+              <p className={`text-base font-bold tracking-tight ${transparent ? "text-white" : "text-[#0f172a]"}`}>
+                SI-MANGGIS
+              </p>
+              <p className={`text-[11px] ${transparent ? "text-white/80" : "text-[#64748b]"}`}>Layanan Kelurahan Digital</p>
+            </div>
+          </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center md:gap-5">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`text-sm font-medium transition-colors duration-150 ${
-                  transparent
-                    ? "text-white/80 hover:text-white"
-                    : "text-[#64748b] hover:text-[#1e40af]"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+          <div className="hidden items-center gap-1 md:flex">
+            {navLinks.map((link) => {
+              const active = isActive(link.href);
+
+              if (link.emergency) {
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`ml-1 inline-flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold transition-all ${
+                      active
+                        ? "bg-red-100 text-red-700 ring-1 ring-red-200"
+                        : transparent
+                        ? "bg-white/15 text-white hover:bg-white/25"
+                        : "bg-red-50 text-red-700 hover:bg-red-100"
+                    }`}
+                  >
+                    <AlertTriangle size={14} />
+                    {link.label}
+                  </Link>
+                );
+              }
+
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`rounded-full px-3.5 py-2 text-sm font-medium transition-colors ${
+                    active
+                      ? transparent
+                        ? "bg-white/20 text-white"
+                        : "bg-[#dcfce7] text-[#15803d]"
+                      : transparent
+                      ? "text-white/85 hover:text-white"
+                      : "text-[#475569] hover:bg-[#f0fdf4] hover:text-[#15803d]"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+
             <Link
               href="/login"
-              className={`rounded-sm px-5 py-2 text-sm font-semibold transition-colors duration-150 cursor-pointer ${
+              className={`ml-2 inline-flex items-center rounded-full px-5 py-2.5 text-sm font-semibold transition-all ${
                 transparent
-                  ? "bg-white text-[#1e40af] hover:bg-white/90"
-                  : "bg-[#1e40af] text-white hover:bg-[#1e3a8a]"
+                  ? "bg-white text-[#15803d] hover:bg-white/90"
+                  : "bg-gradient-to-r from-[#16a34a] to-[#15803d] text-white hover:from-[#15803d] hover:to-[#166534] shadow-sm"
               }`}
             >
               Dashboard
             </Link>
           </div>
 
-          {/* Mobile menu button */}
-          <div className="flex md:hidden">
-            <button
-              type="button"
-              onClick={() => setIsOpen(!isOpen)}
-              className={`p-1 transition-colors duration-150 cursor-pointer ${
-                transparent ? "text-white" : "text-[#1e293b]"
-              }`}
-              aria-label="Toggle menu"
-            >
-              {isOpen ? <X size={26} /> : <Menu size={26} />}
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => setIsOpen((prev) => !prev)}
+            className={`inline-flex items-center justify-center rounded-lg p-2 transition-colors md:hidden ${
+              transparent ? "text-white hover:bg-white/15" : "text-[#0f172a] hover:bg-[#f8fafc]"
+            }`}
+            aria-label="Toggle menu"
+          >
+            {isOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
         </div>
 
-        {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden border-t border-[#e2e8f0] bg-white pb-3">
-            <div className="space-y-0.5 pt-2">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className="block px-3 py-2.5 text-sm font-medium text-[#64748b] hover:text-[#1e40af] hover:bg-[#f1f5f9] rounded-sm mx-1 transition-colors duration-150 cursor-pointer"
-                >
-                  {link.label}
-                </Link>
-              ))}
+          <div className="md:hidden">
+            <div className="mb-3 rounded-2xl border border-[#dbe6df] bg-white p-2 shadow-lg">
+              {navLinks.map((link) => {
+                const active = isActive(link.href);
+                const emergency = Boolean(link.emergency);
+
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`mb-1 flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors last:mb-0 ${
+                      emergency
+                        ? active
+                          ? "bg-red-100 text-red-700"
+                          : "bg-red-50 text-red-700 hover:bg-red-100"
+                        : active
+                        ? "bg-[#dcfce7] text-[#15803d]"
+                        : "text-[#475569] hover:bg-[#f0fdf4] hover:text-[#15803d]"
+                    }`}
+                  >
+                    {emergency ? <AlertTriangle size={16} /> : null}
+                    {link.label}
+                  </Link>
+                );
+              })}
+
               <Link
                 href="/login"
-                onClick={() => setIsOpen(false)}
-                className="mx-1 mt-2 block rounded-sm bg-[#1e40af] px-4 py-2.5 text-center text-sm font-semibold text-white hover:bg-[#1e3a8a] transition-colors duration-150 cursor-pointer"
+                className="mt-2 block rounded-xl bg-gradient-to-r from-[#16a34a] to-[#15803d] px-4 py-2.5 text-center text-sm font-semibold text-white hover:from-[#15803d] hover:to-[#166534]"
               >
                 Dashboard
               </Link>

@@ -55,36 +55,49 @@ export function normalizePhone(phone: string): string {
 export function parseApprovalMessage(msg: string): ApprovalMessageResult | null {
   if (!msg || typeof msg !== "string") return null;
 
-  const lower = msg.toLowerCase().trim();
-  if (!lower) return null;
+  const normalized = msg.replace(/\r/g, "").trim();
+  if (!normalized) return null;
 
-  const hasSetuju = /\bsetuju\b/.test(lower);
-  const hasTolak = /\btolak\b/.test(lower);
+  // Ambil baris-baris awal yang bukan kutipan/forward agar tidak salah baca
+  // isi pesan template yang berisi kata "tolak".
+  const lines = normalized
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0)
+    .filter((line) => !line.startsWith(">"));
 
-  if (!hasSetuju && !hasTolak) {
-    return null;
-  }
+  if (lines.length === 0) return null;
 
-  // Prioritas TOLAK: lebih aman menolak kalau bingung.
-  const action: ApprovalAction = hasTolak ? "TOLAK" : "SETUJU";
+  const firstLine = lines[0].toLowerCase();
 
-  // Ekstrak tiket (optional) — ambil angka terpanjang (5-12 digit) agar
-  // "setuju 111112" tidak salah kebaca sebagai "11111".
-  const numberMatches = msg.match(/\d{5,12}/g);
+  // HANYA proses jika perintah eksplisit di awal balasan.
+  // Ini mencegah false trigger ketika webhook menerima ulang pesan template.
+  let action: ApprovalAction | null = null;
+  if (/^setuju\b/.test(firstLine)) action = "SETUJU";
+  if (/^tolak\b/.test(firstLine)) action = "TOLAK";
+
+  if (!action) return null;
+
+  // Cari tiket dari baris pertama dulu, fallback ke baris berikutnya.
+  const firstLineNumbers = lines[0].match(/\d{5,12}/g) ?? [];
+  const allNumbers = lines.join(" ").match(/\d{5,12}/g) ?? [];
+  const numberPool = [...firstLineNumbers, ...allNumbers];
+
   let tiket: string | undefined;
-  if (numberMatches && numberMatches.length > 0) {
-    tiket = numberMatches.sort((a, b) => b.length - a.length)[0];
+  if (numberPool.length > 0) {
+    tiket = numberPool.sort((a, b) => b.length - a.length)[0];
   }
 
-  // Untuk TOLAK, sisa kata (selain "tolak", "setuju", dan tiket) jadi alasan.
   let alasan: string | undefined;
   if (action === "TOLAK") {
-    const cleaned = msg
-      .replace(/\bsetuju\b/gi, " ")
+    const cleaned = lines
+      .join(" ")
       .replace(/\btolak\b/gi, " ")
-      .replace(/\b\d{5}\b/g, " ")
+      .replace(/\bsetuju\b/gi, " ")
+      .replace(/\b\d{5,12}\b/g, " ")
       .replace(/\s+/g, " ")
       .trim();
+
     alasan = cleaned.length > 0 ? cleaned : undefined;
   }
 

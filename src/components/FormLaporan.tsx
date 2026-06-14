@@ -170,22 +170,74 @@ export default function FormLaporan() {
 
   if (success) {
     return (
-      <div className="text-center py-16 px-6">
-        <div className="text-5xl mb-4">✅</div>
-        <h2 className="text-2xl font-bold text-[#1e293b] mb-2">Laporan Terkirim!</h2>
-        <p className="text-[#64748b] mb-2">No. Referensi Anda:</p>
-        <p className="text-3xl font-bold text-[#1e40af] mb-6">{success}</p>
-        <p className="text-sm text-[#94a3b8]">
-          Catat nomor ini untuk melacak status.
-          <br />
-          WA akan dikirim ke RT terkait untuk persetujuan.
-        </p>
-        <a
-          href="/cek-tiket"
-          className="inline-block mt-6 text-sm font-semibold text-[#1e40af] hover:text-[#1e3a8a] underline"
-        >
-          Lacak Status →
-        </a>
+      <div className="py-8 px-4 sm:px-6">
+        <div className="mx-auto max-w-xl rounded-2xl border border-emerald-100 bg-gradient-to-b from-emerald-50 to-white p-6 sm:p-8 shadow-sm">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-2xl">
+            ✅
+          </div>
+
+          <p className="text-center text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-700">
+            Pengajuan Berhasil
+          </p>
+          <h2 className="mt-1 text-center text-2xl font-extrabold text-slate-900">
+            Permohonan Terkirim
+          </h2>
+          <p className="mt-2 text-center text-sm leading-relaxed text-slate-600">
+            Permohonan Anda sudah kami terima dan otomatis diteruskan ke RT terkait untuk proses persetujuan.
+          </p>
+
+          <div className="mt-6 rounded-xl border border-emerald-200 bg-white p-4 text-center">
+            <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+              Nomor Referensi / Tiket
+            </p>
+            <p className="mt-1 text-3xl font-extrabold tracking-wide text-[#1e40af]">
+              {success}
+            </p>
+          </div>
+
+          <div className="mt-5 rounded-lg bg-slate-50 px-4 py-3 text-sm text-slate-600">
+            Simpan nomor tiket ini untuk memantau progres layanan pada halaman pelacakan status.
+          </div>
+
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <a
+              href="/cek-tiket"
+              className="inline-flex w-full items-center justify-center rounded-lg bg-[#1e40af] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#1e3a8a]"
+            >
+              Lacak Status Sekarang
+            </a>
+            <button
+              type="button"
+              onClick={() => {
+                setSuccess(null);
+                setError(null);
+                setFieldErrors({});
+                setForm({
+                  nama: "",
+                  nik: "",
+                  alamat: "",
+                  nomor_rt: "",
+                  telepon: "",
+                  jenis: "",
+                  sub_jenis: "",
+                  deskripsi: "",
+                  tempat_lahir: "",
+                  tanggal_lahir: "",
+                  jenis_kelamin: "",
+                  agama: "",
+                  status_kawin: "",
+                  pendidikan_terakhir: "",
+                  pekerjaan: "",
+                  keperluan: "",
+                  nama_ortu: "",
+                });
+              }}
+              className="inline-flex w-full items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50"
+            >
+              Buat Pengajuan Baru
+            </button>
+          </div>
+        </div>
       </div>
     );
   }

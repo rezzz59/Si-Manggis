@@ -1,464 +1,151 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   ArrowRight,
+  Megaphone,
+  FileBadge2,
   FileText,
-  MapPin,
-  Phone,
+  House,
+  IdCard,
+  ScrollText,
+  ShieldAlert,
+  Search,
+  Headphones,
+  Smile,
+  Users,
+  FileCheck2,
   Building2,
-  Newspaper,
-  Flame,
-  Siren,
   ShieldCheck,
-  Droplets,
-  Heart,
+  BadgeCheck,
   Sparkles,
-  Recycle,
-  Briefcase,
+  Globe,
+  MessageCircle,
+  Mail,
   Send,
 } from "lucide-react";
 import AnimateOnScroll from "@/src/components/AnimateOnScroll";
-import SearchBar from "@/src/components/SearchBar";
 
-const PROGRAM_UNGGULAN = [
-  {
-    icon: ShieldCheck,
-    label: "Kampung KB",
-    desc: "Program nasional — mewakili Kalseltel",
-    badge: "Nasional",
-    bg: "bg-[#eff6ff]",
-    ic: "text-[#1e40af]",
-  },
-  {
-    icon: Droplets,
-    label: "RT Mandiri",
-    desc: "Budidaya ikan papuyu &ternak sapi",
-    badge: null,
-    bg: "bg-[#f0fdf4]",
-    ic: "text-[#16a34a]",
-  },
-  {
-    icon: Heart,
-    label: "Home Care Lansia",
-    desc: "Pelayanan kesehatan warga lanjut usia",
-    badge: null,
-    bg: "bg-[#fff7ed]",
-    ic: "text-[#f97316]",
-  },
-  {
-    icon: Sparkles,
-    label: "Kelurahan Bersinar",
-    desc: "Wilayah percontohan bersih dari narkoba",
-    badge: "Percontohan",
-    bg: "bg-[#eff6ff]",
-    ic: "text-[#1e40af]",
-  },
-  {
-    icon: Recycle,
-    label: "Bank Sampah",
-    desc: "8 unit beroperasi, kesadaran lingkungan tinggi",
-    badge: "8 Unit",
-    bg: "bg-[#f0fdf4]",
-    ic: "text-[#16a34a]",
-  },
-  {
-    icon: Briefcase,
-    label: "Koperasi Merah Putih",
-    desc: "Program strategis nasional — Juli 2025",
-    badge: "Stranas",
-    bg: "bg-[#fff7ed]",
-    ic: "text-[#f97316]",
-  },
+const LAYANAN_PENGAJUAN = [
+  { icon: IdCard, title: "Surat Pengantar KTP", desc: "Pengajuan surat pengantar pembuatan atau pembaruan KTP.", href: "/layanan", tag: "Administrasi Kependudukan" },
+  { icon: ScrollText, title: "Surat Pengantar Acara", desc: "Pengajuan surat pengantar kegiatan warga dan acara lingkungan.", href: "/layanan", tag: "Kegiatan Warga" },
+  { icon: House, title: "Surat Domisili", desc: "Layanan keterangan domisili untuk kebutuhan sekolah, kerja, dan lainnya.", href: "/layanan", tag: "Dokumen Kelurahan" },
+  { icon: FileBadge2, title: "Pengantar SKCK", desc: "Permohonan surat pengantar SKCK untuk keperluan pekerjaan dan administrasi.", href: "/layanan", tag: "Keamanan & Legal" },
+  { icon: FileText, title: "Surat Keterangan Usaha", desc: "Layanan surat keterangan usaha (SKU) untuk pelaku usaha lokal.", href: "/layanan", tag: "UMKM" },
+  { icon: ShieldAlert, title: "Pengaduan Masyarakat", desc: "Laporkan keluhan lingkungan, fasilitas umum, dan pelayanan.", href: "/pengaduan", tag: "Aduan Publik" },
 ];
 
-const STATS = [
-  { value: "52", label: "RT", sub: "Pemekaran Okt 2025" },
-  { value: "2.500+", label: "Warga", sub: "Terdaftar" },
-  { value: "8", label: "Bank Sampah", sub: "Unit aktif" },
-  { value: "5", label: "Program", sub: "Inovasi Unggulan" },
+const BERITA_UTAMA = {
+  title: "Pelayanan Administrasi Kelurahan Kini Lebih Ringkas dan Terjadwal",
+  date: "12 Jan 2026",
+  category: "Layanan Publik",
+  desc: "Warga kini dapat mengurus dokumen harian dengan alur antrean yang lebih cepat, transparan, dan mudah dipantau dari satu portal.",
+  image: "/img/Sekilas-Tentang-Danau-Seran.jpg",
+};
+
+const BERITA_SAMPING = [
+  { title: "Verifikasi Data KK Tahap I Mulai di Seluruh RT", date: "10 Jun 2025", category: "Informasi", desc: "Pemutakhiran data keluarga dilakukan bertahap untuk memastikan akurasi layanan." },
+  { title: "Sosialisasi Layanan Digital SI-MANGGIS", date: "08 Jun 2025", category: "Kegiatan", desc: "Pengurus wilayah dibekali alur pengajuan online agar pendampingan warga lebih efektif." },
+  { title: "Potensi Perkebunan Sawit untuk Warga", date: "06 Jun 2025", category: "Potensi", desc: "Pemetaan potensi ekonomi lokal untuk meningkatkan peluang usaha masyarakat." },
 ];
 
-const JENIS_LAYANAN = [
-  {
-    icon: FileText,
-    label: "Surat Izin Tinggal",
-    desc: "Izin domisili & tinggal sementara",
-    href: "/layanan/surat-izin-tinggal",
-  },
-  {
-    icon: Building2,
-    label: "Surat Keterangan",
-    desc: "Domisili, pengantar, usaha",
-    href: "/layanan/surat-keterangan",
-  },
-  {
-    icon: Send,
-    label: "Ajukan Laporan",
-    desc: "Pengaduan & permohonan surat via WA RT",
-    href: "/layanan",
-  },
+const KEUNGGULAN = [
+  { icon: BadgeCheck, title: "Pelayanan Cepat", desc: "Proses mudah dan terukur" },
+  { icon: ShieldCheck, title: "Transparan", desc: "Status layanan jelas terbuka" },
+  { icon: Building2, title: "Aman & Terpercaya", desc: "Data warga terlindungi" },
+  { icon: Sparkles, title: "24/7 Online", desc: "Layanan dapat diakses kapan saja" },
 ];
 
 export default function HomePage() {
+  const router = useRouter();
+  const [keyword, setKeyword] = useState("");
+
+  const filteredLayanan = useMemo(() => {
+    const q = keyword.trim().toLowerCase();
+    if (!q) return LAYANAN_PENGAJUAN;
+    return LAYANAN_PENGAJUAN.filter((item) => `${item.title} ${item.desc} ${item.tag}`.toLowerCase().includes(q));
+  }, [keyword]);
+
+  const suggestions = useMemo(() => {
+    const q = keyword.trim().toLowerCase();
+    if (!q) return [];
+    return LAYANAN_PENGAJUAN.filter((item) => `${item.title} ${item.desc} ${item.tag}`.toLowerCase().includes(q)).slice(0, 8);
+  }, [keyword]);
+
+  useEffect(() => {
+    const closeSuggestionsOnScroll = () => setKeyword((prev) => (prev ? "" : prev));
+    window.addEventListener("scroll", closeSuggestionsOnScroll, { passive: true });
+    return () => window.removeEventListener("scroll", closeSuggestionsOnScroll);
+  }, []);
+
+  const handleSearch = () => {
+    const q = keyword.trim();
+    router.push(q ? `/layanan?q=${encodeURIComponent(q)}` : "/layanan");
+  };
+
   return (
-    <main className="flex flex-col min-h-full">
-
-      {/* ============================================
-          HERO — full photo, text reveal on load
-          ============================================ */}
-      <section className="relative min-h-screen flex items-center overflow-hidden">
-        {/* Background photo */}
-        <div className="absolute inset-0">
-          <Image
-            src="/img/Sekilas-Tentang-Danau-Seran.jpg"
-            alt="Pemandangan Danau Seran, Kelurahan Guntung Manggis"
-            fill
-            className="object-cover object-center"
-            priority
-          />
-        </div>
-
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1e293b]/95 via-[#1e40af]/55 to-transparent" />
-        <div className="absolute inset-0 noise-texture pointer-events-none" />
-
-        {/* Content */}
-        <div className="relative z-10 w-full">
-          <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
-            <div className="max-w-2xl pt-24 pb-20">
-
-              {/* Tag line */}
-              <div className="hero-tag flex items-center gap-3 mb-8">
-                <div className="w-[3px] h-8 bg-[#f97316]" />
-                <span className="text-[11px] font-semibold text-white/60 uppercase tracking-[0.18em]">
-                  Portal Resmi Kelurahan Gunting Manggis
-                </span>
+    <main className="min-h-full bg-[#f8faf8] text-[#0f172a]">
+      <section className="relative isolate min-h-[100svh] overflow-hidden pt-28 pb-12 sm:pt-32">
+        <Image src="/img/Sekilas-Tentang-Danau-Seran.jpg" alt="Aerial view Kelurahan Guntung Manggis" fill priority className="object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0b4f2e]/88 via-[#0f7a43]/68 to-[#0a5c33]/45" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_22%,rgba(255,255,255,0.18),transparent_38%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(6,30,19,0.45),rgba(6,30,19,0.1))]" />
+        <div className="page-shell relative z-10 flex min-h-[calc(100svh-7rem)] items-center">
+          <div className="grid w-full grid-cols-1 items-center gap-8 lg:grid-cols-12">
+            <AnimateOnScroll className="lg:col-span-7 lg:pr-6">
+              <span className="inline-flex items-center rounded-full border border-white/35 bg-white/10 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.12em] text-white backdrop-blur-md">Selamat Datang di SI-MANGGIS</span>
+              <h1 className="mt-5 text-4xl font-extrabold leading-[1.02] text-white sm:text-5xl lg:text-6xl">Layanan Digital Kelurahan<span className="block text-[#86efac]">Guntung Manggis</span>yang Cepat dan Transparan</h1>
+              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/90 sm:text-base">Solusi layanan administrasi publik modern yang ramah masyarakat, mudah diakses, dan transparan untuk seluruh warga.</p>
+              <div className="relative mt-6 max-w-2xl">
+                <div className="flex items-center gap-3 rounded-2xl border border-white/25 bg-white/95 px-4 py-3.5 shadow-[0_16px_42px_-26px_rgba(2,44,24,0.65)] backdrop-blur-sm">
+                  <Search size={18} className="text-[#0f7a43]" />
+                  <input type="text" value={keyword} onChange={(e) => setKeyword(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleSearch()} placeholder="Cari layanan, contoh: Surat Pengantar KTP" className="flex-1 bg-transparent text-sm text-[#0f172a] placeholder:text-[#64748b] outline-none" aria-label="Cari layanan" />
+                  <button type="button" onClick={handleSearch} className="inline-flex h-10 items-center justify-center gap-1 rounded-xl bg-[#0f7a43] px-3 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-[#0c6638]" aria-label="Cari layanan">Cek Status <ArrowRight size={15} /></button>
+                </div>
+                {suggestions.length > 0 && (
+                  <div className="absolute left-0 right-0 top-[calc(100%+8px)] z-[9500] max-h-56 overflow-y-auto rounded-2xl border border-[#dceae1] bg-white shadow-[0_24px_45px_-30px_rgba(15,23,42,0.5)]">
+                    {suggestions.map((item) => (
+                      <Link key={item.title} href={item.href} className="block border-b border-[#edf3ef] px-4 py-3 last:border-b-0 hover:bg-[#f6fbf8]">
+                        <p className="text-sm font-semibold text-[#0f172a]">{item.title}</p>
+                        <p className="mt-0.5 text-xs text-[#0f7a43]">{item.tag}</p>
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
-
-              {/* Main heading — staggered reveal */}
-              <div className="hero-line-1 overflow-hidden mb-1">
-                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-[1.15] pb-1">
-                  Guntung
-                </h1>
+              <div className="mt-6 flex flex-wrap items-center gap-3">
+                <Link href="/layanan" className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-[#0f7a43] transition hover:-translate-y-0.5">Ajukan Layanan <ArrowRight size={15} /></Link>
+                <Link href="/cek-tiket" className="inline-flex items-center gap-2 rounded-xl border border-white/35 bg-white/10 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/20">Cek Status Layanan</Link>
+                <Link href="/kontak" className="inline-flex items-center gap-2 text-sm font-semibold text-[#d1fae5] transition hover:text-white">Butuh bantuan? Hubungi Petugas <ArrowRight size={15} /></Link>
               </div>
-              <div className="hero-line-2 overflow-hidden">
-                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-[1.15] pb-1">
-                  <span className="text-[#93c5fd]">Manggis</span>
-                </h1>
-              </div>
+            </AnimateOnScroll>
 
-              {/* Subtext */}
-              <p className="hero-sub text-base text-white/55 leading-relaxed mb-10 max-w-md">
-                Kecamatan Landasan Ulin, Kota Banjarbaru,
-                Kalimantan Selatan. Portal informasi & layanan
-                digital untuk warga.
-              </p>
-
-              {/* Search bar */}
-              <div className="hero-search">
-                <SearchBar />
+            <AnimateOnScroll delay={120} className="lg:col-span-5 lg:justify-self-end lg:self-center">
+              <div className="w-full max-w-sm rounded-[24px] border border-white/35 bg-white/95 p-5 shadow-[0_24px_45px_-30px_rgba(2,44,24,0.8)] backdrop-blur-md">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3 rounded-2xl border border-[#e2efe7] bg-white p-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e8f7ee] text-[#0f7a43]"><Users size={18} /></div><div><p className="text-3xl font-extrabold leading-none text-[#0f172a]">31.000</p><p className="text-sm text-[#64748b]">Penduduk</p></div></div>
+                  <div className="flex items-center gap-3 rounded-2xl border border-[#e2efe7] bg-white p-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e8f7ee] text-[#0f7a43]"><Building2 size={18} /></div><div><p className="text-3xl font-extrabold leading-none text-[#0f172a]">4.250 Ha</p><p className="text-sm text-[#64748b]">Luas Wilayah</p></div></div>
+                  <div className="flex items-center gap-3 rounded-2xl border border-[#e2efe7] bg-white p-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e8f7ee] text-[#0f7a43]"><FileCheck2 size={18} /></div><div><p className="text-3xl font-extrabold leading-none text-[#0f172a]">51 RT / 6 RW</p><p className="text-sm text-[#64748b]">Wilayah Administratif</p></div></div>
+                  <div className="flex items-center gap-3 rounded-2xl border border-[#e2efe7] bg-white p-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e8f7ee] text-[#0f7a43]"><Sparkles size={18} /></div><div><p className="text-lg font-extrabold leading-none text-[#0f172a]">Desa Perkebunan</p><p className="text-sm text-[#64748b]">Potensi Unggulan</p></div></div>
+                </div>
               </div>
-
-              {/* Program tags */}
-              <div className="hero-tags flex flex-wrap gap-2 mt-10">
-                {[
-                  "Kampung KB",
-                  "RT Mandiri",
-                  "Bank Sampah",
-                  "Koperasi Merah Putih",
-                  "Bersinar",
-                ].map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-[11px] font-semibold text-white/70 bg-white/10 px-3 py-1.5 rounded-sm"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
+            </AnimateOnScroll>
           </div>
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 opacity-0 hero-scroll">
-          <span className="text-[10px] font-semibold text-white/40 uppercase tracking-widest">
-            Scroll
-          </span>
-          <div className="w-px h-8 bg-gradient-to-b from-white/40 to-transparent" />
         </div>
       </section>
 
-
-      {/* ============================================
-          SECTION 2 — white, scroll-animated
-          ============================================ */}
-      <section className="bg-white pt-16 pb-20">
-
-        {/* --- UNIT GAWAT DARURAT --- */}
-        <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12 mb-16">
-          <AnimateOnScroll delay={0}>
-            <div className="flex items-end justify-between mb-6">
-              <div>
-                <div className="w-10 h-[3px] bg-[#f97316] mb-3" />
-                <h2 className="text-3xl font-extrabold text-[#1e293b] tracking-tight leading-none">
-                  Unit Gawat<br />Darurat
-                </h2>
-              </div>
-              <Link
-                href="/darurat"
-                className="text-[11px] font-semibold text-[#1e40af] hover:text-[#1e3a8a] transition-colors flex items-center gap-1 cursor-pointer"
-              >
-                Lihat Semua <ArrowRight size={10} />
-              </Link>
-            </div>
-          </AnimateOnScroll>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <AnimateOnScroll delay={100}>
-              <a
-                href="https://maps.google.com/?q=Dinas+Pemadam+Kebakaran+Kota+Banjarbaru"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="card-hover flex items-start gap-4 rounded-sm bg-[#eff6ff] border border-[#bfdbfe] px-6 py-5 cursor-pointer"
-              >
-                <div className="flex-shrink-0 mt-0.5">
-                  <Flame size={24} className="text-[#dc2626]" strokeWidth={1.8} />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-bold text-[#1e293b] leading-tight">Damkar</p>
-                  <p className="text-xs text-[#64748b] mt-1 leading-relaxed">
-                    Dinas Pemadam Kebakaran Kota Banjarbaru
-                  </p>
-                  <div className="mt-2 flex items-center gap-1 text-[10px] font-bold text-[#1e40af]">
-                    <MapPin size={9} strokeWidth={2.5} />
-                    Lihat di Google Maps
-                  </div>
-                </div>
-              </a>
-            </AnimateOnScroll>
-
-            <AnimateOnScroll delay={200}>
-              <a
-                href="https://maps.google.com/?q=Poskesdes+Kelurahan+Guntung+Manggis"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="card-hover flex items-start gap-4 rounded-sm bg-[#f0fdf4] border border-[#bbf7d0] px-6 py-5 cursor-pointer"
-              >
-                <div className="flex-shrink-0 mt-0.5">
-                  <Siren size={24} className="text-[#16a34a]" strokeWidth={1.8} />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-bold text-[#1e293b] leading-tight">Ambulans</p>
-                  <p className="text-xs text-[#64748b] mt-1 leading-relaxed">
-                    Poskesdes Kelurahan Guntung Manggis
-                  </p>
-                  <div className="mt-2 flex items-center gap-1 text-[10px] font-bold text-[#16a34a]">
-                    <MapPin size={9} strokeWidth={2.5} />
-                    Lihat di Google Maps
-                  </div>
-                </div>
-              </a>
-            </AnimateOnScroll>
-          </div>
-        </div>
-
-        {/* Divider */}
-        <div className="h-px bg-[#e2e8f0] mx-6 sm:mx-8 lg:mx-12 mb-16" />
-
-
-        {/* --- BERITA TERKINI --- */}
-        <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12 mb-16">
-          <AnimateOnScroll delay={0}>
-            <div className="flex items-end justify-between mb-6">
-              <div className="max-w-xs">
-                <div className="w-10 h-[3px] bg-[#1e40af] mb-3" />
-                <h2 className="text-3xl font-extrabold text-[#1e293b] tracking-tight leading-none">
-                  Berita<br />Terkini
-                </h2>
-                <p className="text-[11px] text-[#94a3b8] mt-2 leading-relaxed">
-                  Kabar terbaru dari Kelurahan Guntung Manggis
-                </p>
-              </div>
-              <Link
-                href="/artikel"
-                className="text-[11px] font-semibold text-[#1e40af] hover:text-[#1e3a8a] transition-colors flex items-center gap-1 whitespace-nowrap cursor-pointer"
-              >
-                Semua Artikel <ArrowRight size={10} />
-              </Link>
-            </div>
-          </AnimateOnScroll>
-
-          {/* Asymmetric grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {/* Big card — spans 2 cols */}
-            <AnimateOnScroll delay={0} className="lg:col-span-2">
-              <div className="group cursor-pointer">
-                <div className="relative h-[300px] rounded-sm overflow-hidden">
-                  <Image
-                    src="/img/Sekilas-Tentang-Danau-Seran.jpg"
-                    alt="Perbaikan Jembatan Guntung Manggis"
-                    fill
-                    className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <span className="text-[10px] font-bold text-white bg-[#f97316] px-2.5 py-1 rounded-sm mb-3 inline-block">
-                      Jan 2026
-                    </span>
-                    <h3 className="text-lg font-bold text-white leading-snug">
-                      Perbaikan Jembatan Guntung Manggis,
-                      Dinas PUPR Kalseltel Gerak Cepat
-                    </h3>
-                    <p className="text-[11px] text-white/60 mt-2">
-                      Baca selengkapnya →
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </AnimateOnScroll>
-
-            {/* Two stacked cards */}
-            <AnimateOnScroll delay={100} className="flex flex-col gap-4">
-              <Link href="/artikel/pasar-murah-wengga-kuda" className="group cursor-pointer">
-                <div className="relative h-[142px] rounded-sm overflow-hidden">
-                  <Image
-                    src="/img/Sekilas-Tentang-Danau-Seran.jpg"
-                    alt="Pasar Murah"
-                    fill
-                    className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <span className="text-[9px] font-bold text-white bg-[#16a34a] px-2 py-0.5 rounded-sm mb-2 inline-block">
-                      Feb 2025
-                    </span>
-                    <h3 className="text-[13px] font-bold text-white leading-snug line-clamp-2">
-                      Pasar Murah Mandiri Komplek Wengga Kuda
-                    </h3>
-                  </div>
-                </div>
-              </Link>
-
-              <Link href="/artikel/pemekaran-rt-52" className="group cursor-pointer">
-                <div className="relative h-[142px] rounded-sm overflow-hidden">
-                  <Image
-                    src="/img/bg.png"
-                    alt="Pemekaran RT"
-                    fill
-                    className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <span className="text-[9px] font-bold text-white bg-[#1e40af] px-2 py-0.5 rounded-sm mb-2 inline-block">
-                      Okt 2025
-                    </span>
-                    <h3 className="text-[13px] font-bold text-white leading-snug line-clamp-2">
-                      Pemekaran 52 RT, Kelurahan Tumbuh Cepat
-                    </h3>
-                  </div>
-                </div>
-              </Link>
-            </AnimateOnScroll>
-          </div>
-        </div>
-
-        {/* Divider */}
-        <div className="h-px bg-[#e2e8f0] mx-6 sm:mx-8 lg:mx-12 mb-16" />
-
-
-        {/* --- PROGRAM UNGGULAN --- */}
-        <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12 mb-16">
-          <AnimateOnScroll delay={0}>
-            <div className="mb-6">
-              <div className="w-10 h-[3px] bg-[#f97316] mb-3" />
-              <h2 className="text-3xl font-extrabold text-[#1e293b] tracking-tight leading-none">
-                Program Unggulan
-              </h2>
-              <p className="text-[11px] text-[#94a3b8] mt-2">
-                Inovasi dan keunggulan Kelurahan Guntung Manggis
-              </p>
-            </div>
-          </AnimateOnScroll>
-
-          {/* Program cards grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {PROGRAM_UNGGULAN.map((prog, i) => (
-              <AnimateOnScroll key={prog.label} delay={i * 80}>
-                <div
-                  className={`rounded-sm bg-white border border-[#e2e8f0] p-5 ${
-                    i === 0 ? "sm:col-span-2 lg:col-span-2" : ""
-                  } card-hover`}
-                >
-                  <div className="flex items-start gap-4">
-                    <div
-                      className={`flex h-11 w-11 items-center justify-center rounded-sm flex-shrink-0 ${prog.bg}`}
-                    >
-                      <prog.icon size={18} className={prog.ic} strokeWidth={1.8} />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <p className="text-sm font-bold text-[#1e293b] leading-tight">
-                          {prog.label}
-                        </p>
-                        {prog.badge && (
-                          <span className="text-[9px] font-bold text-white bg-[#1e40af] px-2 py-0.5 rounded-sm uppercase tracking-wide">
-                            {prog.badge}
-                          </span>
-                        )}
-                      </div>
-                      <p
-                        className="text-xs text-[#64748b] mt-1 leading-relaxed"
-                        dangerouslySetInnerHTML={{ __html: prog.desc }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </AnimateOnScroll>
-            ))}
-          </div>
-        </div>
-
-        {/* Divider */}
-        <div className="h-px bg-[#e2e8f0] mx-6 sm:mx-8 lg:mx-12 mb-16" />
-
-
-        {/* --- LAYANAN WARGA --- */}
-        <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
-          <AnimateOnScroll delay={0}>
-            <div className="flex items-end justify-between mb-6">
-              <div>
-                <div className="w-10 h-[3px] bg-[#1e40af] mb-3" />
-                <h2 className="text-3xl font-extrabold text-[#1e293b] tracking-tight leading-none">
-                  Layanan<br />Warga
-                </h2>
-              </div>
-              <Link
-                href="/layanan"
-                className="text-[11px] font-semibold text-[#1e40af] hover:text-[#1e3a8a] transition-colors flex items-center gap-1 whitespace-nowrap cursor-pointer"
-              >
-                Ajukan Sekarang <ArrowRight size={10} />
-              </Link>
-            </div>
-          </AnimateOnScroll>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {JENIS_LAYANAN.map((layanan, i) => (
-              <AnimateOnScroll key={layanan.label} delay={i * 100}>
-                <Link
-                  href={layanan.href}
-                  className="card-hover flex items-center gap-4 rounded-sm bg-white border border-[#cbd5e1] px-6 py-5 cursor-pointer"
-                >
-                  <div className="flex h-11 w-11 items-center justify-center rounded-sm bg-[#eff6ff] flex-shrink-0">
-                    <layanan.icon size={18} className="text-[#1e40af]" strokeWidth={1.8} />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-[#1e293b] leading-tight">
-                      {layanan.label}
-                    </p>
-                    <p className="text-xs text-[#64748b] mt-0.5">{layanan.desc}</p>
-                  </div>
-                  <ArrowRight size={14} className="text-[#cbd5e1] ml-auto flex-shrink-0" />
+      <section className="py-12 sm:py-14">
+        <div className="page-shell">
+          <AnimateOnScroll><div className="mb-6 flex flex-wrap items-center justify-between gap-3"><div><p className="section-kicker">Layanan Populer</p><h2 className="section-title mt-2">Layanan yang Sering Diajukan</h2></div><Link href="/layanan" className="inline-flex items-center gap-2 rounded-xl border border-[#d5e7dc] bg-white px-4 py-2 text-sm font-semibold text-[#0f7a43] transition hover:bg-[#f3faf6]">Lihat Semua Layanan <ArrowRight size={15} /></Link></div></AnimateOnScroll>
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+            {filteredLayanan.slice(0, 6).map((item, i) => (
+              <AnimateOnScroll key={item.title} delay={i * 40}>
+                <Link href={item.href} className="group flex h-full flex-col items-center justify-center rounded-[22px] border border-[#dcebe3] bg-white p-5 text-center shadow-[0_14px_38px_-28px_rgba(15,23,42,0.5)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_20px_42px_-24px_rgba(15,23,42,0.32)]">
+                  <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-[#ecf8f1] text-[#0f7a43] transition-transform duration-300 group-hover:scale-110"><item.icon size={22} strokeWidth={2} /></div>
+                  <h3 className="text-sm font-bold leading-snug text-[#0f172a]">{item.title}</h3>
                 </Link>
               </AnimateOnScroll>
             ))}
@@ -466,146 +153,56 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="pb-8"><div className="page-shell"><AnimateOnScroll><div className="grid grid-cols-1 gap-3 rounded-[24px] bg-gradient-to-r from-[#0b6a3a] via-[#0f7a43] to-[#0e6d3d] p-5 text-white shadow-[0_20px_45px_-32px_rgba(2,44,24,0.8)] md:grid-cols-4 md:p-7"><div className="flex items-center gap-3"><div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15"><FileCheck2 size={20} /></div><div><p className="text-3xl font-extrabold leading-none">1.250+</p><p className="text-sm text-white/85">Surat Diproses Bulan Ini</p></div></div><div className="flex items-center gap-3"><div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15"><Users size={20} /></div><div><p className="text-3xl font-extrabold leading-none">3.800+</p><p className="text-sm text-white/85">Warga Terdaftar di Sistem</p></div></div><div className="flex items-center gap-3"><div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15"><Smile size={20} /></div><div><p className="text-3xl font-extrabold leading-none">98%</p><p className="text-sm text-white/85">Kepuasan Layanan</p></div></div><div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/15 bg-white/10 p-3"><div className="flex items-center gap-2"><Headphones size={18} /><div><p className="text-sm font-semibold">Butuh Bantuan?</p><p className="text-xs text-white/85">Hubungi Petugas Kami</p></div></div><Link href="/kontak" className="inline-flex items-center gap-2 rounded-lg bg-white px-3 py-2 text-xs font-bold text-[#0f7a43]">Kontak Kami <ArrowRight size={14} /></Link></div></div></AnimateOnScroll></div></section>
 
-      {/* ============================================
-          STATISTIK BAR — dark navy, animated counter
-          ============================================ */}
-      <section className="bg-[#1e3a5f] py-10">
-        <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
-          <AnimateOnScroll delay={0}>
-            <div className="grid grid-cols-2 lg:grid-cols-4">
-              {STATS.map((stat, i) => (
-                <div
-                  key={stat.label}
-                  className="flex items-center gap-3 px-5 py-4"
-                  style={{
-                    borderLeft: i === 0 ? "none" : "1px solid rgba(255,255,255,0.1)",
-                    paddingLeft: i === 0 ? "0" : "20px",
-                  }}
-                >
-                  <span className="text-4xl lg:text-5xl font-extrabold text-white leading-none tracking-tight tabular-nums">
-                    {stat.value}
-                  </span>
-                  <div>
-                    <p className="text-xs font-semibold text-white/80 leading-tight">
-                      {stat.label}
-                    </p>
-                    <p className="text-[10px] text-white/30 mt-0.5">{stat.sub}</p>
-                  </div>
-                </div>
+      <section className="pb-8"><div className="page-shell"><AnimateOnScroll delay={60}><div className="flex flex-col gap-3 rounded-2xl border border-[#dcebe3] bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between"><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e9f6ef] text-[#0f7a43]"><Megaphone size={18} /></div><p className="text-sm text-[#334155]"><span className="font-semibold text-[#0f7a43]">Pengumuman Terbaru:</span> Pelayanan administrasi tutup pada tanggal 17 Juni 2025. Pelayanan kembali dibuka 18 Juni 2025.</p></div><Link href="/artikel" className="text-sm font-semibold text-[#0f7a43] hover:text-[#0c6638]">Lihat Semua</Link></div></AnimateOnScroll></div></section>
+
+      <section className="pb-12 pt-2 sm:pb-16">
+        <div className="page-shell">
+          <AnimateOnScroll><div className="mb-6 flex flex-wrap items-center justify-between gap-3"><div><p className="section-kicker">Berita & Kegiatan</p><h2 className="section-title mt-2">Informasi Terbaru Kelurahan</h2></div><Link href="/artikel" className="inline-flex items-center gap-2 rounded-xl border border-[#d5e7dc] bg-white px-4 py-2 text-sm font-semibold text-[#0f7a43] transition hover:bg-[#f3faf6]">Lihat Semua Berita <ArrowRight size={15} /></Link></div></AnimateOnScroll>
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+            <AnimateOnScroll className="lg:col-span-6"><article className="group relative min-h-[300px] overflow-hidden rounded-[24px] border border-[#dce8df] bg-white"><Image src={BERITA_UTAMA.image} alt={BERITA_UTAMA.title} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover transition-transform duration-500 group-hover:scale-105" /><div className="absolute inset-0 bg-gradient-to-t from-[#07150f]/90 via-[#07150f]/50 to-transparent" /><div className="absolute inset-x-0 bottom-0 p-6"><span className="inline-flex rounded-full bg-white/20 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.1em] text-white backdrop-blur-sm">{BERITA_UTAMA.category}</span><h3 className="mt-3 text-2xl font-extrabold leading-tight text-white">{BERITA_UTAMA.title}</h3><p className="mt-2 text-sm leading-relaxed text-white/85">{BERITA_UTAMA.desc}</p><p className="mt-3 text-xs font-semibold text-white/80">{BERITA_UTAMA.date}</p></div></article></AnimateOnScroll>
+            <div className="space-y-4 lg:col-span-6">
+              {BERITA_SAMPING.map((item, idx) => (
+                <AnimateOnScroll key={item.title} delay={idx * 60 + 40}>
+                  <article className="group flex items-start gap-4 rounded-[22px] border border-[#dcebe3] bg-white p-4 shadow-[0_12px_32px_-26px_rgba(15,23,42,0.45)] transition hover:-translate-y-0.5 hover:shadow-[0_16px_36px_-24px_rgba(15,23,42,0.35)]">
+                    <div className="flex h-20 w-28 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#eef7f1]"><Image src="/img/layanan.png" alt={item.title} width={112} height={80} className="h-full w-full object-cover" /></div>
+                    <div className="min-w-0"><span className="inline-flex rounded-full bg-[#e9f6ef] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[#0f7a43]">{item.category}</span><h3 className="mt-2 text-lg font-bold leading-snug text-[#0f172a]">{item.title}</h3><p className="mt-1 text-sm leading-relaxed text-[#64748b]">{item.desc}</p><p className="mt-2 text-xs font-semibold text-[#0f7a43]">{item.date}</p></div>
+                  </article>
+                </AnimateOnScroll>
               ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="pb-14">
+        <div className="page-shell">
+          <AnimateOnScroll>
+            <div className="grid grid-cols-1 gap-5 rounded-[24px] border border-[#dcebe3] bg-white p-5 shadow-[0_16px_36px_-28px_rgba(15,23,42,0.45)] lg:grid-cols-12 lg:p-7">
+              <div className="relative min-h-[260px] overflow-hidden rounded-[22px] border border-[#dcebe3] lg:col-span-7"><Image src="/img/bg.png" alt="Kantor Kelurahan Guntung Manggis" fill className="object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-[#0c2a1b]/70 via-transparent to-transparent" /></div>
+              <div className="lg:col-span-5">
+                <p className="section-kicker">Tentang Kelurahan</p>
+                <h2 className="mt-2 text-3xl font-extrabold leading-tight text-[#0f172a]">Kelurahan Guntung Manggis</h2>
+                <p className="mt-3 text-sm leading-relaxed text-[#475569]">Kelurahan Guntung Manggis merupakan wilayah yang berkembang dengan potensi perkebunan, pertanian, dan sumber daya alam yang melimpah. Kami berkomitmen memberikan pelayanan terbaik untuk warga secara digital, inklusif, dan berkelanjutan.</p>
+                <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {KEUNGGULAN.map((item) => (
+                    <div key={item.title} className="flex items-start gap-3 rounded-xl border border-[#e4efe8] bg-[#fbfdfb] p-3"><div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#e9f6ef] text-[#0f7a43]"><item.icon size={16} /></div><div><p className="text-sm font-bold text-[#0f172a]">{item.title}</p><p className="text-xs text-[#64748b]">{item.desc}</p></div></div>
+                  ))}
+                </div>
+                <Link href="/profil" className="mt-5 inline-flex items-center gap-2 rounded-xl border border-[#cfe3d7] px-4 py-2.5 text-sm font-semibold text-[#0f7a43] transition hover:bg-[#f3faf6]">Selengkapnya Tentang Kami <ArrowRight size={15} /></Link>
+              </div>
             </div>
           </AnimateOnScroll>
         </div>
       </section>
 
-
-      {/* ============================================
-          FOOTER
-          ============================================ */}
-      <footer className="bg-[#0f172a] pt-16 pb-8">
-        <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
-
-            {/* Brand */}
-            <div className="sm:col-span-2 lg:col-span-1">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="flex h-11 w-11 items-center justify-center rounded-sm bg-[#1e40af]">
-                  <span className="text-base font-bold text-white">SM</span>
-                </div>
-                <div>
-                  <p className="text-base font-bold text-white leading-tight">Si-Manggis</p>
-                  <p className="text-[10px] text-white/40 uppercase tracking-wider">Portal Kelurahan Digital</p>
-                </div>
-              </div>
-              <p className="text-sm text-white/45 leading-relaxed">
-                Kelurahan Guntung Manggis
-                <br />
-                Kec. Landasan Ulin, Kota Banjarbaru
-                <br />
-                Kalimantan Selatan 70724
-              </p>
-            </div>
-
-            {/* Navigasi */}
-            <div>
-              <p className="text-[10px] font-bold text-white/50 uppercase tracking-[0.15em] mb-4">
-                Navigasi
-              </p>
-              <ul className="space-y-2.5">
-                {[
-                  { label: "Beranda", href: "/" },
-                  { label: "Profil", href: "/profil" },
-                  { label: "Layanan", href: "/layanan" },
-                  { label: "Kabar", href: "/artikel" },
-                  { label: "Darurat", href: "/darurat" },
-                ].map((item) => (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className="text-sm text-white/45 hover:text-white transition-colors duration-150"
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Program */}
-            <div>
-              <p className="text-[10px] font-bold text-white/50 uppercase tracking-[0.15em] mb-4">
-                Program Unggulan
-              </p>
-              <ul className="space-y-2.5">
-                {[
-                  "Kampung KB (Nasional)",
-                  "RT Mandiri",
-                  "Home Care Lansia",
-                  "Kelurahan Bersinar",
-                  "Bank Sampah (8 Unit)",
-                  "Koperasi Merah Putih",
-                ].map((item) => (
-                  <li key={item} className="text-sm text-white/45">
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Kontak */}
-            <div>
-              <p className="text-[10px] font-bold text-white/50 uppercase tracking-[0.15em] mb-4">
-                Kontak
-              </p>
-              <ul className="space-y-3">
-                {[
-                  { icon: MapPin, text: "Kode Wilayah 63.72.02.1005" },
-                  { icon: Building2, text: "Kelurahan Guntung Manggis" },
-                  { icon: Phone, text: "Hubungi via Portal Darurat" },
-                  { icon: Newspaper, text: "Kode Pos: 70724" },
-                ].map(({ icon: Icon, text }) => (
-                  <li key={text} className="flex items-start gap-2 text-sm text-white/45">
-                    <Icon size={13} className="flex-shrink-0 mt-0.5" strokeWidth={1.8} />
-                    {text}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Bottom bar */}
-          <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-1.5">
-            <p className="text-xs text-white/30">
-              &copy; 2026 Pemerintah Kelurahan Guntung Manggis
-            </p>
-            <p className="text-[11px] text-white/20 italic">
-              Dibuat dengan semangat gotong royong
-            </p>
-          </div>
+      <footer className="bg-gradient-to-br from-[#0a3f25] via-[#0d5b34] to-[#0a3f25] text-white">
+        <div className="page-shell py-10">
+          <AnimateOnScroll><div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4"><div><p className="text-xl font-extrabold tracking-tight">SI-MANGGIS</p><p className="mt-2 text-sm leading-relaxed text-white/85">Layanan Kelurahan Digital modern untuk pelayanan publik yang cepat, transparan, dan ramah warga.</p><div className="mt-4 flex items-center gap-2.5">{[Globe, MessageCircle, Mail, Send].map((Icon, idx) => (<span key={idx} className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/20 bg-white/10"><Icon size={15} /></span>))}</div></div><div><p className="text-sm font-bold uppercase tracking-[0.12em] text-white/80">Navigasi</p><ul className="mt-3 space-y-2 text-sm text-white/85"><li><Link href="/">Beranda</Link></li><li><Link href="/layanan">Layanan</Link></li><li><Link href="/artikel">Pengumuman</Link></li><li><Link href="/pengaduan">Pengaduan</Link></li></ul></div><div><p className="text-sm font-bold uppercase tracking-[0.12em] text-white/80">Kontak Kami</p><ul className="mt-3 space-y-2 text-sm text-white/85"><li>Jl. Guntung Manggis No. 01</li><li>Landasan Ulin, Kalimantan Selatan</li><li>(0512) 123 5678</li><li>kel.guntungmanggis@email.id</li></ul></div><div><p className="text-sm font-bold uppercase tracking-[0.12em] text-white/80">Butuh Bantuan?</p><p className="mt-3 text-sm text-white/85">Hubungi petugas kami untuk informasi lebih lanjut.</p><Link href="/kontak" className="mt-4 inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-[#0f7a43]">Hubungi Kami<ArrowRight size={14} /></Link></div></div></AnimateOnScroll>
+          <div className="mt-8 border-t border-white/15 pt-4 text-xs text-white/75">© {new Date().getFullYear()} SI-MANGGIS. All rights reserved.</div>
         </div>
       </footer>
-
     </main>
   );
 }
