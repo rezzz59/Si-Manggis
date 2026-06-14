@@ -64,10 +64,11 @@ export default function LoginPage() {
                     <input
                       type="email"
                       inputMode="email"
-                      placeholder="admin@desaguntungmanggis.id"
+                      placeholder="Masukkan email petugas"
                       value={form.email}
                       onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
                       className="w-full rounded-xl border border-[#d6e3db] bg-white py-3 pl-10 pr-4 text-sm text-[#0f172a] placeholder-[#94a3b8] outline-none transition focus:border-[#1f7a4f] focus:ring-4 focus:ring-[#1f7a4f]/15"
+                      required
                     />
                   </div>
                 </div>

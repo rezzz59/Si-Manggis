@@ -7,7 +7,11 @@ import {
   MessageSquare,
   LogOut,
   Home,
-  Images,
+  Phone,
+  Users,
+  ClipboardList,
+  Newspaper,
+  MapPin,
 } from "lucide-react";
 
 export default async function DashboardLayout({
@@ -18,12 +22,15 @@ export default async function DashboardLayout({
   const session = await auth();
   if (!session) redirect("/login");
 
-  const navItems = [
+const navItems = [
     { href: "/dashboard", icon: LayoutDashboard, label: "Beranda" },
-    { href: "/dashboard/homepage", icon: Home, label: "Homepage" },
-    { href: "/dashboard/aset", icon: Images, label: "Aset Website" },
     { href: "/dashboard/permohonan", icon: FileText, label: "Permohonan" },
     { href: "/dashboard/pengaduan", icon: MessageSquare, label: "Pengaduan" },
+    { href: "/dashboard/artikel", icon: Newspaper, label: "Artikel" },
+    { href: "/dashboard/layanan", icon: ClipboardList, label: "Layanan" },
+    { href: "/dashboard/profil", icon: Users, label: "Profil Desa" },
+    { href: "/dashboard/rt", icon: MapPin, label: "Data RT" },
+    { href: "/dashboard/darurat", icon: Phone, label: "Nomor Darurat" },
   ];
 
   return (
