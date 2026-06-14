@@ -28,6 +28,14 @@
 - [ ] Perbaiki pesan instruksi ke RT agar wajib menyertakan tiket
 - [ ] Uji skenario balasan "setuju <tiket>" dan "tolak <tiket> <alasan>"
 
+## Redesign Cek Tiket (Lebih Modern & Rapi)
+- [ ] Redesign hero `/cek-tiket` agar visual lebih tegas dan modern
+- [ ] Refactor panel pencarian tiket (hierarchy, spacing, CTA)
+- [ ] Upgrade result card permohonan/pengaduan + status chip premium
+- [ ] Optimasi progress tracker desktop/mobile
+- [ ] Poles sidebar ilustrasi + FAQ agar lebih clean
+- [ ] Validasi visual desktop setelah redesign
+
 ## Modernisasi Halaman Layanan
 - [ ] Perkuat hero layanan (CTA utama/sekunder + panel visual premium)
 - [ ] Refactor card daftar layanan agar lebih modern dan konsisten
