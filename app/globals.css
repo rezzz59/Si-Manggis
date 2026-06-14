@@ -19,6 +19,85 @@
   --color-white:         #ffffff;
 }
 
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Shared layout helpers restored for public pages */
+.page-shell,
+.public-shell {
+  width: min(100% - 2rem, 1200px);
+  margin-inline: auto;
+}
+
+@media (min-width: 640px) {
+  .page-shell,
+  .public-shell {
+    width: min(100% - 3rem, 1200px);
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-shell,
+  .public-shell {
+    width: min(100% - 4rem, 1200px);
+  }
+}
+
+.public-hero {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid #e3eee7;
+  padding-top: 7rem;
+  padding-bottom: 2.5rem;
+}
+
+@media (min-width: 640px) {
+  .public-hero {
+    padding-top: 8rem;
+    padding-bottom: 3rem;
+  }
+}
+
+.public-section {
+  padding-block: 3rem;
+}
+
+@media (min-width: 640px) {
+  .public-section {
+    padding-block: 3.5rem;
+  }
+}
+
+.public-muted-bg {
+  background: #f7fbf9;
+}
+
+.section-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  border: 1px solid #cfe3d7;
+  background: #edf8f1;
+  color: #0f7a43;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.section-title {
+  color: #0f172a;
+  font-size: clamp(1.5rem, 2.3vw, 2rem);
+  line-height: 1.15;
+  font-weight: 800;
+}
+
 /* ============================================
    HARD SHADOW — human-made, no blur
    ============================================ */

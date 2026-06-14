@@ -157,13 +157,16 @@ export default function PengaduanPage() {
           </div>
         }
       >
-        <Link href="/cek-tiket" className="public-btn-primary px-5 py-3 text-sm">
+        <Link
+          href="/cek-tiket"
+          className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#0f5132] shadow-[0_22px_44px_-26px_rgba(15,23,42,0.55)] transition hover:-translate-y-0.5 hover:bg-[#f2fbf6]"
+        >
           Lacak Tiket <ArrowRight size={15} />
         </Link>
       </PublicHeroBanner>
 
       {/* 2) Timeline */}
-      <section className="bg-white py-7 sm:py-8 border-b border-[#edf4ef]">
+      <section className="border-b border-[#edf4ef] bg-white py-8 sm:py-10">
         <div className="public-shell">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {TIMELINE.map((step, idx) => {
@@ -171,7 +174,7 @@ export default function PengaduanPage() {
               return (
                 <div
                   key={step.title}
-                  className="rounded-2xl border border-[#dceae1] bg-[#f9fcfa] px-4 py-4"
+                  className="rounded-2xl border border-[#dceae1] bg-gradient-to-b from-[#fbfefd] to-[#f4fbf7] px-4 py-4 shadow-[0_16px_34px_-26px_rgba(15,23,42,0.28)]"
                 >
                   <div className="mb-2 flex items-center gap-2">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#e8f5ee] text-[#1f7a4f]">
@@ -191,7 +194,7 @@ export default function PengaduanPage() {
       </section>
 
       {/* 3) Two-column main content */}
-      <section className="public-section bg-[#f7fbf9]">
+      <section className="public-section bg-[radial-gradient(circle_at_top,#edf8f1_0%,#f7fbf9_46%,#f7fbf9_100%)]">
         <div className="public-shell">
           {submitted ? (
             // 7) Success state
@@ -258,10 +261,9 @@ export default function PengaduanPage() {
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
               {/* Left: Form */}
               <div className="lg:col-span-8">
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form onSubmit={handleSubmit} className="space-y-6">
                   {/* 4) Section 1: Reporter Information */}
-                  <div className="public-card p-5 sm:p-6">
-                    <p className="public-label">Section 1 — Reporter Information</p>
+                  <div className="public-card border-[#d4e6db] p-5 shadow-[0_20px_46px_-34px_rgba(15,23,42,0.28)] sm:p-6">
                     <h2 className="text-base font-bold text-[#0f172a]">Data Pelapor</h2>
                     <p className="mt-1 text-xs text-[#5f7287]">
                       Data dasar pelapor untuk kebutuhan klarifikasi jika diperlukan.
@@ -278,7 +280,7 @@ export default function PengaduanPage() {
                           placeholder="Nama Anda"
                           value={form.nama}
                           onChange={(e) => setForm((f) => ({ ...f, nama: e.target.value }))}
-                          className="public-input"
+                          className="w-full rounded-xl border border-[#d7e6de] bg-white px-3.5 py-2.5 text-sm text-[#0f172a] outline-none transition focus:border-[#1f7a4f] focus:ring-4 focus:ring-[#1f7a4f]/10"
                         />
                       </div>
                       <div>
@@ -288,15 +290,14 @@ export default function PengaduanPage() {
                           placeholder="08xxxxxxxxxx"
                           value={form.telepon}
                           onChange={(e) => setForm((f) => ({ ...f, telepon: e.target.value }))}
-                          className="public-input"
+                          className="w-full rounded-xl border border-[#d7e6de] bg-white px-3.5 py-2.5 text-sm text-[#0f172a] outline-none transition focus:border-[#1f7a4f] focus:ring-4 focus:ring-[#1f7a4f]/10"
                         />
                       </div>
                     </div>
                   </div>
 
                   {/* Section 2: Location */}
-                  <div className="public-card p-5 sm:p-6">
-                    <p className="public-label">Section 2 — Location</p>
+                  <div className="public-card border-[#d4e6db] p-5 shadow-[0_20px_46px_-34px_rgba(15,23,42,0.28)] sm:p-6">
                     <h2 className="text-base font-bold text-[#0f172a]">Lokasi Kejadian</h2>
                     <p className="mt-1 text-xs text-[#5f7287]">
                       Ambil lokasi otomatis agar tim lebih cepat menindaklanjuti.
@@ -309,13 +310,13 @@ export default function PengaduanPage() {
                         placeholder="Tekan tombol untuk ambil lokasi otomatis"
                         value={form.lokasi}
                         onChange={(e) => setForm((f) => ({ ...f, lokasi: e.target.value }))}
-                        className="public-input flex-1"
+                        className="flex-1 rounded-xl border border-[#d7e6de] bg-white px-3.5 py-2.5 text-sm text-[#0f172a] outline-none transition focus:border-[#1f7a4f] focus:ring-4 focus:ring-[#1f7a4f]/10"
                       />
                       <button
                         type="button"
                         onClick={handleLocation}
                         disabled={gettingLocation}
-                        className="public-btn-primary flex items-center gap-1.5 flex-shrink-0 px-4 py-2.5 text-sm disabled:opacity-50"
+                        className="inline-flex flex-shrink-0 items-center gap-2 rounded-full bg-gradient-to-r from-[#1f7a4f] to-[#16613d] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_18px_34px_-20px_rgba(15,122,67,0.6)] transition hover:-translate-y-0.5 disabled:opacity-50"
                       >
                         {gettingLocation ? (
                           <Loader2 size={14} className="animate-spin" />
@@ -328,8 +329,7 @@ export default function PengaduanPage() {
                   </div>
 
                   {/* Section 3: Evidence Upload */}
-                  <div className="public-card p-5 sm:p-6">
-                    <p className="public-label">Section 3 — Evidence Upload</p>
+                  <div className="public-card border-[#d4e6db] p-5 shadow-[0_20px_46px_-34px_rgba(15,23,42,0.28)] sm:p-6">
                     <h2 className="text-base font-bold text-[#0f172a]">Bukti Foto</h2>
                     <p className="mt-1 text-xs text-[#5f7287]">
                       Maksimal 4 file. Format: JPG/PNG/WEBP. Ukuran disarankan di bawah 5 MB.
@@ -387,8 +387,7 @@ export default function PengaduanPage() {
                   </div>
 
                   {/* Section 4: Complaint Details */}
-                  <div className="public-card p-5 sm:p-6">
-                    <p className="public-label">Section 4 — Complaint Details</p>
+                  <div className="public-card border-[#d4e6db] p-5 shadow-[0_20px_46px_-34px_rgba(15,23,42,0.28)] sm:p-6">
                     <h2 className="text-base font-bold text-[#0f172a]">Detail Pengaduan</h2>
                     <p className="mt-1 text-xs text-[#5f7287]">
                       Tulis kronologi dengan jelas agar proses verifikasi lebih cepat.
@@ -404,7 +403,7 @@ export default function PengaduanPage() {
                         placeholder="Jelaskan kejadian, waktu, dampak, dan harapan tindak lanjut..."
                         value={form.pesan}
                         onChange={(e) => setForm((f) => ({ ...f, pesan: e.target.value }))}
-                        className="public-input resize-none"
+                        className="w-full resize-none rounded-xl border border-[#d7e6de] bg-white px-3.5 py-2.5 text-sm text-[#0f172a] outline-none transition focus:border-[#1f7a4f] focus:ring-4 focus:ring-[#1f7a4f]/10"
                       />
                     </div>
                   </div>
@@ -419,12 +418,15 @@ export default function PengaduanPage() {
                     <button
                       type="submit"
                       disabled={loading || uploading}
-                      className="public-btn-primary px-8 py-3 text-sm disabled:opacity-60"
+                      className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#1f7a4f] to-[#16613d] px-8 py-3.5 text-sm font-semibold text-white shadow-[0_20px_40px_-20px_rgba(15,122,67,0.62)] transition hover:-translate-y-0.5 disabled:opacity-60"
                     >
                       <Send size={16} />
                       {loading ? "Mengirim..." : "Kirim Pengaduan"}
                     </button>
-                    <Link href="/cek-tiket" className="public-btn-soft px-5 py-3 text-sm">
+                    <Link
+                      href="/cek-tiket"
+                      className="inline-flex items-center justify-center rounded-full border border-[#cfe4d8] bg-white px-5 py-3 text-sm font-semibold text-[#1f7a4f] shadow-[0_14px_30px_-24px_rgba(15,23,42,0.42)] transition hover:-translate-y-0.5 hover:border-[#1f7a4f]/40 hover:bg-[#f4fbf7]"
+                    >
                       Cek Tiket Anda
                     </Link>
                   </div>
@@ -433,8 +435,8 @@ export default function PengaduanPage() {
 
               {/* Right: Information panel */}
               <aside className="lg:col-span-4">
-                <div className="sticky top-24 space-y-4">
-                  <div className="public-card p-5">
+                <div className="sticky top-24 space-y-5">
+                  <div className="public-card border-[#d4e6db] p-5 shadow-[0_20px_46px_-34px_rgba(15,23,42,0.28)]">
                     <p className="public-label">Informasi Layanan</p>
                     <h3 className="text-base font-bold text-[#0f172a]">Kenapa Aman Melapor di SI-MANGGIS?</h3>
                     <ul className="mt-4 space-y-3">
@@ -469,7 +471,7 @@ export default function PengaduanPage() {
                     </ul>
                   </div>
 
-                  <div className="public-card p-5">
+                  <div className="public-card border-[#d4e6db] p-5 shadow-[0_20px_46px_-34px_rgba(15,23,42,0.28)]">
                     <p className="public-label">FAQ Shortcut</p>
                     <h3 className="text-base font-bold text-[#0f172a]">Pertanyaan Umum</h3>
                     <div className="mt-3 space-y-2">
@@ -496,7 +498,7 @@ export default function PengaduanPage() {
                     </Link>
                   </div>
 
-                  <div className="rounded-2xl border border-[#dbe8df] bg-white p-4">
+                  <div className="rounded-2xl border border-[#dbe8df] bg-white p-4 shadow-[0_18px_36px_-30px_rgba(15,23,42,0.28)]">
                     <div className="flex items-center gap-2">
                       <HelpCircle size={15} className="text-[#1f7a4f]" />
                       <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#6b7280]">

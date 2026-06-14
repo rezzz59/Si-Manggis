@@ -28,6 +28,35 @@
 - [ ] Perbaiki pesan instruksi ke RT agar wajib menyertakan tiket
 - [ ] Uji skenario balasan "setuju <tiket>" dan "tolak <tiket> <alasan>"
 
+## Perbaikan UI Halaman Pengaduan
+- [x] Rapikan spacing vertikal dan hierarchy section agar lebih lega
+- [x] Upgrade visual card form agar lebih modern dan konsisten
+- [x] Perjelas CTA utama/sekunder pada form pengaduan
+- [x] Rapikan panel sidebar informasi, FAQ, dan bantuan cepat
+- [ ] Review konsistensi tone hijau modern dengan halaman publik lain
+
+## Redesign Halaman Darurat
+- [x] Redesign hero darurat agar lebih tegas dan modern
+- [x] Tambah emergency alert strip di bawah hero
+- [x] Redesign kartu kontak darurat (CTA call utama + detail rapi)
+- [x] Upgrade tampilan embed map dan info lokasi
+- [x] Tambah section panduan cepat saat darurat
+- [x] Rapikan note/CTA footer ke halaman layanan
+
+## Redesign Halaman Kontak
+- [x] Upgrade hero kontak agar lebih modern dan aman dari overlap navbar
+- [x] Redesign kartu informasi kontak (hierarchy + shadow + badge icon)
+- [x] Tambah section ringkas respon layanan
+- [x] Refactor CTA pengaduan agar lebih premium
+- [ ] Review konsistensi style dengan halaman publik lain
+
+## Redesign Halaman Login Admin
+- [ ] Upgrade hero login admin ke gaya hijau modern
+- [ ] Redesign card login agar lebih premium
+- [ ] Modernisasi field email/password + focus state
+- [ ] Refactor tombol masuk + loading state
+- [ ] Rapikan alert error dan microcopy akses staff
+
 ## Redesign Cek Tiket (Lebih Modern & Rapi)
 - [ ] Redesign hero `/cek-tiket` agar visual lebih tegas dan modern
 - [ ] Refactor panel pencarian tiket (hierarchy, spacing, CTA)

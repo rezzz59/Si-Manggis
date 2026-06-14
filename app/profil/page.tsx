@@ -8,6 +8,10 @@ import {
   Building2,
   LocateFixed,
   ArrowRight,
+  Sprout,
+  Home,
+  GraduationCap,
+  HeartPulse,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -33,26 +37,26 @@ const batasWilayah = [
   { arah: "Barat", wilayah: "Kelurahan Landasan Ulin Timur (Kec. Landasan Ulin)" },
 ];
 
-const timelineSejarah = [
+const potensiWilayah = [
   {
-    tahun: "1980",
-    title: "Awal Pertumbuhan Wilayah",
-    desc: "Kawasan berkembang sebagai permukiman dan pusat aktivitas warga.",
+    title: "Perkebunan & Pertanian",
+    desc: "Potensi lahan produktif yang mendukung ketahanan pangan dan ekonomi warga.",
+    icon: Sprout,
   },
   {
-    tahun: "1995",
-    title: "Penguatan Sektor Pertanian & Perkebunan",
-    desc: "Masyarakat mengembangkan potensi lokal sebagai penopang ekonomi keluarga.",
+    title: "Permukiman Padat Berkembang",
+    desc: "Kawasan hunian aktif dengan pertumbuhan penduduk dan aktivitas sosial yang tinggi.",
+    icon: Home,
   },
   {
-    tahun: "2010",
-    title: "Peningkatan Infrastruktur",
-    desc: "Perbaikan jalan lingkungan, drainase, dan fasilitas pelayanan dasar masyarakat.",
+    title: "Fasilitas Pendidikan",
+    desc: "Akses pendidikan yang terus berkembang untuk menunjang kualitas SDM kelurahan.",
+    icon: GraduationCap,
   },
   {
-    tahun: "2023",
-    title: "Transformasi Layanan Digital",
-    desc: "Mulai penguatan layanan publik berbasis digital melalui SI-MANGGIS.",
+    title: "Fasilitas Kesehatan",
+    desc: "Layanan kesehatan dasar tersedia dan terus ditingkatkan untuk kebutuhan warga.",
+    icon: HeartPulse,
   },
 ];
 
@@ -91,7 +95,7 @@ const demografi = [
 export default function ProfilPage() {
   return (
     <main className="min-h-full bg-[#f7faf8] text-[#0f172a]">
-      <section className="relative overflow-hidden border-b border-[#d7e8de] pt-36 pb-12">
+      <section className="relative overflow-hidden border-b border-[#d7e8de] pt-32 pb-14 md:pt-36 md:pb-16">
         <div
           className="absolute inset-0"
           style={{
@@ -107,15 +111,18 @@ export default function ProfilPage() {
               <span className="inline-flex items-center rounded-full border border-white/45 bg-white/20 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.12em] text-white">
                 Profil Kelurahan
               </span>
-              <h1 className="mt-5 text-4xl font-extrabold leading-[1.06] text-white sm:text-5xl">
+              <h1 className="mt-5 text-4xl font-extrabold leading-[1.04] text-white sm:text-5xl md:text-6xl">
                 Kelurahan Guntung Manggis
               </h1>
-              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/90 sm:text-base">
+              <p className="mt-5 max-w-2xl text-sm leading-relaxed text-white/90 sm:text-base md:text-[17px]">
                 Kelurahan dengan wilayah luas dan jumlah penduduk terbesar di Banjarbaru,
                 berkomitmen menghadirkan pelayanan publik yang prima, inklusif, dan berkelanjutan.
               </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <a href="#identitas" className="public-btn-primary px-5 py-3 text-sm">
+              <div className="mt-8 flex flex-wrap gap-3">
+                <a
+                  href="#identitas"
+                  className="inline-flex items-center justify-center rounded-xl bg-white px-5 py-3 text-sm font-semibold text-[#0f7a43] shadow-[0_14px_30px_-20px_rgba(15,107,60,0.45)] transition hover:-translate-y-0.5 hover:bg-[#f3fbf7]"
+                >
                   Data Dasar
                 </a>
                 <a
@@ -128,12 +135,12 @@ export default function ProfilPage() {
             </div>
 
             <div className="lg:col-span-5">
-              <div className="public-card rounded-2xl bg-white/95 p-5">
+              <div className="public-card rounded-3xl bg-white/95 p-5 sm:p-6">
                 <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#64748b]">Pimpinan Kelurahan</p>
                 <p className="mt-1 text-2xl font-extrabold text-[#0f7a43]">Zikru Rakhman</p>
                 <p className="text-sm text-[#334155]">Lurah Guntung Manggis</p>
 
-                <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3 lg:grid-cols-1">
+                <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-3 lg:grid-cols-1">
                   <div className="rounded-xl border border-[#dcebe3] bg-white p-3">
                     <p className="text-xs font-semibold text-[#64748b]">Penduduk</p>
                     <p className="text-lg font-extrabold text-[#0f172a]">33.629 Jiwa</p>
@@ -153,34 +160,39 @@ export default function ProfilPage() {
         </div>
       </section>
 
-      <section id="identitas" className="public-section">
+      <section id="identitas" className="public-section py-14 md:py-16">
         <div className="public-shell">
           <span className="section-kicker">Data Dasar</span>
           <h2 className="section-title mt-2">Informasi Umum Kelurahan</h2>
 
-          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {identitasKelurahan.map((item) => (
-              <div key={item.label} className="public-card p-5">
-                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#ebf7f0] text-[#0f7a43]">
-                  <item.icon size={18} />
+          <div className="mt-6 rounded-3xl border border-[#dcebe3] bg-white p-4 shadow-[0_20px_45px_-32px_rgba(15,23,42,0.34)] sm:p-5">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {identitasKelurahan.map((item) => (
+                <div
+                  key={item.label}
+                  className="rounded-2xl border border-[#e4efe9] bg-gradient-to-b from-white to-[#f8fcfa] p-4 shadow-[0_12px_28px_-24px_rgba(15,23,42,0.32)]"
+                >
+                  <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#ebf7f0] text-[#0f7a43]">
+                    <item.icon size={18} />
+                  </div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[#6b7280]">
+                    {item.label}
+                  </p>
+                  <p className="mt-1 text-lg font-extrabold text-[#0f172a]">{item.value}</p>
                 </div>
-                <p className="text-xs font-semibold uppercase tracking-[0.08em] text-[#6b7280]">
-                  {item.label}
-                </p>
-                <p className="mt-1 text-lg font-extrabold text-[#0f172a]">{item.value}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
-          <div className="mt-8 public-card overflow-hidden">
-            <div className="border-b border-[#e6efe9] px-5 py-4">
-              <p className="text-sm font-bold text-[#0f7a43]">Batas Wilayah</p>
+          <div className="mt-8 overflow-hidden rounded-3xl border border-[#d9e9e1] bg-white shadow-[0_20px_45px_-30px_rgba(15,23,42,0.28)]">
+            <div className="border-b border-[#e6efe9] bg-[#f7fcf9] px-5 py-4">
+              <p className="text-xs font-bold uppercase tracking-[0.1em] text-[#64748b]">Batas Wilayah</p>
             </div>
             <div className="divide-y divide-[#edf4ef]">
               {batasWilayah.map((item) => (
                 <div
                   key={item.arah}
-                  className="grid grid-cols-1 gap-2 px-5 py-4 sm:grid-cols-[110px_1fr]"
+                  className="grid grid-cols-1 gap-2 px-5 py-4 transition-colors hover:bg-[#f9fdfb] sm:grid-cols-[110px_1fr]"
                 >
                   <p className="text-sm font-semibold text-[#0f7a43]">{item.arah}</p>
                   <p className="text-sm text-[#334155]">{item.wilayah}</p>
@@ -191,32 +203,29 @@ export default function ProfilPage() {
         </div>
       </section>
 
-      <section className="public-section public-muted-bg">
+      <section className="public-section public-muted-bg py-14 md:py-16">
         <div className="public-shell">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
             <div className="lg:col-span-5">
-              <span className="section-kicker">Sejarah Singkat</span>
-              <h2 className="section-title mt-2">Perjalanan Kelurahan Guntung Manggis</h2>
+              <span className="section-kicker">Potensi Wilayah</span>
+              <h2 className="section-title mt-2">Keunggulan Kelurahan Guntung Manggis</h2>
               <p className="section-subtitle">
-                Kelurahan Guntung Manggis terletak di Kecamatan Landasan Ulin, Kota Banjarbaru,
-                Provinsi Kalimantan Selatan. Nama "Manggis" berasal dari buah manggis yang dahulu
-                banyak tumbuh di kawasan ini dan menjadi identitas lokal masyarakat.
+                Potensi lokal menjadi fondasi pembangunan kelurahan yang berkelanjutan, inklusif,
+                dan berorientasi pada peningkatan kualitas hidup masyarakat.
               </p>
             </div>
             <div className="lg:col-span-7">
-              <div className="relative space-y-4 pl-6 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-[#cfe3d7]">
-                {timelineSejarah.map((item) => (
-                  <div key={item.tahun} className="relative public-card p-4 sm:p-5">
-                    <span className="absolute -left-[23px] top-6 h-3.5 w-3.5 rounded-full bg-[#0f7a43]" />
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                      <div>
-                        <p className="text-lg font-bold text-[#0f172a]">{item.title}</p>
-                        <p className="mt-1 text-sm leading-relaxed text-[#475569]">{item.desc}</p>
-                      </div>
-                      <span className="inline-flex w-fit rounded-full bg-[#e9f6ef] px-3 py-1 text-xs font-bold text-[#0f7a43]">
-                        {item.tahun}
-                      </span>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {potensiWilayah.map((item) => (
+                  <div
+                    key={item.title}
+                    className="rounded-2xl border border-[#deece5] bg-white p-5 shadow-[0_14px_32px_-26px_rgba(15,23,42,0.35)]"
+                  >
+                    <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-[#ebf7f0] text-[#0f7a43]">
+                      <item.icon size={20} />
                     </div>
+                    <p className="text-base font-bold text-[#0f172a]">{item.title}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-[#475569]">{item.desc}</p>
                   </div>
                 ))}
               </div>
@@ -225,19 +234,19 @@ export default function ProfilPage() {
         </div>
       </section>
 
-      <section id="visi-misi" className="public-section">
+      <section id="visi-misi" className="public-section py-14 md:py-16">
         <div className="public-shell">
           <span className="section-kicker">Arah Pembangunan</span>
           <h2 className="section-title mt-2">Visi & Misi Kelurahan</h2>
 
           <div className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-12">
             <div className="space-y-4 lg:col-span-5">
-              <div className="rounded-2xl border border-[#cfe3d7] bg-white p-6 shadow-[0_14px_30px_-24px_rgba(15,23,42,0.35)]">
+              <div className="rounded-3xl border border-[#d8e9e0] bg-white p-6 shadow-[0_18px_38px_-28px_rgba(15,23,42,0.36)]">
                 <p className="text-xs font-bold uppercase tracking-[0.1em] text-[#64748b]">Visi</p>
                 <p className="mt-3 text-xl font-extrabold leading-tight text-[#0f172a]">“{visiKelurahan}”</p>
               </div>
 
-              <div className="public-card p-5">
+              <div className="rounded-3xl border border-[#dbeae3] bg-white p-5 shadow-[0_16px_34px_-28px_rgba(15,23,42,0.3)]">
                 <p className="text-xs font-bold uppercase tracking-[0.1em] text-[#64748b]">Penjelasan Visi</p>
                 <div className="mt-3 space-y-3">
                   {penjelasanVisi.map((item) => (
@@ -250,7 +259,7 @@ export default function ProfilPage() {
               </div>
             </div>
 
-            <div className="public-card p-6 lg:col-span-7">
+            <div className="rounded-3xl border border-[#dbeae3] bg-white p-6 shadow-[0_18px_38px_-30px_rgba(15,23,42,0.3)] lg:col-span-7">
               <p className="text-xs font-bold uppercase tracking-[0.1em] text-[#64748b]">Misi</p>
               <ul className="mt-3 space-y-3">
                 {misi.map((item, idx) => (
@@ -267,14 +276,14 @@ export default function ProfilPage() {
         </div>
       </section>
 
-      <section className="public-section pb-14">
+      <section className="public-section pb-16 md:pb-20 pt-14 md:pt-16">
         <div className="public-shell">
           <span className="section-kicker">Demografi</span>
           <h2 className="section-title mt-2">Gambaran Warga</h2>
 
           <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {demografi.map((item) => (
-              <div key={item.label} className="public-card p-5">
+              <div key={item.label} className="rounded-2xl border border-[#deece5] bg-white p-5 shadow-[0_14px_30px_-26px_rgba(15,23,42,0.28)]">
                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[#eaf6ef] text-[#0f7a43]">
                   <item.icon size={18} />
                 </div>
@@ -284,7 +293,7 @@ export default function ProfilPage() {
             ))}
           </div>
 
-          <div className="mt-8 rounded-2xl border border-[#cfe3d7] bg-gradient-to-r from-[#0f6b3c] to-[#0d5b34] p-5 text-white sm:flex sm:items-center sm:justify-between">
+          <div className="mt-10 rounded-3xl border border-[#cfe3d7] bg-gradient-to-r from-[#0f6b3c] to-[#0d5b34] p-5 text-white shadow-[0_24px_50px_-34px_rgba(15,107,60,0.75)] sm:flex sm:items-center sm:justify-between sm:p-6">
             <div>
               <p className="text-lg font-bold">Butuh Bantuan atau Layanan?</p>
               <p className="text-sm text-white/90">Kami siap membantu kebutuhan administrasi dan informasi Anda.</p>
