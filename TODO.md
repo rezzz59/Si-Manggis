@@ -28,6 +28,13 @@
 - [ ] Perbaiki pesan instruksi ke RT agar wajib menyertakan tiket
 - [ ] Uji skenario balasan "setuju <tiket>" dan "tolak <tiket> <alasan>"
 
+## Modernisasi Halaman Layanan
+- [ ] Perkuat hero layanan (CTA utama/sekunder + panel visual premium)
+- [ ] Refactor card daftar layanan agar lebih modern dan konsisten
+- [ ] Rapikan area detail dokumen expanded dengan style checklist modern
+- [ ] Polish section Ajukan Permohonan (panel form modern + hierarchy heading)
+- [ ] Verifikasi visual desktop/mobile halaman `/layanan`
+
 ## Full Theme “Warna Manggis” (Scope B)
 - [ ] Update token warna global di `app/globals.css`
 - [ ] Refactor `src/components/Navbar.tsx` ke palet manggis
